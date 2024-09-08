@@ -1,1 +1,47 @@
-bin/*
+# Files to ignore when considering what GIT should commit.
+
+# Shader state debug image dumps
+*.tga
+
+# Map compile artifacts
+mapsrc/*.bsp
+mapsrc/*.prt
+mapsrc/*.vmx
+
+# Object files
+*.o
+*.p
+
+# Emacs style backup files
+*~
+
+# Git for Windows editor crash
+*.exe.stackdump
+
+# VSCode
+*.vscode/
+
+# Visual Studio
+*.suo
+*.user
+*.sln.docstates
+*.obj
+*.pch
+*.tlog
+*.log
+*.scc
+*.exp
+*.ilk
+*.lastbuildstate
+vc100.pdb
+ipch
+*.sdf
+*.opensdf
+*.idb
+*.vcxproj
+*.sln
+*.vcxproj.filters
+*.vcxproj.vpc_crc
+*.vpc.sentinel
+*.rsp
+.vs/
