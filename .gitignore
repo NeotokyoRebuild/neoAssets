@@ -1,12 +1,12 @@
 # Files to ignore when considering what GIT should commit.
 
 # Shader state debug image dumps
-*.tga
+neo/*.tga
 
 # Map compile artifacts
-mapsrc/*.bsp
-mapsrc/*.prt
-mapsrc/*.vmx
+neo/mapsrc/*.bsp
+neo/mapsrc/*.prt
+neo/mapsrc/*.vmx
 
 # Object files
 *.o
