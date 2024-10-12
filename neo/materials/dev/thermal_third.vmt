@@ -1,14 +1,5 @@
-"UnlitGeneric"
+"Neo_Thermal_Model"
 {
 	$model 1
-	$receiveflashlight 0
-	
-	$translucent 0
-	$alpha 0
+	$nodecal 1
 }
-
-//"VertexLitGeneric"
-//{
-//	$alpha 1
-//	$translucent 1
-//}
