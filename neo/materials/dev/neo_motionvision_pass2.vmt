@@ -2,4 +2,6 @@
 {
 	"$motioneffect" "_rt_MotionVision"
 	"$original" "_rt_MotionVision_Intermediate"
+	"$mvtexture" "dev/mvgrad2"
+	"$noisetexture" "dev/noise"
 }
