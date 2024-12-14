@@ -2,16 +2,12 @@
 {
 	$model 1
 	$nodecal 1
-	$color "[ 1 0.75 0.25 ]"
-	$color2 "[ 1 0.75 0.25 ]"
-	$lightwarptexture "dev/tvgrad"
 
 	proxies
 	{
 		EntitySpeed
 		{
-			scale 0.003
-			resultVar $color2
+			resultVar $speed
 		}
 	}
 }
