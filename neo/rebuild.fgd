@@ -90,6 +90,7 @@
 	
 	Radius(integer) : "Radius in inches (48 - 256)" : 128 : "Radius of the Ghost Retrieval Point in inches."	
 
+	output OnCap(void) : "Fires when capped here"
 ]
 
 @PointClass base(Angles) studio("models/gameplay/w_ghost.mdl") = neo_ghostspawnpoint :
