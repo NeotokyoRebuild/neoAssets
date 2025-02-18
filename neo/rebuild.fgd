@@ -136,6 +136,9 @@
 
 @PointClass base(Targetname) iconsprite("vgui/hud/kill_shortbus.vmt") = neo_message : "Displays localised text on screen"
 [
+	sound(sound) : "Sound Effect" : "" : "When the message is shown, this sound effect will be played."
+	volume(float) : "Volume 0-10" : "10" : "Volume of the sound effect."
+
 	input ShowMessage(string) : "Show Message"
 	input HideMessage(void) : "Hide Message"
 ]
