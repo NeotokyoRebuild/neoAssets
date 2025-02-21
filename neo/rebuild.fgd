@@ -70,7 +70,24 @@
 	
 	ForcedWeapon(integer) : "Forced Weapon" : -1 : "-1 = Do not force weapon"
 	
-	HiddenHudElements(integer) : "HUD Elements to Hide" : 0 : "Combo of power of 2"
+	spawnflags(flags) =
+	[
+		         1 : "Hide Ammo" : 0
+		         2 : "Hide Compass" : 0
+		         4 : "Hide Crosshair" : 0
+		         8 : "Hide Damage Indicator" : 0
+		        16 : "Hide Friendly Markers" : 0
+		        32 : "Hide Winscreen" : 0
+		        64 : "Hide Enemy beacons in ghost" : 0
+		       128 : "Hide Ghost caps" : 0
+		       256 : "Hide Ghost marker" : 0
+		       512 : "Hide Ghost uplink" : 0
+		      1024 : "Hide Health" : 0
+		      2048 : "Hide Hints" : 0
+		      4096 : "Hide Round info" : 0
+		      8192 : "Hide WPM" : 0
+		     16384 : "Hide Scoreboard" : 0
+	]
 
 	input FireTeamWin(integer) : "Trigger round win (2 = Jinrai, 3 = NSF)"
 	input FireDMPlayerWin(void) : "Trigger round win for the activator (Deathmatch only)"
