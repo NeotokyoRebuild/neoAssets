@@ -57,9 +57,13 @@ building_template/Building_Trainstation_window002e	230 230 200 300
 lights/physgunlight	189 231 232 20
 
 forcetextureshadow models/nt/props_nature/wall_vegetation.mdl
+forcetextureshadow models/nt/props_nature/vegetation_smallclump.mdl
 forcetextureshadow models/nt/props_nature/vegetation_longclump.mdl
 forcetextureshadow models/nt/props_nature/bushhedge.mdl
+forcetextureshadow models/nt/props_nature/foliage_01.mdl
 forcetextureshadow models/nt/props_nature/foliage_02.mdl
+forcetextureshadow models/nt/props_nature/foliage_03.mdl
+forcetextureshadow models/nt/props_nature/foliage_04.mdl
 forcetextureshadow models/nt/props_nature/tree01_sg.mdl
 forcetextureshadow models/nt/props_nature/tree02_sg.mdl
 forcetextureshadow models/nt/props_nature/tree03_sg.mdl
@@ -70,6 +74,13 @@ forcetextureshadow models/nt/props_nature/tree06_sg.mdl
 forcetextureshadow models/nt/props_nature/tree07_sg.mdl
 forcetextureshadow models/nt/props_nature/tree08_sg.mdl
 forcetextureshadow models/nt/props_nature/tree09_sg.mdl
+forcetextureshadow models/nt/props_nature/tree1.mdl
+forcetextureshadow models/nt/props_nature/tree2.mdl
+forcetextureshadow models/nt/props_nature/tree3.mdl
+forcetextureshadow models/nt/props_nature/sakurasv.mdl
+forcetextureshadow models/nt/props_nature/sakura2sv.mdl
+forcetextureshadow models/nt/props_nature/sakura3sv.mdl
+forcetextureshadow models/nt/props_nature/sakura4sv.mdl
 
 forcetextureshadow models/nt/props_nature/BambooTree01_sg.mdl
 forcetextureshadow models/nt/props_nature/bambootree02_sg.mdl
