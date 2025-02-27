@@ -115,3 +115,5 @@ forcetextureshadow models/nt/props_warehouse/handrail_walkway_platform_a.mdl
 forcetextureshadow models/nt/props_warehouse/handrail_walkway_platform_b.mdl
 forcetextureshadow models/nt/props_warehouse/handrail_walkway_platform_c.mdl
 forcetextureshadow models/nt/props_warehouse/handrail_walkway_turn.mdl
+
+forcetextureshadow models/nt/props_tech/hydroliclift.mdl
