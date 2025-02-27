@@ -5,6 +5,7 @@
 	"$surfaceprop" "blockbullets"
 	"$translucent" 1
 	"$nodecal" 1
-	"%compileNodraw" 1
+	"%compilenodraw" 1
+	"%compileDetail" 1
 	"%keywords" "Tools"
 }
