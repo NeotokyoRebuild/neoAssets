@@ -1,6 +1,7 @@
 "LightmappedGeneric"
 {
 	"$basetexture" "Tools/neotoolsblockbullets"
+    	"srgb?$basetexture" "Tools/neotoolsblockbullets-dx10"
 	"$surfaceprop" "blockbullets"
 	"$translucent" 1
 	"$nodecal" 1
