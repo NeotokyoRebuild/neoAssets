@@ -128,3 +128,13 @@ forcetextureshadow models/nt/props_warehouse/handrail_walkway_platform_c.mdl
 forcetextureshadow models/nt/props_warehouse/handrail_walkway_turn.mdl
 
 forcetextureshadow models/nt/props_tech/hydroliclift.mdl
+
+forcetextureshadow models/props_wasteland/exterior_fence001a.mdl
+forcetextureshadow models/props_wasteland/exterior_fence001b.mdl
+forcetextureshadow models/props_wasteland/exterior_fence002a.mdl
+forcetextureshadow models/props_wasteland/exterior_fence002b.mdl
+forcetextureshadow models/props_wasteland/exterior_fence002c.mdl
+forcetextureshadow models/props_wasteland/exterior_fence002d.mdl
+forcetextureshadow models/props_wasteland/exterior_fence002e.mdl
+forcetextureshadow models/props_wasteland/exterior_fence003a.mdl
+forcetextureshadow models/props_wasteland/exterior_fence003b.mdl
