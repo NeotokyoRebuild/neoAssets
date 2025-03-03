@@ -1,0 +1,28 @@
+"UnlitGeneric"
+{
+	"$basetexture" "tutorial/tut_overlay_scan"
+	"$translucent" "1"
+	"$ignorez" "1"
+	"$no_fullbright" "1"
+	"$nolod" "1"
+
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar"	"$color"
+			"sineperiod"	5
+			"sinemin"	0.86,0.86,0.86
+			"sinemax"	0.99,0.99,0.99
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$baseTextureTransform"
+			"texturescrollrate" .12
+			"texturescrollangle" -90
+		}	
+	}
+}
+

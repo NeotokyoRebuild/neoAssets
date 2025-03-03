@@ -1,0 +1,58 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" 	"tutorial/tut_white2"
+	"%keywords" "neotokyo"
+	
+// Cyber Specials
+
+	"$detail"	"tutorial/tut_noisegeneral"
+	"$detailscale" 0.5
+	"$detailblendfactor" 0.2
+	"$detailframe" 0
+	
+	$zero 0
+	$threshold 0.05
+
+	$increment 0
+	$framemod 0
+	$framewrapper 0
+	
+	Proxies
+	{
+		Sine
+		{
+			sineperiod	3.8
+			sinemin		0
+			sinemax		0.2
+			timeoffset	0
+			resultVar	"$detailblendfactor"
+		}
+		UniformNoise
+		{
+			minVal				0
+			maxVal				427
+			resultVar			"$increment"
+		}
+		LessOrEqual
+		{			
+          	srcVar1 		        "$detailblendfactor"
+           	srcVar2 		        "$threshold"
+          	resultVar 				"$framemod"
+          	greaterVar				"$zero"
+        	LessEqualVar			"$increment"
+		}
+		Add
+		{
+			srcVar1				"$detailframe"
+			srcVar2				"$framemod"
+			resultVar			"$framewrapper"
+		}
+		WrapMinMax
+		{
+			srcVar1			"$framewrapper"
+			minVal			0
+			maxVal			4
+			resultVar		"$detailframe"
+		}
+	}
+}

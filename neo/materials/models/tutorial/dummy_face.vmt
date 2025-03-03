@@ -1,0 +1,79 @@
+VertexLitGeneric
+{
+	$basetexture "models/tutorial/dummy_face"
+	$nocull 1
+	$translucent 1
+	$model 1
+	
+	// These vars do not change
+	$jinrai 2
+	$nsf 3
+	
+	$zero 0
+	$one 1
+	$two 2
+	
+	// These vars will change
+	$teamnum 0
+	$frame 0
+	
+	$jintotal 0
+	$nsftotal 0
+	
+	$setteamcolour 0
+	
+	$finaltotal 0
+	
+	$isnpc 0
+
+	proxies
+	{
+		EntityTeam	// For switching the face texture
+		{
+			resultvar	"$teamnum"
+		}
+		IsNPC
+		{
+			scale 1
+			resultvar	"$isnpc"
+		}
+			LessOrEqual
+				{				
+          	    srcVar1 		        "$teamnum"
+           	    srcVar2 		        "$one"
+          	    resultVar 				"$jintotal"
+          	    greaterVar				"$one"
+        	    LessEqualVar			"$zero"
+				}
+			LessOrEqual
+				{				
+          	    srcVar1					"$teamnum"
+           	    srcVar2					"$two"
+          	    resultVar				"$nsftotal"			
+          	    greaterVar				"$one"
+        	    LessEqualVar			"$zero"
+				}
+			Add
+				{	
+          	    srcVar1					"$jintotal"
+           	    srcVar2					"$nsftotal"
+          	    resultVar				"$finaltotal"
+				}
+	        LessOrEqual
+      	        {
+          	 	srcVar1 		"$finaltotal"
+           	  	srcVar2 		"$one"
+          	 	resultVar 		"$setteamcolour"
+          	  	LessEqualVar 	"$jinrai"
+          		greaterVar 	    "$nsf"
+       	        }
+	        LessOrEqual
+      	        {
+          	 	srcVar1 		"$finaltotal"
+           	  	srcVar2 		"$zero"
+          	 	resultVar 		"$frame"
+          	  	LessEqualVar 	"$isnpc"	// 0 if not NPC, aka dead. 1 if npc
+          		greaterVar 	    "$setteamcolour"
+       	        }
+	}
+}

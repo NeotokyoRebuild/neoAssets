@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$baseTexture" 	"tutorial/tut_door_pit"
+	"%keywords" "neotokyo"
+	"$translucent" 1
+	"$surfaceprop" "no_decal"
+	"$nocull" 1
+}
