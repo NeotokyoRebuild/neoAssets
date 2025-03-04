@@ -138,3 +138,14 @@ forcetextureshadow models/props_wasteland/exterior_fence002d.mdl
 forcetextureshadow models/props_wasteland/exterior_fence002e.mdl
 forcetextureshadow models/props_wasteland/exterior_fence003a.mdl
 forcetextureshadow models/props_wasteland/exterior_fence003b.mdl
+
+forcetextureshadow models/props_foliage/tree_deciduous_card_01_skybox.mdl
+forcetextureshadow models/nt/props_skybox/tree_deciduous_card_01_skybox.mdl
+forcetextureshadow models/nt/props_skybox/crane02.mdl
+forcetextureshadow models/nt/props_skybox/skybox_cranetower.mdl
+forcetextureshadow models/nt/props_skybox/radiotower01.mdl
+forcetextureshadow models/nt/props_skybox/satdish01.mdl
+forcetextureshadow models/nt/props_skybox/satdish01b.mdl
+forcetextureshadow models/nt/props_skybox/tree1.mdl
+forcetextureshadow models/nt/props_skybox/tree2.mdl
+forcetextureshadow models/nt/props_skybox/tree3.mdl
