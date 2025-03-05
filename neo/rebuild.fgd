@@ -1,0 +1,176 @@
+@include "base.fgd"
+
+@PointClass base(PlayerClass, Angles) studio("models/editor/attacker_start.mdl") = info_player_attacker :
+	"This entity marks the start point for attackers."
+[
+	StartDisabled(choices) : "Start Disabled" : 0 =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+
+	input Enable(void) : "Turn spawnpoint on." 
+	input Disable(void) : "Turn spawnpoint off."
+	
+	output OnPlayerSpawn(void) : "Fires when a player spawns from this spawn point."
+]
+
+@PointClass base(PlayerClass, Angles) studio("models/editor/defender_start.mdl") = info_player_defender :
+	"This entity marks the start point for defenders."
+[
+	StartDisabled(choices) : "Start Disabled" : 0 =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	
+	input Enable(void) : "Turn spawnpoint on." 
+	input Disable(void) : "Turn spawnpoint off."
+	
+	output OnPlayerSpawn(void) : "Fires when a player spawns from this spawn point."
+]
+
+@PointClass base(Targetname) iconsprite("vgui/hud/star.vmt") = neo_bloom_controller : "An entity that lets you tweak bloom for your map."
+[
+	bloomamount(float) : "Bloom amount setting" : 0 : "Bloom amounts from 0.4 - 0.6 look best."
+	
+	input SetBloomScale(float) : "Set bloom amount"
+]
+
+@PointClass base(Targetname) iconsprite("vgui/hud/kill_kill.vmt") = neo_game_config : "Game Config Entity"
+[
+	GameType(choices) : "Game Type" : 0 : "Map gamemode" =
+	[
+		0 : "TDM"
+		1 : "CTG"
+		2 : "VIP"
+		3 : "DM"
+		4 : "Empty"
+		5 : "Tutorial"
+	]	
+
+	ForcedTeam(choices) : "Forced Team" : 0 : "Skip team menu and spawn as this team" =
+	[
+		0 : "Disabled"
+		1 : "Spectator"
+		2 : "Jinrai"
+		3 : "NSF"
+	]	
+	
+	ForcedClass(choices) : "Forced Class" : -1 : "Skip class menu and spawn as this class" =
+	[
+		-1 : "Disabled"
+		0 : "Recon"
+		1 : "Assault"
+		2 : "Support"
+		3 : "VIP"
+	]	
+	
+	ForcedSkin(integer) : "Forced Skin" : -1 : "-1 = Do not force skin"
+	
+	ForcedWeapon(integer) : "Forced Weapon" : -1 : "-1 = Do not force weapon"
+	
+	spawnflags(flags) =
+	[
+		         1 : "Hide Ammo" : 0
+		         2 : "Hide Compass" : 0
+		         4 : "Hide Crosshair" : 0
+		         8 : "Hide Damage Indicator" : 0
+		        16 : "Hide Friendly Markers" : 0
+		        32 : "Hide Winscreen" : 0
+		        64 : "Hide Enemy beacons in ghost" : 0
+		       128 : "Hide Ghost caps" : 0
+		       256 : "Hide Ghost marker" : 0
+		       512 : "Hide Ghost uplink" : 0
+		      1024 : "Hide Health" : 0
+		      2048 : "Hide Hints" : 0
+		      4096 : "Hide Round info" : 0
+		      8192 : "Hide WPM" : 0
+		     16384 : "Hide Scoreboard" : 0
+	]
+
+	input FireTeamWin(integer) : "Trigger round win (2 = Jinrai, 3 = NSF)"
+	input FireDMPlayerWin(void) : "Trigger round win for the activator (Deathmatch only)"
+	input FireRoundTie(void) : "Trigger round tie"
+	
+	output OnRoundEnd(void) : "Fires when a round ends"
+	output OnRoundStart(void) : "Fires when a round starts"
+]
+
+@PointClass base(Angles) sphere() sphere(Radius) iconsprite("vgui/hud/ctg/g_beacon_arrow_down.vmt") = neo_ghost_retrieval_point : "Ghost Retrieval Point"
+[
+	team(choices) : "Owning Team (int)" : 0 : "Team that can capture at this point" =
+	[
+		0 : "Attacker"
+		1 : "Defender"
+	]
+	
+	Radius(integer) : "Radius in inches (48 - 256)" : 128 : "Radius of the Ghost Retrieval Point in inches."	
+
+	output OnCap(void) : "Fires when capped here"
+]
+
+@PointClass base(Angles) studio("models/gameplay/w_ghost.mdl") = neo_ghostspawnpoint :
+	"This entity marks the start point ghosts for CTG gametypes."
+[
+
+]
+
+@FilterClass base(BaseFilter) iconsprite("editor/filter_class.vmt") = filter_activator_neoclass : "A filter that filters by the class (Recon, Assault, Support, etc) of the player who activated it."
+[
+    filterneoclass(choices) : "Player Class" : 0 : "Player class to filter against" =
+    [
+		0 : "Recon"
+		1 : "Assault"
+		2 : "Support"
+		3 : "VIP"
+    ]
+]
+
+@FilterClass base(BaseFilter) iconsprite("editor/filter_team.vmt") = filter_activator_team :
+	"A filter that filters by the team of the activator."
+[
+	filterteam(choices) : "Filter Team Number" : 2 : 
+		"The team number to filter by.  If the filter mode is Allow, only entities whose "+
+		"team number matches the given team will pass the filter. If the filter mode is Disallow, "+
+		"all entities EXCEPT those whose team number matches the given team will pass the filter." =
+	[
+		2 : "Jinrai"
+		3 : "NSF"
+	]
+]
+
+@PointClass base(BaseNPC) studio() = neo_npc_dummy : "Dummy NPC for tutorial" [
+    Health(integer) : "Health" : 100 : "Dummy health (greater than 0)"
+    Model(studio) : "Model" : "models/tutorial/dummy_small.mdl" : "Dummy model"
+    Weapon(studio) : "Weapon Model" : "" : "Optional model for dummy to hold"
+    DistortEffect(choices) : "Enable Distortion Effect" : 1 : "Toggles distortion effect on the weapon model" =
+    [
+        0 : "Disabled"
+        1 : "Enabled"
+    ]
+]
+
+@PointClass base(Targetname) iconsprite("vgui/hud/kill_shortbus.vmt") = neo_message : "Displays localised text on screen"
+[
+	sound(sound) : "Sound Effect" : "" : "When the message is shown, this sound effect will be played."
+	volume(float) : "Volume 0-10" : "10" : "Volume of the sound effect."
+
+	input ShowMessage(string) : "Show Message"
+	input HideMessage(void) : "Hide Message"
+]
+
+@PointClass base(Targetname) studio("models/weapons/w_frag_thrown.mdl") = neo_grenade_frag : "Deployed frag"
+[
+	input SetTimer(float) : "Deploy"
+]
+
+@PointClass base(Targetname) studio("models/weapons/w_smokenade_thrown.mdl") = neo_grenade_smoke : "Deployed smoke"
+[
+	input SetTimer(float) : "Deploy"
+]
+
+@PointClass base(Targetname) studio("models/weapons/w_detpack.mdl") = neo_deployed_detpack : "Deployed detpack"
+[
+	input RemoteDetonate(void) : "Explode"
+]
