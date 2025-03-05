@@ -1,0 +1,9 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" 	"tutorial/tut_water"
+	"%keywords" "neotokyo"
+	"$translucent" 1
+	"$surfaceprop" "water"
+	"$nocull" 1
+}
+

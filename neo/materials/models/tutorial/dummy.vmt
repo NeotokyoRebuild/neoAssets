@@ -1,0 +1,107 @@
+VertexLitGeneric
+{
+	$basetexture "lights/white"
+	$model 1
+	$phong 1
+	$bumpmap "lights/white"
+	
+	$color2 "[ 0 0 0 ]"
+
+	$phongexponent			20
+	$phongboost				1.0
+	$phongfresnelranges		"[0 0 0]"
+
+	// These vars do not change
+	$jinrai "[0.4 1 0.4]"
+	$nsf "[0.4 0.4 1]"
+	$dead "[0 0 0]"
+	
+	$zero 0
+	$one 1
+	$two 2
+	
+	// These vars will change
+	$teamnum 0
+	
+	$jintotal 0
+	$nsftotal 0
+	
+	$setteamcolour "[0 0 0]"
+	
+	$finaltotal 0
+
+	proxies
+	{
+		sine
+		{
+			sineperiod	0.05
+			sinemin		3
+			sinemax		5
+			timeoffset	0
+			resultvar	"$phongfresnelranges[0]"
+		}
+		sine
+		{
+			sineperiod	0.15
+			sinemin		3
+			sinemax		4
+			timeoffset	0
+			resultvar	"$phongfresnelranges[1]"
+		}
+		sine
+		{
+			sineperiod	0.1
+			sinemin		3
+			sinemax		6
+			timeoffset	0
+			resultvar	"$phongfresnelranges[2]"
+		}
+		EntityTeam	// Red if NPC, Green if Jinrai, Blue if NSF, Black if dead. This can probably be simplified, but I have a headache!
+		{
+			resultvar	"$teamnum"
+		}
+			LessOrEqual
+				{				
+          	    srcVar1 		        "$teamnum"
+           	    srcVar2 		        "$one"
+          	    resultVar 				"$jintotal"
+          	    greaterVar				"$one"
+        	    LessEqualVar			"$zero"
+				}
+			LessOrEqual
+				{				
+          	    srcVar1					"$teamnum"
+           	    srcVar2					"$two"
+          	    resultVar				"$nsftotal"			
+          	    greaterVar				"$one"
+        	    LessEqualVar			"$zero"
+				}
+			Add
+				{	
+          	    srcVar1					"$jintotal"
+           	    srcVar2					"$nsftotal"
+          	    resultVar				"$finaltotal"
+				}
+	        LessOrEqual
+      	        {
+          	 	srcVar1 		"$finaltotal"
+           	  	srcVar2 		"$one"
+          	 	resultVar 		"$setteamcolour"
+          	  	LessEqualVar 	"$jinrai"
+          		greaterVar 	    "$nsf"
+       	        }
+	        LessOrEqual
+      	        {
+          	 	srcVar1 		"$finaltotal"
+           	  	srcVar2 		"$zero"
+          	 	resultVar 		"$color2"
+          	  	LessEqualVar 	"$dead"
+          		greaterVar 	    "$setteamcolour"
+       	        }
+		IsNPC
+		{
+			scale 1
+			resultvar	"$color2[0]"
+		}
+	}
+}
