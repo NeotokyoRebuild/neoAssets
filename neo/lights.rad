@@ -139,6 +139,8 @@ forcetextureshadow models/props_wasteland/exterior_fence002e.mdl
 forcetextureshadow models/props_wasteland/exterior_fence003a.mdl
 forcetextureshadow models/props_wasteland/exterior_fence003b.mdl
 
+forcetextureshadow models/props_foliage/ivy_01.mdl
+
 forcetextureshadow models/props_foliage/tree_deciduous_card_01_skybox.mdl
 forcetextureshadow models/nt/props_skybox/tree_deciduous_card_01_skybox.mdl
 forcetextureshadow models/nt/props_skybox/crane02.mdl
