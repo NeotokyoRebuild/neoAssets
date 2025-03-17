@@ -95,6 +95,7 @@
 	
 	output OnRoundEnd(void) : "Fires when a round ends"
 	output OnRoundStart(void) : "Fires when a round starts"
+	output OnCompetitive(void) : "Fires when competitive mode is enabled"
 ]
 
 @PointClass base(Angles) sphere() sphere(Radius) iconsprite("vgui/hud/ctg/g_beacon_arrow_down.vmt") = neo_ghost_retrieval_point : "Ghost Retrieval Point"
