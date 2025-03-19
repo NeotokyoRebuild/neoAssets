@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "wall\windowtrim1blue_ivy_illum1"
+	"$surfaceprop" "glass"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$selfillum" 1
+}

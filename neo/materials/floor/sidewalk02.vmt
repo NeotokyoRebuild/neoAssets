@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "floor\sidewalk02"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "floor\sidewalk02_normal"
+        "$envmap" "env_cubemap"
+    	"$envmaptint" "[0.01 0.01 0.01]"
+	"%keywords" "neotokyo"
+}

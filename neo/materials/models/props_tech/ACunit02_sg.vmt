@@ -1,0 +1,19 @@
+"vertexlitGeneric"
+ {
+  	"$basetexture" "models\props_tech\ACunit02_sg"
+  	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_tech\ACunit02_sg_spec"
+	"$envmaptint" "[0.14 0.14 0.14]"
+	"$envmapcontrast" .2
+	"%keywords" "neotokyo"
+  	"Proxies" 
+       		{ 
+         	"AnimatedTexture" 
+         	{ 
+           	"animatedTextureVar" "$basetexture" 
+           	"animatedTextureFrameNumVar" "$frame" 
+            	"animatedTextureFrameRate" "15" 
+         	}
+    		} 
+ }

@@ -1,0 +1,10 @@
+LightmappedGeneric
+{
+	"$basetexture"	"door\casudoor02_ivy"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "door\casudoor01_ref_ivy"
+    "$envmaptint" "[0.2 0.2 0.2]"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+
+}

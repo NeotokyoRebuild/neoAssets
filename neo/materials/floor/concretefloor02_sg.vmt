@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "floor\concretefloor02_sg"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "floor\concretefloor01_sg_normal"
+	"$envmap" "env_cubemap"
+	//"$envmapmask" "floor\concretefloor01_sg_mask"
+	"$envmaptint" "[0.05 0.05 0.05]"
+	"$normalmapalphaenvmapmask" 1
+	"$detail" "wall/detailconcrete001a"
+	"$detailscale" 3
+	"%keywords" "neotokyo"
+}

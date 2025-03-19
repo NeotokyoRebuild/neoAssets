@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_building\frontage128_alpha"
+	"$surfaceprop" "glass"
+	"$bumpmap" "\models\props_building\frontage128_alpha_normal"
+        "$envmap" "env_cubemap"
+        "$envmaptint" "[0.12 0.12 0.12]"
+	"$normalmapalphaenvmapmask" 1
+	"$model" 1
+	"$selfillum" 1
+}

@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	
+	"$baseTexture" "models\props_street\parkbench_a"
+	"$surfaceprop" "wood"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.03 0.03 0.03]"
+	"$envmapcontrast" .5 
+}

@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_construction\concrete_broken02"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+        "$bumpmap" "\models\props_construction\concrete_broken02_normal"
+        "$envmaptint" "[0.06 0.06 0.06]"
+}

@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_street\rabbitsign"
+	"$surfaceprop" "computer"
+        "$envmap" "env_cubemap"
+        "$normalmapalphaenvmapmask" 1
+        "$bumpmap" "\models\props_street\rabbitsign_normal"
+        "$envmaptint" "[0.17 0.17 0.17]"
+	"$envmapcontrast" "1"
+	"$selfillum" 1
+}

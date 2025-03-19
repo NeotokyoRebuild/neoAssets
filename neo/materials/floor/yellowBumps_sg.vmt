@@ -1,0 +1,10 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "floor/yellowBumps_sg"
+	"$surfaceprop" "rubber"
+	"$bumpmap" "floor/yellowBumps_sg_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo" 
+}

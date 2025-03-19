@@ -12,4 +12,5 @@ particles_manifest
 	file	"particles/vortigaunt_fx.pcf"
 	file	"particles/water_impact.pcf"
 	file	"particles/ntr_muzzle_flash.pcf"
+	file	"particles/ntr_fire.pcf"
 }

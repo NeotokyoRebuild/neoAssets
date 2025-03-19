@@ -1,0 +1,12 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models/props_warehouse/shippingcontainer01_B"
+	"$bumpmap" "models/props_warehouse/shippingcontainer01_B_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[0.10 0.10 0.10]"
+	"$bumpscale" 1.50
+	"$surfaceprop" "metalpanel"		
+}

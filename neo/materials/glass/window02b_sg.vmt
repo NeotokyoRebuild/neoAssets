@@ -1,0 +1,10 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "glass/window02b_sg"
+	"$surfaceprop" "glass" 
+      	"$envmapmask" "glass/window02_sg_spec"
+      	"$envmap" "env_cubemap"
+      	"$envmaptint" "[0.14 0.14 0.14]"
+      	"$translucent" 1
+      	"%keywords" "neotokyo"
+}

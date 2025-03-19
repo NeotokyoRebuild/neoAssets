@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_rural\marblefloor04_sg"
+	"$surfaceprop" "concrete"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.12 0.12 0.12]"
+	"$envmapcontrast" "1"
+}

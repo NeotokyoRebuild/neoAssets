@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "signs\twoway_traffic"
+	"$surfaceprop" "metalpanel"
+	"$bumpmap" "signs\twoway_traffic_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo"
+}

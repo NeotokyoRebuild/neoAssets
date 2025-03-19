@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_rural\Tarp01_sg"
+	"$surfaceprop" "plastic"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.03 0.03 0.03]"
+	"$envmapcontrast" .1
+}

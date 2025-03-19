@@ -1,0 +1,11 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "metal/metal_trim01"
+	"$surfaceprop" "metal"
+	"$bumpmap" "metal/metal_trim01_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$envmapcontrast" .1
+	//"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

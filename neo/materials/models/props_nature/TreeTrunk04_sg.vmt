@@ -1,0 +1,5 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_nature\TreeTrunk04_sg"
+	"$surfaceprop" "wood"
+}

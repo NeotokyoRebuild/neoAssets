@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\cabinet_integrated"
+	"$surfaceprop" "metalvent"
+	"$bumpmap" "models\props_office\cabinet_integrated_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.19 0.19 0.19]"
+	"$envmapcontrast" .7
+	"$normalmapalphaenvmapmask" 1
+	"$selfillum" 1
+}

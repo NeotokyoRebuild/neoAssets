@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_tech\mini_roundcone_radar"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models\props_tech\mini_roundcone_radar_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.09 0.09 0.09]"
+	"$envmapcontrast" .1
+	"$normalmapalphaenvmapmask" 1
+}

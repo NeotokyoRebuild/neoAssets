@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_doors\temple_door"
+	"$surfaceprop" "wood"
+	"$bumpmap" "\models\props_doors\temple_door_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.09 0.09 0.09]"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 0.8
+}

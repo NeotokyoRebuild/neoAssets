@@ -1,0 +1,19 @@
+"UnlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "skybox/iyashift"
+	"$nofog" 1
+	$ignorez 1
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar"	"$color"
+			"sineperiod"	22
+			"sinemin"	1.19,1.08,0.98
+			"sinemax"	0.72,0.72,0.74
+		}
+	}
+}
+

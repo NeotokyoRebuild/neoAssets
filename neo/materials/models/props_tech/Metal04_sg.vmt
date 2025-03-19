@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+ {
+  	"$basetexture" "models\props_tech\Metal04_sg"
+  	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_tech\Metal04_sg_mask"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$envmapcontrast" 0
+	"%keywords" "neotokyo"
+ }

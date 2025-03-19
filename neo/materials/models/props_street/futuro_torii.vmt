@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	
+	"$baseTexture" "models\props_street\futuro_torii"
+	"$surfaceprop" "plastic"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.09 0.09 0.09]"
+	"$envmapcontrast" .5 
+}

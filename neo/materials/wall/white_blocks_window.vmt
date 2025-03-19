@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\white_blocks_window"
+	"$surfaceprop" "tile"
+	"$bumpmap" "wall\white_blocks_window_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

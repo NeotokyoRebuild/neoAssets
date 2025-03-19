@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_vehicles\scooter01b"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+        "$normalmapalphaenvmapmask" 1
+        "$bumpmap" "\models\props_vehicles\scooter01_normal"
+        "$envmaptint" "[0.14 0.14 0.14]"
+}

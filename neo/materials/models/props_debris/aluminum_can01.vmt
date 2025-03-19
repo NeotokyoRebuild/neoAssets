@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_debris\aluminum_can01"
+	"$surfaceprop" "popcan"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.09 0.09 0.09]"
+	"$envmapcontrast" .5 
+}

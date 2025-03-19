@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_tech\wallunit_triangle"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models\props_tech\wallunit_triangle_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.12 0.12 0.12]"
+	"$envmapcontrast" .1
+	"$normalmapalphaenvmapmask" 1
+}

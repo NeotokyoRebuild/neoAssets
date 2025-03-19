@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "floor\gravelRoof"
+	"$surfaceprop" "gravel"
+	//"$envmap" "env_cubemap"
+	//"$envmapmask" "floor\gravelRoof"
+	//"$envmaptint" "[0.09 0.09 0.09]"
+	//"$envmapcontrast" .1
+	//"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

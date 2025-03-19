@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_street\kuze_streetkiosk"
+	"$surfaceprop" "metal"
+        "$envmap" "env_cubemap"
+        "$normalmapalphaenvmapmask" 1
+        "$bumpmap" "\models\props_street\kuze_streetkiosk_normal"
+        "$envmaptint" "[0.10 0.10 0.10]"
+	"$envmapcontrast" "1"
+	"$selfillum" 1
+}

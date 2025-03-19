@@ -1,0 +1,9 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "wall/facwallbottom_G_ivy"
+	"$surfaceprop" "metal"
+	"$bumpmap" "wall\facwallbottom_N_ivy"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo" 
+}

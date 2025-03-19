@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "door\metaldoubledoors01_dj"
+	"$surfaceprop" "metalpanel"
+	"%keywords" "neotokyo"
+	"$bumpmap" "door\metaldoubledoorsnormal01_dj"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+}

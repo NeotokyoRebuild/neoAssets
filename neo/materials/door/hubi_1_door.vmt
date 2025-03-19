@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "door\hubi_1_door"
+	"$surfaceprop" "glass"
+	"%keywords" "neotokyo"
+	"$envmapmask" "door\hubi_1_door_mask"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"$selfillum" "1"
+}

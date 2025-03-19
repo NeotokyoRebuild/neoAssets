@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\player\vip\VIP_lower"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmaptint" "[.07 .07 .07]"
+	//"$envmapcontrast" 1
+	"$surfaceprop" "metal"
+	"$bumpmap" "models\player\vip\VIP_lower_normal"
+}

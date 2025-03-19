@@ -1,0 +1,8 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "wall\wall_stucco02_sg"
+	"$surfaceprop" "concrete"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.01 0.01 0.01]"
+	"%keywords" "neotokyo" 
+}

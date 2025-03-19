@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_skybox\skybox_apartment02"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_skybox\skybox_apartment02_mask"
+	"$envmaptint" "[0.05 0.05 0.05]"
+	"$envmapcontrast" .01
+}

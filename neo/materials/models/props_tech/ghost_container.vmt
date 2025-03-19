@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$model" 1
+	"$basetexture" "models\props_tech\ghost_container"
+	"$surfaceprop" "solidmetal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.06 0.06 0.06]"
+}

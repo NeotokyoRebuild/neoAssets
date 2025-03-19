@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "glass/greenglass02_ivy"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "glass"
+	"%keywords" "neotokyo"
+	"$envmapmask" "glass/greenglassmask_ivy"
+	"$translucent" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[0.10 0.10 0.16]"
+}

@@ -1,0 +1,12 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "metal\Galvanizedvent1_ivy"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[0.12 0.12 0.12]"
+}

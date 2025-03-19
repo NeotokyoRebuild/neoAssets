@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	
+	"$baseTexture" "models\props_street\nBarrier"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.05 0.05 0.05]"
+	"$envmapcontrast" .8 
+}

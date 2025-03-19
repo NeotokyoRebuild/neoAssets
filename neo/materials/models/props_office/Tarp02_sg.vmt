@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\Tarp02_sg"
+	"$surfaceprop" "carpet"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.03 0.03 0.03]"
+	"$envmapcontrast" .1
+}

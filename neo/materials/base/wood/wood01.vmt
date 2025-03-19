@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "base\wood\wood01"
+	"$surfaceprop" "wood"
+	"$bumpmap" "base\wood\wood01_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[0.16 0.14 0.12]"
+	"%keywords" "neotokyo"
+}
