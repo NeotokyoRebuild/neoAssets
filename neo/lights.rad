@@ -117,6 +117,9 @@ forcetextureshadow models/nt/props_fence/fence_squarelink_4long.mdl
 forcetextureshadow models/nt/props_fence/fence_squarelink_quads.mdl
 forcetextureshadow models/nt/props_fence/fence_squarelink_quads_long.mdl
 
+forcetextureshadow models/nt/props_street/blockade1.mdl
+forcetextureshadow models/nt/props_street/blockade2.mdl
+
 forcetextureshadow models/nt/props_warehouse/metal_techbeam_grate.mdl
 forcetextureshadow models/nt/props_warehouse/handrail_walkway_128.mdl
 forcetextureshadow models/nt/props_warehouse/handrail_walkway_256.mdl
