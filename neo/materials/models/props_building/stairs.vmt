@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_building\stairs"
+	"$surfaceprop" "metal"
+        "$envmap" "env_cubemap"
+        "$model" 1
+        "$envmapmask" "\models\props_building\stairs_spec"
+        "$envmaptint" "[0.12 0.12 0.12]"
+}

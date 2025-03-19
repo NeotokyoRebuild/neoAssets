@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\elevator_interior_lg"
+	"$surfaceprop" "plastic"
+	"$bumpmap" "wall\elevator_interior_lg_normal"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+    	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_warehouse\freightElevator"
+	"$surfaceprop" "Metal"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_warehouse\freightElevator_spec"
+	"$envmaptint" "[0.10 0.10 0.10]"
+	"$envmapcontrast" .3
+	"$alphatest" 1
+}

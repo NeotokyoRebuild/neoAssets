@@ -1,0 +1,15 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_vehicles\attack_helicopter_mat2b"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models\props_vehicles\attack_helicopter_mat2_normal" 
+	//"$phong" "1"
+	//"$phongexponent" "6"
+	//"$phongboost" "1"	
+	//"$phongfresnelranges"	"[1 2 6]"
+	//"$phongexponenttexture" "models\props_vehicles\attack_helicopter_mat1_exp"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.10 0.10 0.10]"
+    	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" .5
+}

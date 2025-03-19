@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_building\wood_divider"
+	"$surfaceprop" "wood"
+    	"$bumpmap" "models\props_building\wood_divider_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.09 0.09 0.09]"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 0.8
+	
+}

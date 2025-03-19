@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	
+	"$baseTexture" "models\props_street\BusStop_kiosk01_sg"
+	"$surfaceprop" "metal"
+	"$selfillum" 1
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_street\BusStop_kiosk01_sg_mask"
+	"$envmaptint" "[0.19 0.19 0.19]"
+	"$envmapcontrast" 1
+}

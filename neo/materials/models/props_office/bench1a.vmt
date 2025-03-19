@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{ 
+	"$basetexture" "models/props_office/bench1a.vmt" 
+ 	"$surfaceprop" "wood"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.03 0.03 0.03]"
+}

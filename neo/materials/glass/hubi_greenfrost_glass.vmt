@@ -1,0 +1,10 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "glass/hubi_greenfrost_glass"
+	"$surfaceprop" "glass" 
+      	"$envmapmask" "glass/hubi_greenfrost_glass_mask"
+     	 "$envmap" "env_cubemap"
+      	"$envmaptint" "[0.19 0.19 0.19]"
+	"$selfillum" "1"
+      	"%keywords" "neotokyo"
+}

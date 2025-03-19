@@ -1,0 +1,10 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "wall\building06_dj"
+	"$surfaceprop" "concrete"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$selfillum" 1
+	
+}

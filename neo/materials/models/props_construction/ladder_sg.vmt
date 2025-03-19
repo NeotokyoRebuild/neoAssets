@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_construction\ladder_sg"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+        "$bumpmap" "\models\props_construction\ladder_sg_normal"
+        "$envmaptint" "[0.19 0.19 0.19]"
+}

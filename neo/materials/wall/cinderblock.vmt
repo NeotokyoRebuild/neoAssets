@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\cinderblock"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "wall\cinderblock_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.01 0.01 0.01]"
+	"%keywords" "neotokyo"
+}

@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\rightwallsga_lg"
+	"$surfaceprop" "plaster"
+	"$bumpmap" "wall\rightwallsga_lg_normal"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.06 0.06 0.06]"
+	"$envmapcontrast" .7
+    	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

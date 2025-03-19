@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_vehicles\RenaultRigWindow01_sg"
+	"$surfaceprop" "glass"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.14 0.14 0.14]"
+	"$envmapcontrast" 1
+}

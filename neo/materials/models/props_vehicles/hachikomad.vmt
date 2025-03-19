@@ -1,0 +1,12 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_vehicles\hachikomad"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models\props_vehicles\hachikoma_normal" 
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.20 0.20 0.20]"
+	"$envmapcontrast" .5
+	"$translucent" 1
+	//"$alphatest" 1
+	//"$nolod" 1
+}

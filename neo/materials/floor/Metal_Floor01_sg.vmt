@@ -1,0 +1,10 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "floor/Metal_Floor01_sg"
+	"$surfaceprop" "metal"
+	"$bumpmap" "floor/Metal_Floor01_sg_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+    	"$envmaptint" "[0.10 0.10 0.10]"
+	"%keywords" "neotokyo" 
+}

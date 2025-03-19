@@ -1,0 +1,9 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "road/road1c"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "road\road1c_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo" 
+}

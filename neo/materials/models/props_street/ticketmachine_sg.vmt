@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{ 
+	"$baseTexture" "models\props_street\ticketmachine_sg"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[0.12 0.12 0.12]"
+}

@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\ruffplasterwall2_ivy"
+	"$surfaceprop" "plaster"
+	"$bumpmap" "wall\ruffplasterwallnormal1_ivy"
+	"%keywords" "neotokyo"
+}

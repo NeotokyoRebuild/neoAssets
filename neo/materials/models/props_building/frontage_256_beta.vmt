@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_building\frontage_256_beta"
+	"$surfaceprop" "glass"
+        "$envmap" "env_cubemap"
+	"$envmapmask" "\models\props_building\frontage_256_beta_mask"
+        "$envmaptint" "[0.12 0.12 0.12]"
+}

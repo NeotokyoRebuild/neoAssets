@@ -1,0 +1,12 @@
+"vertexlitGeneric"
+{
+	
+	"$baseTexture" "models\props_street\streetlamp_squarea"
+	"$surfaceprop" "metalvent"
+	"$bumpmap" "models\props_street\streetlamp_square_normal"
+   	"$envmap" "env_cubemap"
+   	"$envmaptint" "[0.10 0.10 0.10]"
+   	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$selfillum" 1
+}

@@ -1,0 +1,11 @@
+"WorldVertexTransition"
+{
+	"$baseTexture" "floor/concdebris_sg"
+	"$basetexture2" "base/concrete/concrete02"
+	"$surfaceprop" "cloth"
+	"$bumpmap" "floor/concdebris_sg_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo" 
+}

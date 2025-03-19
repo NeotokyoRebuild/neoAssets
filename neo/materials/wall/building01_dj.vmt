@@ -1,0 +1,9 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "wall/building01_dj"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo" 
+	"$envmapmask" "wall/subwall3_mask_dj"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+}

@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_fence\metal_black"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.09 0.09 0.09]"
+	"$envmapcontrast" .1
+}

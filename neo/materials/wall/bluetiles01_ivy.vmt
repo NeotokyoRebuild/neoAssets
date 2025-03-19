@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "wall\bluetiles01_ivy"
+	"$surfaceprop" "tile"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+  	"$envmaptint" "[0.03 0.03 0.03]"
+	"$bumpmap" "wall\asortedtilenormal_ivy"
+}

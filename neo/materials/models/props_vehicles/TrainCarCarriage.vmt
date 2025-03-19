@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_vehicles\TrainCarCarriage"
+	"$basealphaenvmapmask" 1
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.10 0.10 0.10]"
+	"$envmapcontrast" 1
+}

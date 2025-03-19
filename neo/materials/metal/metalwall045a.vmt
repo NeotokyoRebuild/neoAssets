@@ -1,0 +1,13 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall045a"
+	"%keywords" "neotokyo"
+	"$bumpmap" "Metal/metalwall045a_normal"
+	"$surfaceprop" "metalvent"
+	"$envmaptint" "[0.05 0.05 0.05]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" .25
+}

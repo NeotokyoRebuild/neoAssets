@@ -1,0 +1,10 @@
+LightmappedGeneric
+{
+	"$basetexture"	"door\ddoors01_ivy"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "door\door_metalBlue_normal"
+	"$normalmapalphaenvmapmask" "1"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+	"$envmaptint" "[0.5 0.5 0.5]"
+}

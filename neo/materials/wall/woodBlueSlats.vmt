@@ -1,0 +1,13 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "wall/woodBlueSlats"
+	"$surfaceprop" "wood"
+	//"$bumpmap" "wall\woodOrange_normal"
+	$translucent 1
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmap" "env_cubemap"
+	//"$envmapsaturation" 1
+	//"$envmapcontrast" 1
+    	//"$envmaptint" "[0.01 0.01 0.01]"
+	"%keywords" "neotokyo" 
+}

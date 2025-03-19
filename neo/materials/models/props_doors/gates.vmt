@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{ 
+"$basetexture" "models/props_doors/gates" 
+"$surfaceprop" "metal"
+"$envmap" "env_cubemap"
+"$envmapmask" "models\props_doors\gates_spec"
+"$envmaptint" "[0.14 0.14 0.14]"
+}

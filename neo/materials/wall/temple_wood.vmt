@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\temple_wood"
+	"$surfaceprop" "wood"
+	"$bumpmap" "wall\temple_wood_normal"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo"
+}

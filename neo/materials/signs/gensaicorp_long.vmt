@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "signs\gensaicorp_long"
+	"$surfaceprop" "metalpanel"
+	"$bumpmap" "signs\gensaicorp_long_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.03 0.03 0.03]"
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

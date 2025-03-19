@@ -1,0 +1,13 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "road\snowroad01_ivy"
+	"$surfaceprop" "concrete"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "road\snowroad01normal_ivy"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[0.06 0.06 0.06]"
+}

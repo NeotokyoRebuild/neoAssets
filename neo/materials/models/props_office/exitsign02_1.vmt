@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{ 
+	"$basetexture" "models/props_office/exitsign02_1.vmt" 
+ 	"$surfaceprop" "metalvent"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$selfillum" "1"
+}

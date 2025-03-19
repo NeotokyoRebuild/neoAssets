@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "floor\metalfloortile01_dj"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "floor\metalfloortile01normal_dj"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[0.12 0.12 0.12]"
+}

@@ -1,0 +1,11 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "floor/serverfloor_4check_dj"
+	"$surfaceprop" "default"
+	"$bumpmap" "floor/serverfloor_0check_dj_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.03 0.03 0.03]"
+	"$envmapcontrast" .5
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo" 
+}

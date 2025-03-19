@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "door\entrance_modern1"
+	"$surfaceprop" "glass"
+	"$bumpmap" "door\entrance_modern1_normal"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.05 0.05 0.05]"
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+	
+}

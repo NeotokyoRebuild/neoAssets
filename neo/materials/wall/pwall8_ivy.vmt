@@ -1,0 +1,13 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "wall\pwall8_ivy"
+	"$surfaceprop" "concrete"
+	"%keywords" "neotokyo"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "wall\pwall8normal_ivy"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[0.17 0.17 0.17]"
+}

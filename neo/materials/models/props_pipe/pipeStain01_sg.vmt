@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_pipe\pipeStain01_sg"
+	"$surfaceprop" "plastic"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_pipe\plasticPipe01_spec_sg"
+	"$envmaptint" "[0.09 0.09 0.09]"
+	"$envmapcontrast" .1
+}

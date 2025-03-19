@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_warehouse\container_scaled3"
+	"$surfaceprop" "metalpanel"
+	"$bumpmap" "models\props_warehouse\container_scaled_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.02 0.02 0.02]"
+}

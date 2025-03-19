@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_nature\rock02_sg"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.01 0.01 0.01]"
+	"$envmapcontrast" 1
+	"$surfaceprop" "rock"
+	//"$bumpmap" "models\props_nature\rock02_sg"
+}

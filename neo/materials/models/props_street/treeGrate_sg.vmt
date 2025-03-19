@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	
+	"$baseTexture" "models\props_street\treeGrate_sg"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models\props_street\treeGrate_sg_normal"
+   	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+   	"$envmaptint" "[0.03 0.03 0.03]"
+	"$envmapcontrast" 0.5
+}

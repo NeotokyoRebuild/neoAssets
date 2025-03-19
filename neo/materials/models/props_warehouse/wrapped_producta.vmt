@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_warehouse\wrapped_producta"
+	"$surfaceprop" "plastic_barrel"
+        "$bumpmap" "models\props_warehouse\wrapped_product_normal"
+        "$envmap" "env_cubemap"
+        "$normalmapalphaenvmapmask" 1
+        "$envmaptint" "[0.14 0.14 0.14]"
+	"$envmapcontrast" ".7"
+}

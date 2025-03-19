@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\water_cooler_onwall"
+	"$surfaceprop" "wood"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_office\water_cooler_onwall_mask"
+	"$envmaptint" "[0.02 0.02 0.02]"
+	"$envmapcontrast" .05
+}

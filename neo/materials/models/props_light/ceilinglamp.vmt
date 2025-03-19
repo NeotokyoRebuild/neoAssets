@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_light\ceilinglamp"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$envmapcontrast" .1
+}

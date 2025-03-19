@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\water_cooler_squared"
+	"$surfaceprop" "plastic_barrel"
+	"$bumpmap" "models\props_office\water_cooler_squared_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.19 0.19 0.19]"
+	"$normalmapalphaenvmapmask" 1
+}

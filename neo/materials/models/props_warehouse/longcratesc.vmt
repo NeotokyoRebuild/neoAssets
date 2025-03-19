@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_warehouse\longcratesc"
+	"$surfaceprop" "metal"
+	"$envmapmask" "models\props_warehouse\longcrates_mask"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.03 0.03 0.03]"
+	"$envmapcontrast" .5 
+}

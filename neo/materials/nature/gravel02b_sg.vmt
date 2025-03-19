@@ -1,0 +1,12 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "nature/gravel02b_sg"
+	"$translucent" 1
+	"$surfaceprop" "gravel"
+	"$bumpmap" "nature/gravel02b_sg_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.20 0.20 0.20]"
+	"$envmapcontrast" 0
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

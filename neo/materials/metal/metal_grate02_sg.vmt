@@ -1,0 +1,9 @@
+"lightmappedGeneric"
+{
+	"$baseTexture"  "metal/metal_grate02_sg"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.03 0.03 0.03]"
+	"$translucent" 1
+	"%keywords" "neotokyo" 
+}

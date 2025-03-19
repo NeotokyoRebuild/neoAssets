@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{ 
+"$basetexture" "models/comm" 
+"$envmap" "env_cubemap"
+"$normalmapalphaenvmapmask" 1
+ $surfaceprop "metal"
+"$bumpmap" "models/comm_NORMAL"
+"$envmaptint" "[0.10 0.10 0.10]"
+}

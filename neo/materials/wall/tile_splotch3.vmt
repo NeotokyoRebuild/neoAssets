@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\tile_splotch3"
+	"$surfaceprop" "tile"
+	"$bumpmap" "wall\tile_splotch_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo"
+}

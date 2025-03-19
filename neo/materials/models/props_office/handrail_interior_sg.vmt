@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\handrail_interior_sg"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_office\handrail_interior_spec"
+	//"$envmaptint" "[0.09 0.09 0.09]"
+	//"$envmapcontrast" .01
+}

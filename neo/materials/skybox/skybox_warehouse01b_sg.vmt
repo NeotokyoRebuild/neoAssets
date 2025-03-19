@@ -1,0 +1,9 @@
+"LightMappedGeneric"
+ {
+  	"$basetexture" "skybox\skybox_warehouse01b_sg"
+	"$surfaceprop" "default_silent"
+	"$envmapmask" "skybox\skybox_warehouse01_sg_mask"
+      	"$envmap" "env_cubemap"
+      	"$envmaptint" "[0.06 0.06 0.06]"
+	"%keywords" "neotokyo"
+ }

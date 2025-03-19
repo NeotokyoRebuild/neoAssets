@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_building\shopskinc"
+	"$surfaceprop" "glass"
+        "$envmap" "env_cubemap"
+        "$model" 1
+        "$envmapmask" "\models\props_building\shopskin_mask"
+        "$envmaptint" "[0.12 0.12 0.12]"
+	"$selfillum" 1
+}

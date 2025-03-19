@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_warehouse\fuelTank"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "models\props_warehouse\fuelTank_normal"
+	"$envmaptint" "[0.06 0.06 0.06]"
+	"$envmapcontrast" .1
+	"$normalmapalphaenvmapmask" 1
+}

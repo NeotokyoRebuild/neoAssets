@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_warehouse\Metal05_sg"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_warehouse\Metal05_spec_sg"
+	"$envmaptint" "[0.09 0.09 0.09]"
+	"$envmapcontrast" .1
+}

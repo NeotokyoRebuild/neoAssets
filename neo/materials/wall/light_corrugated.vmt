@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "wall\light_corrugated"
+	"$surfaceprop" "metalpanel"
+	"$bumpmap" "wall\light_corrugated_normal"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.02 0.02 0.02]"
+	"%keywords" "neotokyo"
+}

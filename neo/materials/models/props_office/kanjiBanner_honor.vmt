@@ -1,0 +1,9 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\kanjiBanner_honor"
+	"$surfaceprop" "carpet"
+	"$bumpmap" "models\props_office\kanjiBanner_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.02 0.02 0.02]"
+	"$envmapcontrast" 1
+}

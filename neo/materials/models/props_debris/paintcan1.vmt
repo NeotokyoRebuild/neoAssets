@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_debris\paintcan1"
+	"$surfaceprop" "metal"
+    	"$bumpmap" "models\props_debris\paintcan_normal"
+    	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.05 0.05 0.05]"
+    	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 0.5 
+}

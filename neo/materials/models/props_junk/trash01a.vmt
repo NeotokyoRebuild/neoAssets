@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_junk/trash01a"
+	"$surfaceprop" "dirt"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "Models/props_junk/trash01a_mask"
+	"$envmaptint" "[0.12 0.12 0.12]"
+	"$alphatest" 1
+}
+
+

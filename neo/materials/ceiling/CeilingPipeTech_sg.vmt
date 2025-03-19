@@ -1,0 +1,9 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "ceiling/CeilingPipeTech_sg"
+	"$surfaceprop" "metal"
+	//"$bumpmap" "ceiling/CeilingPipeTech_sg"
+	"$envmap" "env_cubemap"
+    	"$envmaptint" "[0.01 0.01 0.01]"
+	"%keywords" "neotokyo" 
+}
