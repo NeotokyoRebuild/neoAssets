@@ -1,4 +1,5 @@
 @include "base.fgd"
+@include "halflife2.fgd"
 
 @PointClass base(PlayerClass, Angles) studio("models/editor/attacker_start.mdl") = info_player_attacker :
 	"This entity marks the start point for attackers."
@@ -174,4 +175,14 @@
 @PointClass base(Targetname) studio("models/weapons/w_detpack.mdl") = neo_deployed_detpack : "Deployed detpack"
 [
 	input RemoteDetonate(void) : "Explode"
+]
+
+@PointClass base(Targetname, Parentname, Angles) = env_muzzleflash : "Muzzle Flash" 
+[
+	parentattachment(string) : "Parent Attachment" : "" : "The name of an attachment on the parent to hierarchically attach to."
+	scale(float) : "Scale" : "1" : "Size of the muzzle flash."
+	loop(boolean) : "Loop" : "0" : "Loop this effect?"
+	
+	input Fire(void) : "Fires the effect once."
+	input Stop(void) : "Stops the effect when looping."
 ]
