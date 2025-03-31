@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "decals/misc/htlogo1"
+	"$decal" 1
+	"$decalscale" 0.25
+	"%keywords" "neotokyo"
+	"$translucent" 1
+}
