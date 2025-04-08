@@ -49,9 +49,9 @@
 		5 : "Tutorial"
 	]	
 
-	ForcedTeam(choices) : "Forced Team" : 0 : "Skip team menu and spawn as this team" =
+	ForcedTeam(choices) : "Forced Team" : -1 : "Skip team menu and spawn as this team" =
 	[
-		0 : "Disabled"
+		-1 : "Disabled"
 		1 : "Spectator"
 		2 : "Jinrai"
 		3 : "NSF"
