@@ -1,4 +1,5 @@
 @include "base.fgd"
+@include "halflife2.fgd"
 
 @PointClass base(PlayerClass, Angles) studio("models/editor/attacker_start.mdl") = info_player_attacker :
 	"This entity marks the start point for attackers."
@@ -49,9 +50,9 @@
 		5 : "Tutorial"
 	]	
 
-	ForcedTeam(choices) : "Forced Team" : 0 : "Skip team menu and spawn as this team" =
+	ForcedTeam(choices) : "Forced Team" : -1 : "Skip team menu and spawn as this team" =
 	[
-		0 : "Disabled"
+		-1 : "Disabled"
 		1 : "Spectator"
 		2 : "Jinrai"
 		3 : "NSF"
@@ -177,7 +178,7 @@
 ]
 
 @PointClass base(Targetname, Parentname, Angles, EnableDisable) studioprop("models/editor/camera.mdl") frustum(fov,0,maxviewdistance,helpercolour,-1) sphere(deadzone) = neo_npc_targetsystem : 
-	"Targeting system for my firstborn"
+	"Targeting system that requires direct LOS"
 [
 	fov(float)					: "FOV" : "90" : "Field of view"
 	topclip(float)				: "Top view clip" : "60" : "How far to clip the view frustum from the top"
@@ -188,8 +189,7 @@
 	
 	helpercolour(color255)	readonly	: "Helper colour (Editor only)" : "0 0 0" : "Editor only"
 	filtername(filterclass)		: "Filter to use" : "" : "Optional - Player must match the filter to be detected."
-
-	
+  
 	damagesource(target_name_or_class)	: "Damage source" : "" : "Where you want the damage to come from. Leave empty to disable attacking"
 	damage(float)				: "Damage amount" : "10" : "Damage delt per hit"
 	firerate(float)				: "Rate of fire" : "10" : "Shots fired per second (max 20 probably)"
@@ -201,4 +201,14 @@
 	output OnMiddleIgnore(void)
 	output OnExit(void)
 	output OnExitMiddle(void)
+]
+
+@PointClass base(Targetname, Parentname, Angles) = env_muzzleflash : "Muzzle Flash" 
+[
+	parentattachment(string) : "Parent Attachment" : "" : "The name of an attachment on the parent to hierarchically attach to."
+	scale(float) : "Scale" : "1" : "Size of the muzzle flash."
+	loop(boolean) : "Loop" : "0" : "Loop this effect?"
+	
+	input Fire(void) : "Fires the effect once."
+	input Stop(void) : "Stops the effect when looping."
 ]
