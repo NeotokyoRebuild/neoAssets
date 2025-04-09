@@ -13,4 +13,5 @@ particles_manifest
 	file	"particles/water_impact.pcf"
 	file	"particles/ntr_muzzle_flash.pcf"
 	file	"particles/ntr_fire.pcf"
+	file	"!particles/ntr_water.pcf"
 }
