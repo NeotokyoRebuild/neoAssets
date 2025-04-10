@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$translucent" 1
+	"$basetexture" "decals/misc/road_line"
+	"$decal" 1
+	"$decalscale" 0.25
+	"%keywords" "neotokyo"
+}

@@ -177,6 +177,32 @@
 	input RemoteDetonate(void) : "Explode"
 ]
 
+@PointClass base(Targetname, Parentname, Angles, EnableDisable) studioprop("models/editor/camera.mdl") frustum(fov,0,maxviewdistance,helpercolour,-1) sphere(deadzone) = neo_npc_targetsystem : 
+	"Targeting system that requires direct LOS"
+[
+	fov(float)					: "FOV" : "90" : "Field of view"
+	topclip(float)				: "Top view clip" : "60" : "How far to clip the view frustum from the top"
+	bottomclip(float)			: "Bottom view clip" : "-100" : "How far to clip the view frustum from the bottom"	
+	maxviewdistance(float)		: "View Distance" : "800" : "How far I can see"
+	deadzone(float)				: "Middle Detection distance" : "100" : "How far the player must be from the entity for it to fire OnMiddle"
+	middlebounds(float)			: "Middle Boundry Width" : "20" : "Half of the middle boundry width (this zone is square)"
+	
+	helpercolour(color255)	readonly	: "Helper colour (Editor only)" : "0 0 0" : "Editor only"
+	filtername(filterclass)		: "Filter to use" : "" : "Optional - Player must match the filter to be detected."
+  
+	damagesource(target_name_or_class)	: "Damage source" : "" : "Where you want the damage to come from. Leave empty to disable attacking"
+	damage(float)				: "Damage amount" : "10" : "Damage delt per hit"
+	firerate(float)				: "Rate of fire" : "10" : "Shots fired per second (max 20 probably)"
+
+	output OnSpotted(void)
+	output OnRight(void)
+	output OnLeft(void)
+	output OnMiddle(void)
+	output OnMiddleIgnore(void)
+	output OnExit(void)
+	output OnExitMiddle(void)
+]
+
 @PointClass base(Targetname, Parentname, Angles) = env_muzzleflash : "Muzzle Flash" 
 [
 	parentattachment(string) : "Parent Attachment" : "" : "The name of an attachment on the parent to hierarchically attach to."
