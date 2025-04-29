@@ -1,0 +1,30 @@
+"Configs"
+{
+	"Games"
+	{
+		"Neotokyo;Rebuild"
+		{
+			"GameDir"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\neo"
+			"Hammer"
+			{
+				"GameData0"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\bin\rebuild.fgd"
+				"TextureFormat"		"5"
+				"MapFormat"		"4"
+				"DefaultTextureScale"		"0.250000"
+				"DefaultLightmapScale"		"16"
+				"GameExe"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\ntre64.exe"
+				"DefaultSolidEntity"		"func_detail"
+				"DefaultPointEntity"		"info_player_start"
+				"BSP"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\bin\x64\vbsp.exe"
+				"Vis"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\bin\x64\vvis.exe"
+				"Light"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\bin\x64\vrad.exe"
+				"GameExeDir"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild"
+				"MapDir"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\sourcesdk_content\neo\mapsrc"
+				"BSPDir"		"C:\Program Files (x86)\Steam\steamapps\common\NeotokyoRebuild\neo\maps"
+				"CordonTexture"		"tools\toolsskybox"
+				"MaterialExcludeCount"		"0"
+			}
+		}
+	}
+	"SDKVersion"		"5"
+}
