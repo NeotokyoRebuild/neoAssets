@@ -1,7 +1,7 @@
 @include "base.fgd"
 @include "halflife2.fgd"
 
-@PointClass base(PlayerClass, Angles) studio("models/editor/attacker_start.mdl") = info_player_attacker :
+@PointClass base(Targetname, PlayerClass, Angles) studio("models/editor/attacker_start.mdl") = info_player_attacker :
 	"This entity marks the start point for attackers."
 [
 	StartDisabled(choices) : "Start Disabled" : 0 =
@@ -16,7 +16,7 @@
 	output OnPlayerSpawn(void) : "Fires when a player spawns from this spawn point."
 ]
 
-@PointClass base(PlayerClass, Angles) studio("models/editor/defender_start.mdl") = info_player_defender :
+@PointClass base(Targetname, PlayerClass, Angles) studio("models/editor/defender_start.mdl") = info_player_defender :
 	"This entity marks the start point for defenders."
 [
 	StartDisabled(choices) : "Start Disabled" : 0 =
