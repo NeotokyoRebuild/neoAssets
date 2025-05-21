@@ -207,7 +207,7 @@
 [
 	parentattachment(string) : "Parent Attachment" : "" : "The name of an attachment on the parent to hierarchically attach to."
 	scale(float) : "Scale" : "1" : "Size of the muzzle flash."
-	loop(choices) : "Loop" : "0" : "Loop this effect?"
+	loop(choices) : "Loop" : "0" : "Loop this effect?" =
 	[
 		0 : "No"
 		1 : "Yes"
