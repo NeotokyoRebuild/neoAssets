@@ -207,8 +207,75 @@
 [
 	parentattachment(string) : "Parent Attachment" : "" : "The name of an attachment on the parent to hierarchically attach to."
 	scale(float) : "Scale" : "1" : "Size of the muzzle flash."
-	loop(boolean) : "Loop" : "0" : "Loop this effect?"
+	loop(choices) : "Loop" : "0" : "Loop this effect?" =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
 	
 	input Fire(void) : "Fires the effect once."
 	input Stop(void) : "Stops the effect when looping."
+]
+
+@PointClass base(Targetname, Parentname, Angles) worldtext() = point_worldtext : 
+    "An entity that displays a text message oriented in the world, at its origin."
+[
+    message(string) : "Entity Message" : "" : "Text Message. Newline characters are accepted"
+    textsize(float) : "Text Size" : 10 : "Text Size."
+    textspacingX(float) : "Text Spacing X" : 0 : "Spacing between each letter along X axis"
+    textspacingY(float) : "Text Spacing Y" : 0 : "Spacing between each letter along Y axis"
+    color(color255) : "Color" : "255 255 255 255"
+    font(choices) : "Font" : "0" =
+    [
+        0: "TF2 Build"
+        1: "TF2 Build (no outline/shadow)"
+        2: "TF2"
+        3: "TF2 (no outline/shadow)"
+        4: "Liberation Sans"
+        5: "Liberation Sans (no outline/shadow)"
+        6: "TF2 Professor"
+        7: "TF2 Professor (no outline/shadow)"
+        8: "Roboto Mono"
+        9: "Roboto Mono (no outline/shadow)"
+        10: "Roboto Mono (shadow only)"
+        11: "Roboto Mono (green glow, soft edges)"
+        12: "TF2 Build (soft edges)"
+    ]
+    orientation(choices) : "Orientation" : "0" =
+    [
+        0: "Stationary"
+        1: "Face player"
+        2: "Ignore pitch"
+    ]
+    rainbow(choices) : "Rainbow" : 0 =
+    [
+        0 : "No"
+        1 : "Yes"
+    ]
+
+    input SetText(string) : "Set the message text."
+    input SetTextSize(float) : "Set the message text size."
+    input SetTextSpacingX(float) : "Set the spacing between letters along the X axis."
+    input SetTextSpacingY(float) : "Set the spacing between letters along the Y axis."
+    input SetColor(string) : "Set the message color."
+    input SetFont(integer) : "Set the font."
+    input SetOrientation(integer) : "Set the orientation."
+    input SetRainbow(integer) : "Enable rainbow text."
+]
+
+@PointClass base(Angles) = env_detail_controller : "An entity that lets you control the fade distances for detail props."
+[
+	fademindist(float) : "Start Fade Dist/Pixels" : 400 : "Distance at which the prop starts to fade."
+	fademaxdist(float) : "End Fade Dist/Pixels" : 1200 : "Maximum distance at which the prop is visible."
+]
+
+@SolidClass base(Targetname, Parentname, Global, Inputfilter, EnableDisable) = trigger_brush
+[
+	DontMessageParent(integer) : "Don't alert parent" : 0 : "When 0 forwards OnStartTouch, OnEndTouch outputs or Use input to parented entity"
+
+	input Use(void) : "Fires the OnUse output."
+
+	output OnUse(void) : "Fired when the Use input is given. "
+	output OnStartTouch(void) : "Fired when an entity starts touching this trigger. The touching entity must pass this trigger's InputFilter to cause this output to fire."
+	output OnEndTouch(void) : "Fired when an entity stops touching this trigger. Only entities that passed this trigger's InputFilter will cause this output to fire."
 ]
