@@ -279,3 +279,21 @@
 	output OnStartTouch(void) : "Fired when an entity starts touching this trigger. The touching entity must pass this trigger's InputFilter to cause this output to fire."
 	output OnEndTouch(void) : "Fired when an entity stops touching this trigger. Only entities that passed this trigger's InputFilter will cause this output to fire."
 ]
+
+@PointClass base(Targetname) iconsprite("vgui/hud/non_star.vmt") = neo_type_converter : "An entity that lets you convert between parameter types."
+[
+	outputtype(choices) : "Type to convert to" : 0 =
+	[
+		0 : "Float"
+		1 : "Integer"
+		2 : "String"
+	]
+	
+	input SendFloat(float) : "Float input"
+	input SendInteger(integer) : "Integer input"
+	input SendString(string) : "String input"
+	
+	output OutFloat(float) : "Float output"
+	output OutInteger(integer) : "Integer output"
+	output OutString(string) : "String output"
+]
