@@ -1,8 +1,8 @@
 "LightmappedGeneric"
 {
 	"$translucent" 1
-	"$basetexture" "Tools/toolssoundscape"
-	"srgb?$basetexture" "Tools/toolssoundscape"
+	"$basetexture" "tools/toolssoundscape"
+	"srgb?$basetexture" "tools/toolssoundscape"
 
 	"%compiletrigger" 1
 	"%compilenodraw" 1
