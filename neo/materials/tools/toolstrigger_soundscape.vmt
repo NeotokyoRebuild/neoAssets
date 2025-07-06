@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$translucent" 1
+	"$basetexture" "tools/toolssoundscape"
+	"srgb?$basetexture" "tools/toolssoundscape"
+
+	"%compiletrigger" 1
+	"%compilenodraw" 1
+	"%compilepassbullets" 1
+
+	"%keywords" "tools,neotokyo"
+}
