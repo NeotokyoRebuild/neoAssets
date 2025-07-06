@@ -2,7 +2,7 @@
 {
 	$model 1
 	$nodecal 1	
-	"$tvmgradtexture" "dev/tvmgrad2"
+	"$tvmgradtexture" "dev/tvmgrad"
 	"$maxtemperatureoffset" "2"
 
 	proxies

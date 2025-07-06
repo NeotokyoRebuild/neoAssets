@@ -2,12 +2,12 @@
 {
 	$model 1
 	$nodecal 1	
-	"$tvmgradtexture" "dev/tvmgrad2"
-	"$maxtemperatureoffset" "2"
+	"$tvmgradtexture" "dev/tvmgrad"
+	"$maxtemperatureoffset" "0.4"
 
 	proxies
 	{
-		WeaponTemperature
+		RagdollLifeTime
 		{
 			resultvar $temperaturevalue
 		}
