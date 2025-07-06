@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" 		"models/tutorial/crosspoint"
+	"$translucent" 1
+	"$model" 1
+	"$nocull" 1
+}
