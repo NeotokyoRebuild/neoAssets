@@ -157,9 +157,17 @@
 [
 	sound(sound) : "Sound Effect" : "" : "When the message is shown, this sound effect will be played."
 	volume(float) : "Volume 0-10" : "10" : "Volume of the sound effect."
+	timermode(choices) : "Timer Mode" : "0" : "Enable timer mode, display a timer when message is shown." =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
 
 	input ShowMessage(string) : "Show Message"
 	input HideMessage(void) : "Hide Message"
+	input ShowSubMessage(string) : "Show Sub Message"
+	input HideSubMessage(void) : "Hide Sub Message"
+	input StopTimer(void) : "Stop Timer"
 ]
 
 @PointClass base(Targetname) studio("models/weapons/w_frag_thrown.mdl") = neo_grenade_frag : "Deployed frag"
