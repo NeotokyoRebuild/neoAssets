@@ -305,3 +305,11 @@
 	output OutInteger(integer) : "Integer output"
 	output OutString(string) : "String output"
 ]
+
+@SolidClass base(Trigger) = neo_trigger_weapon: "Trigger for dropped weapons"
+[
+]
+
+@SolidClass base(Trigger) = neo_ghost_boundry: "Teleports the ghost back to where it was last held"
+[
+]
