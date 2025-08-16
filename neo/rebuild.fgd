@@ -310,6 +310,6 @@
 [
 ]
 
-@SolidClass base(Trigger) = neo_ghost_boundry: "Teleports the ghost back to where it was last held"
+@SolidClass base(Trigger) = neo_ghost_boundary: "Teleports the ghost back to where it was last held"
 [
 ]
