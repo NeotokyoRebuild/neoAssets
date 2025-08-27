@@ -46,6 +46,7 @@
 		1 : "CTG"
 		2 : "VIP"
 		3 : "DM"
+		6 : "JGR"
 		4 : "Empty"
 		5 : "Tutorial"
 	]	
@@ -126,6 +127,7 @@
 		1 : "Assault"
 		2 : "Support"
 		3 : "VIP"
+		4 : "Juggernaut"
     ]
 ]
 
@@ -312,4 +314,9 @@
 
 @SolidClass base(Trigger) = neo_ghost_boundary: "Teleports the ghost back to where it was last held"
 [
+]
+
+@PointClass base(Targetname, Angles) studio("models/player/jgr.mdl") = neo_juggernaut : "Juggernaut"
+[
+	output OnPlayerActivate(void) : "Juggernaut activated"
 ]

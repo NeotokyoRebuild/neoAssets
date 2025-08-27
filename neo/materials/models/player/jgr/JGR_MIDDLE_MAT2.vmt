@@ -1,0 +1,5 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\player\jgr\JGR_MIDDLE_MAT2"
+	"$surfaceprop" "metal"
+}
