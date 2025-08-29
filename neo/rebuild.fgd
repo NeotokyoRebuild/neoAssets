@@ -320,3 +320,7 @@
 [
 	output OnPlayerActivate(void) : "Juggernaut activated"
 ]
+
+@PointClass base(Angles) studio("models/player/jgr.mdl") = neo_juggernautspawnpoint : "Juggernaut spawn point"
+[
+]
