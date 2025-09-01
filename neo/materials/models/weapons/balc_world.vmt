@@ -1,0 +1,12 @@
+"vertexlitGeneric"
+{
+
+	"$baseTexture" "models\weapons\balc_world"
+	"$surfaceprop" "metal"
+	
+	"$bumpmap" "models\weapons\balc_world_normal" 
+	"$phong" "1"
+	"$phongexponent" "35"
+	"$phongboost" "1"	
+	"$phongfresnelranges"	"[0.6 2 10]"
+}
