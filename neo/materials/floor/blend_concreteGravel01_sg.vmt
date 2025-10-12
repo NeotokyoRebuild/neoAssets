@@ -1,0 +1,10 @@
+"WorldVertexTransition"
+{
+"$basetexture" "floor/gravel01_sg"
+"$basetexture2" "floor/concretefloor02_sg"
+"%keywords" "nature"
+"$surfaceprop" "gravel"
+"$surfaceprop2" "concrete"
+}
+
+
