@@ -1,0 +1,10 @@
+"WorldVertexTransition"
+{
+"$basetexture" "floor/gravel01_sg"
+"$basetexture2" "floor/rebar01_sg"
+"%keywords" "neotokyo"
+"$surfaceprop" "gravel"
+"$surfaceprop2" "concrete"
+}
+
+
