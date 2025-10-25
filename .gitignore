@@ -8,6 +8,12 @@ neo/mapsrc/*.bsp
 neo/mapsrc/*.prt
 neo/mapsrc/*.vmx
 
+# These files exist in the main neo repo now, for more info see:
+# https://github.com/NeotokyoRebuild/neo/pull/1430
+*.vbsp
+*.rad
+*.fgd
+
 # Object files
 *.o
 *.p
