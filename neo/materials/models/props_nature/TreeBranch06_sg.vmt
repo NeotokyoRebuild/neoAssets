@@ -1,0 +1,12 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_nature\TreeBranch06_sg"
+	"$surfaceprop" "wood"
+	//"$alphatest" 1
+	"$translucent" 1
+	"$nocull" 1
+	"$treesway" 1
+	"$treeswaystrength" 0
+	"$treeswayscrumblestrength" 0.1
+	"$treeswayscrumblespeed" 0.8
+}
