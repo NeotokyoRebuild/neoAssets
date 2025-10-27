@@ -2,8 +2,12 @@
 {
 	"$baseTexture" "\models\props_building\awning_tarp"
 	"$surfaceprop" "carpet"
-        "$envmap" "env_cubemap"
-        "$bumpmap" "\models\props_building\awning_tarp_normal"
-        "$envmaptint" "[0.12 0.12 0.12]"
-	"$normalmapalphaenvmapmask" 1
+        //"$envmap" "env_cubemap"
+        //"$bumpmap" "\models\props_building\awning_tarp_normal"
+        //"$envmaptint" "[0.12 0.12 0.12]"
+	//"$normalmapalphaenvmapmask" 1
+	"$treesway" 2
+	"$treeswayheight" -4
+	"$treeswaystrength" 0
+	"$treeswayscrumblestrength" 0.1
 }
