@@ -1,0 +1,10 @@
+LightmappedGeneric
+{
+	"$basetexture"	"floor\nukslidea_nt"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "floor\nukslidea_ref_nt"
+	"$envmaptint" "[0.2 0.2 0.2]"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+
+}
