@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "tools/toolscubemapobb"
+	"$translucent" "1"
+	"%compiletrigger" 1
+	"%compilenonsolid" 1
+	"%keywords" "tools,neotokyo"
+}
