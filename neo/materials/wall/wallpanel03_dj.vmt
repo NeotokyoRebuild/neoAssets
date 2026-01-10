@@ -5,5 +5,5 @@
 	"%keywords" "neotokyo" 
 	"$bumpmap" "wall\wallpanel03_dj_normal"
 	"$envmap" "env_cubemap"
-    	"$envmaptint" "[0.02 0.02 0.02]"
+    	"$envmaptint" "[0.004 0.004 0.004]"
 }
