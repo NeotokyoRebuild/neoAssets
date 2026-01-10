@@ -4,6 +4,6 @@
 	"$surfaceprop" "wood"
 	"$bumpmap" "wall\woodwall1_normal"
 	"$envmap" "env_cubemap"
-    	"$envmaptint" "[0.02 0.02 0.02]"
+    	"$envmaptint" "[0.004 0.004 0.004]"
 	"%keywords" "neotokyo" 
 }
