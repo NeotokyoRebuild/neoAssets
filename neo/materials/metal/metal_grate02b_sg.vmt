@@ -1,9 +1,10 @@
 "lightmappedGeneric"
 {
+	"%CompilePassBullets" 1
 	"$baseTexture"  "metal/metal_grate02b_sg"
 	"$surfaceprop" "metal"
 	"$envmap" "env_cubemap"
     	"$envmaptint" "[0.03 0.03 0.03]"
-	"$translucent" 1
+	"$alphatest" 1
 	"%keywords" "neotokyo" 
 }

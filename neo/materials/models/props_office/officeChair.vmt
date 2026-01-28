@@ -1,0 +1,8 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\officeChair"
+	"$surfaceprop" "plastic"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_office\officeChair_spec"
+    "$envmaptint" "[0.5 0.5 0.5]"
+}
