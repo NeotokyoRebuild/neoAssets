@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "\models\props_nature\foliage_02"
+	"$surfaceprop" "foliage"
+	"$nodecal" 1
+	"$alphatest" 1
+	"$alphatestreference" 0.3
+	"$allowalphatocoverage" 1
+	"$nocull" 1
+}
