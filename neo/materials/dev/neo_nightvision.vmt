@@ -1,10 +1,10 @@
-"Neo_ThermalVision"
+"Neo_NightVision"
 {
 	"$fbtexture" "_rt_FullFrameFB"
-	//"$blurtexture" "_rt_SmallHDR0"
-	"$tvtexture" "dev/tvgrad2"
+	"$blurtexture" "_rt_SmallFB1"
+	"$nvtexture" "dev/nvgrad"
 	"$noisetexture" "dev/noise"
-
+	
 	"Proxies"
 	{
 		"TextureScroll"
