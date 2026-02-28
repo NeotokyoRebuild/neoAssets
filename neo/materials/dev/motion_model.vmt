@@ -2,6 +2,7 @@
 {
 	$model 1
 	$nodecal 1
+	"$mvmgradtexture" "dev/tvmgrad"
 
 	proxies
 	{
