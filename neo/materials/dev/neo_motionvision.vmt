@@ -2,7 +2,7 @@
 {
 	"$fbtexture" "_rt_FullFrameFB"
 	//"$blurtexture" "_rt_SmallHDR0"
-	"$mvtexture" "dev/mvgrad2"
+	"$mvtexture" "dev/mvgrad"
 	"$noisetexture" "dev/noise"
 
 	"Proxies"
