@@ -3,6 +3,6 @@
 	"$baseTexture" "wall/jetblack1"
 	"$surfaceprop" "metal"
 	"$envmap" "env_cubemap"
-    	"$envmaptint" "[0.02 0.02 0.02]"
+    	"$envmaptint" "[0.01 0.01 0.01]"
 	"%keywords" "neotokyo" 
 }
