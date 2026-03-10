@@ -1,88 +1,122 @@
 "Refract"
 {
-	"$model" 1
-	"$refractamount" "0.2"
-	"$refracttint" "[1.0 1.0 1.0]"
-	"$translucent" 1
-	"$forcerefract" 1
-	"$vertexalpha" "1"
-	"$vertexcolor" "1"
-	"$bluramount" "1.6"		
+	"$model" "1"
+	"$refractamount" 	"0.035"
+	"$refracttint" 		"[0.85 0.85 0.85]"
+	"$translucent" 		"1"
+	"$forcerefract" 	"1"
+	"$vertexalpha" 		"1"
+	"$vertexcolor" 		"1"
+	"$bluramount" 		"10.5"
+	"$fresnelreflection"	"0.25"
 
-	"$dudvmap" "dev/water_dudv"
-	"$normalmap" "dev/water_normal"
+	"$dudvmap" 			"dev/water_dudv"
+	"$normalmap" 		"dev/water_normal"
 
-	"$surfaceprop" "water"
-	"$bumpframe" "0"
+	"$surfaceprop" 		"water"
+	"$bumpframe" 		"0"
 	
-	"$thermoptic" 0
+	"$thermoptic" 		"0"
+	"$cloakScaler" 		".2"
+	"$baseRefract" 		"0.035" 
+	
+	"$baseBlur"			"10.5"
+	"$cloakOnBlur"		"20"
+	
+	"$baseTint"			"0.85"
+	"$cloakOnTintR"		".8"
+	"$cloakOnTintGB"	".6"
+	
+	"$baseFresnel"		"0.25"
+	
 	"$temp" 0
-	"$one" 1
-	"$two" 2
-	"$blurstart" .2
-	//"$mod" .8
-	"$modtwo" .6
-	
 	"$alpha" 255
 
 	"Proxies"
 	{
 		"TextureScroll"
-		{
+		{ // Transform the water normal for an animated shimmer effect
 			"texturescrollvar" "$bumptransform"
 			"texturescrollrate" .05
 			"texturescrollangle" 45.00
 		}
 		"PlayerTO"
-		{
-			"resultvar" "$thermoptic"
+		{ // Grab the player cloak factor
+			"resultVar" "$thermoptic"
 		}
-		"Equals"
+		"Multiply"
+		{ // Scale down the cloak factor
+			"srcvar1"	"$thermoptic"
+			"srcvar2"	"$cloakScaler"
+			"resultVar"	"$thermoptic"
+		}
+		
+		// refractamount varies between 0.035 when stood still and 0.235 when moving
+		"Add"
+		{
+			"srcvar1"	"$baseRefract"
+			"srcvar2"	"$thermoptic"
+			"resultVar"	"$refractamount"
+		}
+		
+		// bluramount varies between 10.5 when stood still and 14.5 when moving, if the decompile is to be believed
+		"Multiply"
 		{
 			"srcvar1"	"$thermoptic"
-			"resultvar"	"$refractamount"
-		}
-		//"Multiply"
-		//{
-		//	"srcvar1"	"$mod"
-		//	"srcvar2"	"$thermoptic"
-		//	"resultvar"	"$temp"
-		//}
-		"Multiply"
-		{
-			"srcvar1"	"$modtwo"
-			"srcvar2"	"$thermoptic"
-			"resultvar"	"$temp"
-		}	
-		"Subtract"
-		{
-			"srcvar1"	"$one"
-			"srcvar2"	"$temp"
-			"resultvar"	"$refracttint[0]"
-		}	
-		"Subtract"
-		{
-			"srcvar1"	"$one"
-			"srcvar2"	"$temp"
-			"resultvar"	"$refracttint[1]"
-		}		
-		"Subtract"
-		{
-			"srcvar1"	"$one"
-			"srcvar2"	"$temp"
-			"resultvar"	"$refracttint[2]"
-		}
-		"Multiply"
-		{
-			"srcvar1"	"$two"
-			"srcvar2"	"$thermoptic"
-			"resultvar"	"$temp"
+			"srcvar2"	"$cloakOnBlur"
+			"resultVar"	"$bluramount"
 		}
 		"Add"
 		{
-			"srcvar1"	"$blurstart"
+			"srcvar1"	"$bluramount"
+			"srcvar2"	"$baseBlur"
+			"resultVar"	"$bluramount"
+		}
+		
+		// refracttint is [0.85, 0.85, 0.85] when stood still, and [0.69, 0.73, 0.73] when moving
+		"Multiply"
+		{ // Red
+			"srcvar1"	"$cloakOnTintR"
+			"srcvar2"	"$thermoptic"
+			"resultvar"	"$temp"
+		}
+		"Subtract"
+		{
+			"srcvar1"	"$baseTint"
 			"srcvar2"	"$temp"
-			"resultvar"	"$bluramount"
-		}								
+			"resultvar"	"$refracttint[0]"
+		}
+		"Multiply"
+		{ // Green, Blue
+			"srcvar1"	"$cloakOnTintGB"
+			"srcvar2"	"$thermoptic"
+			"resultvar"	"$temp"
+		}
+		"Subtract"
+		{
+			"srcvar1"	"$baseTint"
+			"srcvar2"	"$temp"
+			"resultvar"	"$refracttint[1]"
+		}
+		"Subtract"
+		{
+			"srcvar1"	"$baseTint"
+			"srcvar2"	"$temp"
+			"resultvar"	"$refracttint[2]"
+		}
+		
+		// fresnelreflection is 0.25 when stood still and 0.65 when moving, if the decompile is to be believed (does this even do anything?)
+		"Add"
+		{
+			"srcvar1"	"$thermoptic"
+			"srcvar2"	"$thermoptic"
+			"resultvar"	"$thermoptic"
+		}
+		"Add"
+		{
+			"srcvar1"	"$thermoptic"
+			"srcvar2"	"$baseFresnel"
+			"resultVar"	"$fresnelreflection"
+		}
 	}
 }
