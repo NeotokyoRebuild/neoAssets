@@ -1,0 +1,5 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models/props_nature/ConiferBarkA01"
+	"$surfaceprop" "wood"
+}

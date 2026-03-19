@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "floor\inaka_metaldoor"
+	"$surfaceprop" "metal"
+	"$envmapmask" "floor\inaka_metaldoor_mask"   
+	"%keywords" "neotokyo"
+
+}

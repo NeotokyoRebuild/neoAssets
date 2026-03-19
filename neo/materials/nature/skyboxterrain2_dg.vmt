@@ -1,0 +1,8 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/skyboxterrain2_dg"
+	"$basetexture2" "nature/mount01_ivy"
+	"%tooltexture" "nature/skyboxterrain2_dg"
+	//"%detailtype" "neotokyo_trees"
+	"$surfaceprop" "grass"
+}

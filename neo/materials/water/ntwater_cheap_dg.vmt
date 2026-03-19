@@ -1,0 +1,36 @@
+"Water"
+{
+	"%compilewater" 1
+	"$forcecheap" 1
+	"$CHEAPWATERSTARTDISTANCE" 500.0
+	"$CHEAPWATERENDDISTANCE" 1000.0
+	"$envmap" "env_cubemap"
+	"%tooltexture" "dev/water_normal"
+	"$abovewater" 1
+
+	"$bumpmap" "dev/water_dudv"
+	"$normalmap" "dev/water_normal"
+
+	"$surfaceprop" "water"
+	"$bottommaterial" "dev/dev_waterbeneath2"
+	"$bumpframe" "0"
+
+	"$fogenable" 1
+	"$fogcolor" "{22 20 10}"
+	"$fogstart" 1.00
+	"$fogend" 400.00
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$normalmap"
+			"animatedtextureframenumvar" "$bumpframe"
+			"animatedtextureframerate" 25.00
+		}
+
+		"WaterLOD"
+		{
+		}
+	}
+}
