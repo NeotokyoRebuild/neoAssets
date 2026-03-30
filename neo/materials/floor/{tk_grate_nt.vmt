@@ -1,0 +1,8 @@
+"lightmappedGeneric"
+{
+	"%CompilePassBullets" 1
+	"$baseTexture" "floor/{tk_grate_nt"
+	"$translucent" 1
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+}
