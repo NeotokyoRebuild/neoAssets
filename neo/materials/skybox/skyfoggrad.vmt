@@ -1,0 +1,8 @@
+LightmappedGeneric
+{
+	$basetexture	"skybox/skyfoggrad"
+	$translucent "1"
+	%keywords	"neotokyo"
+}
+
+
