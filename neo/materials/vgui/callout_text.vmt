@@ -1,0 +1,30 @@
+"UnlitGeneric"
+{
+	$basetexture editor/worldtextsheet_robotomono
+	$nocull 1
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent	1
+	$distancealpha	1
+	"$ignorez" 1
+
+	// add an outline
+	$outline 1
+	$outlinecolor "[0.0 0.0 0.0]"
+	$outlinestart0 0.3
+	$outlinestart1 0.49
+	$outlineend0 0.49
+	$outlineend1 0.73
+	$outlinealpha 1
+
+	// and a drop shadow
+	$glow 1
+	$glowcolor "[0 0 0]"
+	$glowalpha 0.45
+	$glowstart 0.03
+	$glowend 0.5
+	$glowx -0.001
+	$glowy -0.001
+
+	$no_fullbright	1
+}
