@@ -1,6 +1,5 @@
 "UnlitGeneric"
 {
-	//"$basetexture" "vgui/hud/cp/cp_nsf"
 	"$basetexture" "effects/cap_zone_bar"
 	"$vertexcolor" 1
 	"$vertexalpha" 1
@@ -18,16 +17,9 @@
 		}
 		"Sine"
         {
-            // The result variable we are targeting
-            "resultVar" "$alpha"
-            
-            // Speed of the pulse (cycles per second)
-            "sineperiod" 2.5
-            
-            // Minimum opacity level (0.0 = completely invisible)
+            "resultVar" "$alpha"            
+            "sineperiod" 2.5            
             "sinemin"    0.3
-            
-            // Maximum opacity level (1.0 = completely opaque)
             "sinemax"    0.5
         }
 	}
