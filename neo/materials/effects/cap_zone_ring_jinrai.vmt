@@ -1,0 +1,27 @@
+"UnlitGeneric"
+{
+	"$basetexture" "vgui/hud/cp/cp_jinrai"
+	"$vertexcolor" 1
+	"$vertexalpha" 1
+	"$translucent" 1
+	"$no_fullbright" 1
+	"$nocull" 1
+
+	"proxies"
+	{
+		"Sine"
+        {
+            // The result variable we are targeting
+            "resultVar" "$alpha"
+            
+            // Speed of the pulse (cycles per second)
+            "sineperiod" 2.5
+            
+            // Minimum opacity level (0.0 = completely invisible)
+            "sinemin"    0.3
+            
+            // Maximum opacity level (1.0 = completely opaque)
+            "sinemax"    0.5
+        }
+	}
+}
