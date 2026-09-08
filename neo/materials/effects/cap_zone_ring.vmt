@@ -1,0 +1,26 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/cap_zone_bar"
+	"$vertexcolor" 1
+	"$vertexalpha" 1
+	"$translucent" 1
+	"$no_fullbright" 1
+	"$nocull" 1
+
+	"proxies"
+	{
+		"TextureScroll"
+		{
+			"Texturescrollvar" "$basetexturetransform"
+			"Texturescrollrate" "1"
+			"texturescrollangle" "0"
+		}
+		"Sine"
+        {
+            "resultVar" "$alpha"            
+            "sineperiod" 2.5            
+            "sinemin"    0.3
+            "sinemax"    0.5
+        }
+	}
+}
