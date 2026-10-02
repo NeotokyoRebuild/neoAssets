@@ -1,0 +1,11 @@
+// The holo sight glass's own texture, unchanged, drawn over its clear view while cloaked.
+"UnlitGeneric"
+{
+	"$basetexture"	"models/weapons/MpnSight_glass"
+	"$translucent"	"1"
+	"$vertexcolor"	"1"
+	"$vertexalpha"	"1"
+	"$nocull"		"1"
+	// Wins against the lens surface it sits on (a depth bias, like bullet decals).
+	"$decal"		"1"
+}
