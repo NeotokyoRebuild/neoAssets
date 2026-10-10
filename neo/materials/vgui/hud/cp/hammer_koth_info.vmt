@@ -1,0 +1,7 @@
+"Sprite"
+{
+	"$basetexture" "vgui\hud\cp\hammer_koth_info"
+	"$spriteorigin" "[ 0.50 0.50 ]"
+	"$no_fullbright" 1
+	"$spriteorientation" "vp_parallel"
+}

@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+     	"$basetexture" "misc/koth_glow"
+     	"$surfacetexture" "concrete"
+     	"$translucent" 1 
+     	"$alpha" 1
+}
