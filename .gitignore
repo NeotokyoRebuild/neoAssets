@@ -14,6 +14,9 @@ neo/mapsrc/*.vmx
 *.rad
 *.fgd
 
+# Mounting the assets folder in gameinfo.txt creates this file, ignore
+neo/sound/sound.cache
+
 # Object files
 *.o
 *.p
