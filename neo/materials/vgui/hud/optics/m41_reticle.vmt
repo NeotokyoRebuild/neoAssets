@@ -1,0 +1,10 @@
+// The M41 red dot glass's own texture, unchanged and additive like the glass, drawn once over its view.
+"UnlitGeneric"
+{
+	"$basetexture"	"models/weapons/mosok41_mat3"
+	"$additive"		"1"
+	"$vertexcolor"	"1"
+	"$nocull"		"1"
+	// Wins against the lens surface it sits on (a depth bias, like bullet decals).
+	"$decal"		"1"
+}
