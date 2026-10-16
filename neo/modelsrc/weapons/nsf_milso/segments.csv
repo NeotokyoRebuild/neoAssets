@@ -1,8 +1,8 @@
 id,model,out_seq,activity,pieces,credits,audio,note
 milso.reload,v_jinrai_milso;v_nsf_milso,reload,ACT_VM_RELOAD,reload:0-63,drop=0.467;seat=1.167,drop@0.292;seat@1.243,64 f shipped partial reload (slide stays forward); seat piece holds the soft seat and the loud tap
-milso.reloadempty,v_jinrai_milso;v_nsf_milso,reloadempty,ACT_VM_RELOAD_EMPTY,reloadempty:0-63,drop=0.467;seat=1.167;bolt=2.067,drop@0.292;seat@1.243,64 f shipped dry reload; bolt = slide home f62 (no sound in the wav: the release is silent)
+milso.reloadempty,v_jinrai_milso;v_nsf_milso,reloadempty,ACT_VM_RELOAD_EMPTY,reloadempty:0-63,drop=0.467;seat=1.167;bolt=2.067,drop@0.292;seat@1.243;bolt@2.060,64 f shipped dry reload; bolt = slide home f62 (no sound in the wav: the release is silent)
 milso.reload_from_drop_partial,v_jinrai_milso;v_nsf_milso,reload_from_drop_partial,,reach:24->reload:24;reload:24-63,seat=1.167,seat@1.243,64 f; insert grab f24 (magazine furthest out)
-milso.reload_from_drop_dry,v_jinrai_milso;v_nsf_milso,reload_from_drop_dry,,reach:24->reloadempty:24@idle01empty;reloadempty:24-63,seat=1.167;bolt=2.067,seat@1.243,64 f; from the slide-back idle
-milso.reload_from_seat_dry,v_jinrai_milso;v_nsf_milso,reload_from_seat_dry,,hold:idle01empty:0:16;track:slide01:reloadempty:54-63@0,bolt=0.267,,16 f; the slide release alone from the slide-back idle
+milso.reload_from_drop_dry,v_jinrai_milso;v_nsf_milso,reload_from_drop_dry,,reach:24->reloadempty:24@idle01empty;reloadempty:24-63,seat=1.167;bolt=2.067,seat@1.243;bolt@2.060,64 f; from the slide-back idle
+milso.reload_from_seat_dry,v_jinrai_milso;v_nsf_milso,reload_from_seat_dry,,hold:idle01empty:0:16;track:slide01:reloadempty:54-63@0,bolt=0.267,bolt@0.260,16 f; the slide release alone from the slide-back idle
 milso.draw_resume_drop_partial,v_jinrai_milso;v_nsf_milso,draw_resume_drop_partial,,drawpark:draw->reload:24:10;reload:24-63,seat=1.500,seat@1.576,74 f
-milso.draw_resume_drop_dry,v_jinrai_milso;v_nsf_milso,draw_resume_drop_dry,,drawpark:drawempty->reloadempty:24:10;reloadempty:24-63,seat=1.500;bolt=2.400,seat@1.576,74 f; the empty draw (slide back)
+milso.draw_resume_drop_dry,v_jinrai_milso;v_nsf_milso,draw_resume_drop_dry,,drawpark:drawempty->reloadempty:24:10;reloadempty:24-63,seat=1.500;bolt=2.400,seat@1.576;bolt@2.393,74 f; the empty draw (slide back)
