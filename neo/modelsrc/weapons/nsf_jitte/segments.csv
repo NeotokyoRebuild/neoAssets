@@ -4,5 +4,5 @@ jitte.reload_partial,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,rel
 jitte.reload_from_drop_dry,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,reload_from_drop_dry,,reach:28->reload:52;reload:52-99,seat=1.300;bolt=2.100,seat@0.933;bolt@1.591,76 f
 jitte.reload_from_drop_partial,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,reload_from_drop_partial,,reach:28->reload:52;reload:52-66;exit:11:straight,seat=1.300,seat@0.933,54 f
 jitte.reload_from_seat_dry,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,reload_from_seat_dry,,reach:17->reload:78;reload:78-99,bolt=0.867,bolt@0.358,39 f; bolt grab f78
-jitte.draw_resume_drop_dry,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,draw_resume_drop_dry,,drawpark:draw->reload:52:9;reload:52-99,seat=1.467;bolt=2.267,seat@1.100;bolt@1.758,81 f
-jitte.draw_resume_drop_partial,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,draw_resume_drop_partial,,drawpark:draw->reload:52:9;reload:52-66;exit:11:straight,seat=1.467,seat@1.100,59 f
+jitte.draw_resume_drop_dry,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,draw_resume_drop_dry,,drawpark:draw->reload:52:12:20;reload:52-99,seat=1.567;bolt=2.367,seat@1.200;bolt@1.858,84 f
+jitte.draw_resume_drop_partial,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,draw_resume_drop_partial,,drawpark:draw->reload:52:12:20;reload:52-66;exit:11:straight,seat=1.567,seat@1.200,62 f

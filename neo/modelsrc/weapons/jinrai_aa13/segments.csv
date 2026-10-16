@@ -4,5 +4,5 @@ aa13.reload_partial,v_jinrai_aa13;v_nsf_aa13,reload_partial,,reload:0-105;exit:9
 aa13.reload_from_drop_dry,v_jinrai_aa13;v_nsf_aa13,reload_from_drop_dry,,reach:37->reload:60;reload:60-140,seat=2.600;bolt=3.567,seat@2.138;bolt@2.997,118 f
 aa13.reload_from_drop_partial,v_jinrai_aa13;v_nsf_aa13,reload_from_drop_partial,,reach:37->reload:60;reload:60-105;exit:9:straight,seat=2.600,seat@2.138,92 f
 aa13.reload_from_seat_dry,v_jinrai_aa13;v_nsf_aa13,reload_from_seat_dry,,reach:18->reload:116;reload:116-140,bolt=1.067,bolt@0.497,43 f; bolt grab f116
-aa13.draw_resume_drop_dry,v_jinrai_aa13;v_nsf_aa13,draw_resume_drop_dry,,drawpark:draw->reload:60:9;reload:60-140,seat=2.467;bolt=3.433,seat@2.005;bolt@2.864,114 f
-aa13.draw_resume_drop_partial,v_jinrai_aa13;v_nsf_aa13,draw_resume_drop_partial,,drawpark:draw->reload:60:9;reload:60-105;exit:9:straight,seat=2.467,seat@2.005,88 f
+aa13.draw_resume_drop_dry,v_jinrai_aa13;v_nsf_aa13,draw_resume_drop_dry,,drawpark:draw->reload:60:12:20;reload:60-140,seat=2.567;bolt=3.533,seat@2.105;bolt@2.964,117 f
+aa13.draw_resume_drop_partial,v_jinrai_aa13;v_nsf_aa13,draw_resume_drop_partial,,drawpark:draw->reload:60:12:20;reload:60-105;exit:9:straight,seat=2.567,seat@2.105,91 f
