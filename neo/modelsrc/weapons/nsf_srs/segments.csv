@@ -1,0 +1,8 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+srs.reload,v_jinrai_srs;v_nsf_srs,reload,ACT_VM_RELOAD,reload:0-111,drop=1.133;seat=1.867;bolt=3.067,drop@0.453;seat@1.711;bolt@2.501|3.000,112 f shipped dry reload; seat = Clip jumps back into the gun at f56 (1.867); bolt by the gun hand: open click (onset 2.771) played 0.27 s early + close (hard cut 3.00); insert grab f45 (gap closed: the start of the carry back to the well)
+srs.reload_partial,v_jinrai_srs;v_nsf_srs,reload_partial,,reload:0-67;exit:6:straight,drop=1.133;seat=1.867,drop@0.453;seat@1.711,74 f; cut f67 in the hold at the grip
+srs.reload_from_drop_dry,v_jinrai_srs;v_nsf_srs,reload_from_drop_dry,,reach:21->reload:45;reload:45-111,seat=1.067;bolt=2.267,seat@0.911;bolt@1.701|2.200,88 f
+srs.reload_from_drop_partial,v_jinrai_srs;v_nsf_srs,reload_from_drop_partial,,reach:21->reload:45;reload:45-67;exit:6:straight,seat=1.067,seat@0.911,50 f
+srs.reload_from_seat_dry,v_jinrai_srs;v_nsf_srs,reload_from_seat_dry,,reach:6->reload:69;reload:69-111,bolt=0.967,bolt@0.401|0.900,49 f; support hand to its grip hold f69 (the gun hand works the bolt)
+srs.draw_resume_drop_dry,v_jinrai_srs;v_nsf_srs,draw_resume_drop_dry,,drawpark:draw->reload:45:12;reload:45-111,seat=1.567;bolt=2.767,seat@1.411;bolt@2.201|2.700,103 f
+srs.draw_resume_drop_partial,v_jinrai_srs;v_nsf_srs,draw_resume_drop_partial,,drawpark:draw->reload:45:12;reload:45-67;exit:6:straight,seat=1.567,seat@1.411,65 f
