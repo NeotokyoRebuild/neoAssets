@@ -59,10 +59,10 @@ $attachment "muzzle" "Muzzle" 0.0000 -0.0000 0.0000 rotate 0.000 -0.000 -0.000
 $attachment "eject" "Eject" 0.0000 -0.0000 0.0000 rotate -0.000 -0.000 0.000
 $sequence "idle01" "anims/idle01.smd" activity ACT_VM_IDLE 1 fps 30 fadein 0.20 fadeout 0.20 loop node "0"
 $sequence "idle01empty" "anims/idle01empty.smd" activity ACT_VM_IDLE_EMPTY 1 fps 30 fadein 0.20 fadeout 0.20 loop node "0"
-$sequence "fire" "anims/fire.smd" activity ACT_VM_PRIMARYATTACK 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
-$sequence "fire1" "anims/fire1.smd" activity ACT_VM_RECOIL1 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
-$sequence "fire2" "anims/fire2.smd" activity ACT_VM_RECOIL2 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
-$sequence "fire3" "anims/fire3.smd" activity ACT_VM_RECOIL3 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
+$sequence "fire" "anims/fire.smd" activity ACT_VM_PRIMARYATTACK 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2" { event AE_MUZZLEFLASH 0 "PISTOL MUZZLE" }
+$sequence "fire1" "anims/fire1.smd" activity ACT_VM_RECOIL1 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2" { event AE_MUZZLEFLASH 0 "PISTOL MUZZLE" }
+$sequence "fire2" "anims/fire2.smd" activity ACT_VM_RECOIL2 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2" { event AE_MUZZLEFLASH 0 "PISTOL MUZZLE" }
+$sequence "fire3" "anims/fire3.smd" activity ACT_VM_RECOIL3 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2" { event AE_MUZZLEFLASH 0 "PISTOL MUZZLE" }
 $sequence "fireempty" "anims/fireempty.smd" activity ACT_VM_DRYFIRE 1 fps 30 fadein 0.20 fadeout 0.20 node "2"
 $sequence "draw" "anims/draw.smd" activity ACT_VM_DRAW 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
 $sequence "drawempty" "anims/drawempty.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
