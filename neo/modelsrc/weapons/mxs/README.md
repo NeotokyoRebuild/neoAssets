@@ -5,8 +5,8 @@ original NEOTOKYO viewmodels decompiled and recompiled with the partial, resume 
 the MX plan (`segments.csv`, rows `mx.*`, shared by the MX and MX-S; each model is built from its own animations).
 
 - Partial: reload f0-52 (cut after the tap contact), 11-frame straight exit to the hold.
-- Resumes reach from the idle hold to the next phase's grab pose: insert f30, tap f49, charging handle f72 (the hand
-  closes on the handle at f72 and pulls to f75; the Charge bone is not where the hand goes).
+- Resumes reach from the idle hold to the next phase's grab pose: insert f30, tap f49, charging handle f62 (the hand
+  holds the handle at f61-64 and pulls it f62-70; the bolt resume reaches straight up beside the gun to it).
 - Draw-resume after the drop: the draw one-handed, support arm and magazine out of view, tilt to f30, then the insert.
 
 Built by ntre's `proposals/0057-reload-cue-timing/tools/`: `mdl2smd.py`, then

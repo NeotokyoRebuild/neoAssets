@@ -5,6 +5,6 @@ mx.reload_from_drop_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_
 mx.reload_from_drop_partial,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_drop_partial,,reach:auto->reload:30;reload:30-52;exit:11:straight,seat=1.167;slap=1.567,seat@1.151;slap@1.592,60 f
 mx.reload_from_seat_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_seat_dry,,reach:auto->reload:49;reload:49-86,slap=0.600;bolt=1.400,slap@0.625;bolt@1.100,54 f
 mx.reload_from_seat_partial,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_seat_partial,,reach:auto->reload:49;reload:49-52;exit:11:straight,slap=0.600,slap@0.625,31 f
-mx.reload_from_slap_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_slap_dry,,reach:auto->reload:72;reload:72-86,bolt=1.300,bolt@1.000,51 f; reach straight to the handle grab f72
+mx.reload_from_slap_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_slap_dry,,reach:26->reload:62!;reload:62-86,bolt=1.300,bolt@1.000,51 f; straight reach up beside the gun to the handle hold f62 (the pull is f62-70)
 mx.draw_resume_drop_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,draw_resume_drop_dry,,drawpark:draw->reload:30;reload:30-86,seat=1.400;slap=1.800;bolt=2.600,seat@1.384;slap@1.825;bolt@2.300,90 f
 mx.draw_resume_drop_partial,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,draw_resume_drop_partial,,drawpark:draw->reload:30;reload:30-52;exit:11:straight,seat=1.400;slap=1.800,seat@1.384;slap@1.825,67 f
