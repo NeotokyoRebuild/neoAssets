@@ -72,3 +72,8 @@ $sequence "lowidle" "anims/lowidle.smd" activity ACT_VM_IDLE_LOWERED 1 fps 30 fa
 $sequence "changemode" "anims/changemode.smd" activity ACT_VM_CHANGEMODE 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
 $sequence "melee01" "anims/melee01.smd" activity ACT_VM_MELEEATTACK1 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
 $sequence "reload_partial" "anims/reload_partial.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "reload_from_drop_dry" "anims/reload_from_drop_dry.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "reload_from_drop_partial" "anims/reload_from_drop_partial.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "reload_from_seat_dry" "anims/reload_from_seat_dry.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "reload_from_seat_partial" "anims/reload_from_seat_partial.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "reload_from_slap_dry" "anims/reload_from_slap_dry.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"

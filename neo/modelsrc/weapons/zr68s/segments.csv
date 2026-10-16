@@ -1,0 +1,8 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+zr68s.reload,v_jinrai_zr68s;v_nsf_zr68s,reload,ACT_VM_RELOAD,reload:0-81,drop=0.700;seat=1.333;slap=1.700;bolt=2.267,drop@0.290;seat@1.280;slap@1.710;bolt@2.010,82 f shipped dry reload
+zr68s.reload_partial,v_jinrai_zr68s;v_nsf_zr68s,reload_partial,,reload:0-56;exit:10:pose,drop=0.700;seat=1.333;slap=1.700,drop@0.290;seat@1.280;slap@1.710,67 f; exit as a plain pose blend (research-accepted on the ZR68; equals the BST build)
+zr68s.reload_from_drop_dry,v_jinrai_zr68s;v_nsf_zr68s,reload_from_drop_dry,,reach:12->reload:30;reload:30-81,seat=0.733;slap=1.100;bolt=1.667,seat@0.680;slap@1.110;bolt@1.410,64 f; insert grab f30 29.2 u
+zr68s.reload_from_drop_partial,v_jinrai_zr68s;v_nsf_zr68s,reload_from_drop_partial,,reach:12->reload:30;reload:30-56;exit:10:pose,seat=0.733;slap=1.100,seat@0.680;slap@1.110,49 f
+zr68s.reload_from_seat_dry,v_jinrai_zr68s;v_nsf_zr68s,reload_from_seat_dry,,reach:6->reload:48;reload:48-81,slap=0.300;bolt=0.867,slap@0.310;bolt@0.610,40 f; slap grab f48 14.7 u
+zr68s.reload_from_seat_partial,v_jinrai_zr68s;v_nsf_zr68s,reload_from_seat_partial,,reach:6->reload:48;reload:48-56;exit:10:pose,slap=0.300,slap@0.310,25 f
+zr68s.reload_from_slap_dry,v_jinrai_zr68s;v_nsf_zr68s,reload_from_slap_dry,,reach:16->reload:61;reload:61-81,bolt=0.767,bolt@0.510,37 f; bolt grab f61 38.6 u
