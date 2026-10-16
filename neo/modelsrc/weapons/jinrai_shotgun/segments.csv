@@ -1,0 +1,3 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+supa7.reloadend,v_jinrai_shotgun;v_nsf_shotgun,reloadend,ACT_SHOTGUN_PUMP,reloadend:0-30,,,31 f shipped finish with the rack (pouch -> pump -> hold)
+supa7.rack,v_jinrai_shotgun;v_nsf_shotgun,rack,,reach:25->reloadend:8!;reloadend:8-30,,,48 f; standalone rack from the hold (reload pressed on a full tube): reach to the pump grip (reloadend f8) then the rack f8-30
