@@ -8,3 +8,4 @@ pz.reload_from_seat_partial,v_jinrai_pz;v_nsf_pz,reload_from_seat_partial,,reach
 pz.reload_from_slap_dry,v_jinrai_pz;v_nsf_pz,reload_from_slap_dry,,reach:20->reload:151;reload:151-173,bolt=1.000,bolt@0.435,43 f; slide grab f151
 pz.draw_resume_drop_dry,v_jinrai_pz;v_nsf_pz,draw_resume_drop_dry,,drawpark:draw->reload:80:25;reload:80-173,seat=2.767;slap=3.633;bolt=4.333,seat@2.349;slap@3.428;bolt@3.769,143 f
 pz.draw_resume_drop_partial,v_jinrai_pz;v_nsf_pz,draw_resume_drop_partial,,drawpark:draw->reload:80:25;reload:80-142;exit:8:straight,seat=2.767;slap=3.633,seat@2.349;slap@3.428,120 f
+pz.fire_chamber_onehand,v_jinrai_pz;v_nsf_pz,fire_chamber_onehand,,flick:4:fire->reload:80:6;drawpark:fire->reload:80:25:6;reload:80-173,seat=2.500;slap=3.367;bolt=4.067,seat@2.082;slap@3.161;bolt@3.502,

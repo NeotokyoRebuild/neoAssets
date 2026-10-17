@@ -8,3 +8,4 @@ mx.reload_from_seat_partial,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_f
 mx.reload_from_slap_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,reload_from_slap_dry,,reach:26->reload:62!;reload:62-86,bolt=1.300,bolt@1.000,51 f; straight reach up beside the gun to the handle hold f62 (the pull is f62-70)
 mx.draw_resume_drop_dry,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,draw_resume_drop_dry,,drawpark:draw->reload:30;reload:30-86,seat=1.400;slap=1.800;bolt=2.600,seat@1.384;slap@1.825;bolt@2.300,90 f
 mx.draw_resume_drop_partial,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,draw_resume_drop_partial,,drawpark:draw->reload:30;reload:30-52;exit:11:straight,seat=1.400;slap=1.800,seat@1.384;slap@1.825,67 f
+mx.fire_chamber_onehand,v_jinrai_mx;v_nsf_mx;v_jinrai_mxs;v_nsf_mxs,fire_chamber_onehand,,flick:4:fire->reload:30:6;drawpark:fire->reload:30:9:6;reload:30-86,seat=1.133;slap=1.533;bolt=2.333,seat@1.117;slap@1.558;bolt@2.033,

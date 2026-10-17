@@ -6,3 +6,4 @@ jitte.reload_from_drop_partial,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_
 jitte.reload_from_seat_dry,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,reload_from_seat_dry,,reach:17->reload:78;reload:78-99,bolt=0.867,bolt@0.358,39 f; bolt grab f78
 jitte.draw_resume_drop_dry,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,draw_resume_drop_dry,,drawpark:draw->reload:52:12:20;reload:52-99,seat=1.567;bolt=2.367,seat@1.200;bolt@1.858,84 f
 jitte.draw_resume_drop_partial,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,draw_resume_drop_partial,,drawpark:draw->reload:52:12:20;reload:52-66;exit:11:straight,seat=1.567,seat@1.200,62 f
+jitte.fire_chamber_onehand,v_jinrai_jitte;v_nsf_jitte;v_jinrai_jittes;v_nsf_jittes,fire_chamber_onehand,,flick:4:fire->reload:52:6;drawpark:fire->reload:52:14:6;reload:52-99,seat=1.367;bolt=2.167,seat@1.000;bolt@1.658,

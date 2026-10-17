@@ -6,3 +6,4 @@ srm.reload_from_drop_partial,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,r
 srm.reload_from_seat_dry,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,reload_from_seat_dry,,reach:17->reload:74;reload:74-92,bolt=1.000,bolt@0.637,36 f; bolt grab f74
 srm.draw_resume_drop_dry,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,draw_resume_drop_dry,,drawpark:draw->reload:34:6;reload:34-92,seat=1.600;bolt=2.767,seat@1.501;bolt@2.404,89 f
 srm.draw_resume_drop_partial,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,draw_resume_drop_partial,,drawpark:draw->reload:34:6;reload:34-56;exit:15:straight,seat=1.600,seat@1.501,68 f
+srm.fire_chamber_onehand,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,fire_chamber_onehand,,flick:4:fire->reload:34:6;drawpark:fire->reload:34:6:6;reload:34-92,seat=1.333;bolt=2.500,seat@1.234;bolt@2.137,

@@ -75,3 +75,5 @@ $sequence "reload_from_seat_partial" "anims/reload_from_seat_partial.smd" fps 30
 $sequence "reload_from_slap_dry" "anims/reload_from_slap_dry.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
 $sequence "draw_resume_drop_dry" "anims/draw_resume_drop_dry.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
 $sequence "draw_resume_drop_partial" "anims/draw_resume_drop_partial.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "fire_blend" "anims/fire.smd" fps 30 fadein 0.20 fadeout 0.20 node "2"
+$sequence "fire_chamber_onehand" "anims/fire_chamber_onehand.smd" fps 30 fadein 0.133 fadeout 0.20 node "0"

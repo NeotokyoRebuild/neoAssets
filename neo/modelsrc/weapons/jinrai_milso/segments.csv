@@ -6,3 +6,4 @@ milso.reload_from_drop_dry,v_jinrai_milso;v_nsf_milso,reload_from_drop_dry,,reac
 milso.reload_from_seat_dry,v_jinrai_milso;v_nsf_milso,reload_from_seat_dry,,hold:idle01empty:0:16;track:slide01:reloadempty:54-63@0,bolt=0.267,bolt@0.260,16 f; the slide release alone from the slide-back idle
 milso.draw_resume_drop_partial,v_jinrai_milso;v_nsf_milso,draw_resume_drop_partial,,drawpark:draw->reload:24:10;reload:24-63,seat=1.500,seat@1.576,74 f
 milso.draw_resume_drop_dry,v_jinrai_milso;v_nsf_milso,draw_resume_drop_dry,,drawpark:drawempty->reloadempty:24:10;reloadempty:24-63,seat=1.500;bolt=2.400,seat@1.576;bolt@2.393,74 f; the empty draw (slide back)
+milso.fire_chamber_onehand,v_jinrai_milso;v_nsf_milso,fire_chamber_onehand,,flick:4:fireempty->reloadempty:24:6;drawpark:fireempty->reloadempty:24:10:6;reloadempty:24-63,seat=1.233;bolt=2.133,seat@1.310;bolt@2.127,

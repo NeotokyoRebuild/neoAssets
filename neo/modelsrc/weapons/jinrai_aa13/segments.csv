@@ -6,3 +6,4 @@ aa13.reload_from_drop_partial,v_jinrai_aa13;v_nsf_aa13,reload_from_drop_partial,
 aa13.reload_from_seat_dry,v_jinrai_aa13;v_nsf_aa13,reload_from_seat_dry,,reach:18->reload:116;reload:116-140,bolt=1.067,bolt@0.497,43 f; bolt grab f116
 aa13.draw_resume_drop_dry,v_jinrai_aa13;v_nsf_aa13,draw_resume_drop_dry,,drawpark:draw->reload:60:12:20;reload:60-140,seat=2.567;bolt=3.533,seat@2.105;bolt@2.964,117 f
 aa13.draw_resume_drop_partial,v_jinrai_aa13;v_nsf_aa13,draw_resume_drop_partial,,drawpark:draw->reload:60:12:20;reload:60-105;exit:9:straight,seat=2.567,seat@2.105,91 f
+aa13.fire_chamber_onehand,v_jinrai_aa13;v_nsf_aa13,fire_chamber_onehand,,flick:4:fire->reload:60:6;drawpark:fire->reload:60:9:6;reload:60-140,seat=2.200;bolt=3.167,seat@1.738;bolt@2.597,
