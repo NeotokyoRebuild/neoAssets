@@ -6,3 +6,4 @@ tachi.reload_from_drop_dry,v_jinrai_tachi;v_nsf_tachi,reload_from_drop_dry,,reac
 tachi.reload_from_seat_dry,v_jinrai_tachi;v_nsf_tachi,reload_from_seat_dry,,hold:idle01empty:0:16;track:slide:reloadempty:54-63@0,bolt=0.267,bolt@0.260,16 f
 tachi.draw_resume_drop_partial,v_jinrai_tachi;v_nsf_tachi,draw_resume_drop_partial,,drawpark:draw->reload:24:14;reload:24-63,seat=1.633;bolt=2.533,seat@1.880;bolt@2.527,78 f
 tachi.draw_resume_drop_dry,v_jinrai_tachi;v_nsf_tachi,draw_resume_drop_dry,,drawpark:drawempty->reloadempty:24:14;reloadempty:24-63,seat=1.633;bolt=2.533,seat@1.880;bolt@2.527,78 f
+tachi.fire_chamber_onehand,v_jinrai_tachi;v_nsf_tachi,fire_chamber_onehand,,flick:4:fireempty->reloadempty:24:8;drawpark:fireempty->reloadempty:24:14:8;reloadempty:24-63,seat=1.367;bolt=2.267,seat@1.613;bolt@2.260,

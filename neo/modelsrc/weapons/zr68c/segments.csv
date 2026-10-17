@@ -8,3 +8,4 @@ zr68c.reload_from_seat_partial,v_jinrai_zr68c;v_nsf_zr68c,reload_from_seat_parti
 zr68c.reload_from_slap_dry,v_jinrai_zr68c;v_nsf_zr68c,reload_from_slap_dry,,reach:auto->reload:61;reload:61-81,bolt=1.233,bolt@0.996,51 f; bolt grab f61 38.6 u straight / 49.8 u arc: reach 30
 zr68c.draw_resume_drop_dry,v_jinrai_zr68c;v_nsf_zr68c,draw_resume_drop_dry,,drawpark:draw->reload:30;reload:30-81,seat=1.433;slap=1.800;bolt=2.367,seat@1.394;slap@1.829;bolt@2.129,85 f; resume after the drop (user 2026-10-15): one-handed draw with the arm and magazine parked out of view
 zr68c.draw_resume_drop_partial,v_jinrai_zr68c;v_nsf_zr68c,draw_resume_drop_partial,,drawpark:draw->reload:30;reload:30-56;exit:10:pose,seat=1.433;slap=1.800,seat@1.394;slap@1.829,70 f
+zr68c.fire_chamber_onehand,v_jinrai_zr68c;v_nsf_zr68c,fire_chamber_onehand,,flick:4:fire->reload:30:6;drawpark:fire->reload:30:9:6;reload:30-81,seat=1.167;slap=1.533;bolt=2.100,seat@1.127;slap@1.562;bolt@1.862,
