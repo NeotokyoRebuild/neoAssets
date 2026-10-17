@@ -1,0 +1,4 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+kyla.reload,v_jinrai_klya9;v_nsf_klya9,reload,ACT_VM_RELOAD,reload:0-71,drop=0.800;seat=1.333,drop@0.232;seat@1.216|1.673,72 f shipped reload (no chamber: dry = partial); drop = cylinder swung open f24; seat f40 as the cylinder closes; gap closed 2026-10-15
+kyla.reload_from_drop_dry,v_jinrai_klya9;v_nsf_klya9,reload_from_drop_dry,,reach:37->reload:25;reload:25-71,seat=1.733,seat@1.616|2.073,84 f; from the open cylinder (f24)
+kyla.draw_resume_drop_dry,v_jinrai_klya9;v_nsf_klya9,draw_resume_drop_dry,,drawpark:draw->reload:25:10;reload:25-71,seat=1.633,seat@1.516|1.973,81 f; the draw with the cylinder open (Chamber held as at f24) and the support hand out of view

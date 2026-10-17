@@ -1,0 +1,11 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+pz.reload,v_jinrai_pz;v_nsf_pz,reload,ACT_VM_RELOAD,reload:0-173,drop=1.500;seat=3.800;slap=4.667;bolt=5.367,drop@0.335|2.383;seat@3.382;slap@4.461;bolt@4.802,174 f shipped dry reload; slap = the drum latch; drop2 = the drum-away rustle; seat from the drum-back rustle 3.382
+pz.reload_partial,v_jinrai_pz;v_nsf_pz,reload_partial,,reload:0-142;exit:8:straight,drop=1.500;seat=3.800;slap=4.667,drop@0.335|2.383;seat@3.382;slap@4.461,151 f; cut f142 after the latch
+pz.reload_from_drop_dry,v_jinrai_pz;v_nsf_pz,reload_from_drop_dry,,reach:39->reload:80;reload:80-173,seat=2.433;slap=3.300;bolt=4.000,seat@2.015;slap@3.094;bolt@3.435,133 f
+pz.reload_from_drop_partial,v_jinrai_pz;v_nsf_pz,reload_from_drop_partial,,reach:39->reload:80;reload:80-142;exit:8:straight,seat=2.433;slap=3.300,seat@2.015;slap@3.094,110 f
+pz.reload_from_seat_dry,v_jinrai_pz;v_nsf_pz,reload_from_seat_dry,,reach:12->reload:130;reload:130-173,slap=0.733;bolt=1.433,slap@0.528;bolt@0.869,56 f; latch grab f130
+pz.reload_from_seat_partial,v_jinrai_pz;v_nsf_pz,reload_from_seat_partial,,reach:12->reload:130;reload:130-142;exit:8:straight,slap=0.733,slap@0.528,33 f
+pz.reload_from_slap_dry,v_jinrai_pz;v_nsf_pz,reload_from_slap_dry,,reach:20->reload:151;reload:151-173,bolt=1.000,bolt@0.435,43 f; slide grab f151
+pz.draw_resume_drop_dry,v_jinrai_pz;v_nsf_pz,draw_resume_drop_dry,,drawpark:draw->reload:80:25;reload:80-173,seat=2.767;slap=3.633;bolt=4.333,seat@2.349;slap@3.428;bolt@3.769,143 f
+pz.draw_resume_drop_partial,v_jinrai_pz;v_nsf_pz,draw_resume_drop_partial,,drawpark:draw->reload:80:25;reload:80-142;exit:8:straight,seat=2.767;slap=3.633,seat@2.349;slap@3.428,120 f
+pz.fire_chamber_onehand,v_jinrai_pz;v_nsf_pz,fire_chamber_onehand,,flick:4:fire->reload:80:6;drawpark:fire->reload:80:25:6;reload:80-173,seat=2.500;slap=3.367;bolt=4.067,seat@2.082;slap@3.161;bolt@3.502,

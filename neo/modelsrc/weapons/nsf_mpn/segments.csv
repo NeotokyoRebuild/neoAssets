@@ -1,0 +1,9 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+mpn.reload,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,reload,ACT_VM_RELOAD,reload:0-96,drop=0.633;seat=1.467;bolt=2.800,drop@0.596;seat@1.447;bolt@2.374,97 f shipped dry reload; seat = the loud click (hard cut 1.60; onset 1.627) played 0.18 s early on the seat (the soft 1.38-1.49 burst left out); drop = the burst 0.58-0.90 (gap closed); no slap
+mpn.reload_partial,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,reload_partial,,reload:0-56;exit:6:straight,drop=0.633;seat=1.467,drop@0.596;seat@1.447,63 f; cut f56 in the hold (hand near idle)
+mpn.reload_from_drop_dry,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,reload_from_drop_dry,,reach:40->reload:36;reload:36-96,seat=1.600;bolt=2.933,seat@1.580;bolt@2.507,101 f
+mpn.reload_from_drop_partial,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,reload_from_drop_partial,,reach:40->reload:36;reload:36-56;exit:6:straight,seat=1.600,seat@1.580,67 f
+mpn.reload_from_seat_dry,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,reload_from_seat_dry,,reach:19->reload:71;reload:71-96,bolt=1.067,bolt@0.641,45 f; charge grab f71
+mpn.draw_resume_drop_dry,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,draw_resume_drop_dry,,drawpark:draw->reload:36:13;reload:36-96,seat=1.900;bolt=3.233,seat@1.880;bolt@2.807,110 f
+mpn.draw_resume_drop_partial,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,draw_resume_drop_partial,,drawpark:draw->reload:36:13;reload:36-56;exit:6:straight,seat=1.900,seat@1.880,76 f
+mpn.fire_chamber_onehand,v_jinrai_mpn_s;v_nsf_mpn_s;v_jinrai_mpn;v_nsf_mpn,fire_chamber_onehand,,flick:6:fire->reload:36:6;drawpark:fire->reload:36:13:6;reload:36-96,seat=1.300;bolt=2.633,seat@1.280;bolt@2.207,

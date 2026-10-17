@@ -1,0 +1,4 @@
+milso_reload_bolt.wav (and tachi/tachi_reload_bolt.wav): PLACEHOLDER slide-release sound for the research branch.
+Neither pistol's reload wav has a slide release (the shipped reloads never release a slide), so this is the second
+burst of NEOTOKYO's weapons/mp5navy/mp5_slideback.wav (from 0.140 s, its transient at 0.160 s; 8-bit mono converted to 16-bit stereo), the
+closest slide-like transient in the game's sounds. Needs a proper recorded slide release later.

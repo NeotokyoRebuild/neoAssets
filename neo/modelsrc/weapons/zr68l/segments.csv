@@ -1,0 +1,11 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+zr68l.reload,v_jinrai_zr68l;v_nsf_zr68l,reload,ACT_VM_RELOAD,reload:0-81,drop=0.700;seat=1.333;slap=1.700;bolt=2.267,drop@0.183;seat@1.335;slap@1.691;bolt@1.996,82 f shipped dry reload; own wav zr68L_Reload.wav: slap piece (source 1.861) and bolt piece (source 2.296) played 0.17 and 0.30 s early to meet the tap and the handle (research 8)
+zr68l.reload_partial,v_jinrai_zr68l;v_nsf_zr68l,reload_partial,,reload:0-56;exit:10:pose,drop=0.700;seat=1.333;slap=1.700,drop@0.183;seat@1.335;slap@1.691,67 f; exit as a plain pose blend (research-accepted on the ZR68; equals the BST build)
+zr68l.reload_from_drop_dry,v_jinrai_zr68l;v_nsf_zr68l,reload_from_drop_dry,,reach:auto->reload:30;reload:30-81,seat=1.267;slap=1.633;bolt=2.200,seat@1.268;slap@1.624;bolt@1.929,80 f; insert grab f30 29.2 u straight / 43.4 u arc: reach 27
+zr68l.reload_from_drop_partial,v_jinrai_zr68l;v_nsf_zr68l,reload_from_drop_partial,,reach:auto->reload:30;reload:30-56;exit:10:pose,seat=1.267;slap=1.633,seat@1.268;slap@1.624,65 f
+zr68l.reload_from_seat_dry,v_jinrai_zr68l;v_nsf_zr68l,reload_from_seat_dry,,reach:auto->reload:48;reload:48-81,slap=0.800;bolt=1.367,slap@0.791;bolt@1.096,55 f; slap grab f48 14.7 u straight / 32.8 u arc: reach 20
+zr68l.reload_from_seat_partial,v_jinrai_zr68l;v_nsf_zr68l,reload_from_seat_partial,,reach:auto->reload:48;reload:48-56;exit:10:pose,slap=0.800,slap@0.791,40 f
+zr68l.reload_from_slap_dry,v_jinrai_zr68l;v_nsf_zr68l,reload_from_slap_dry,,reach:auto->reload:61;reload:61-81,bolt=1.233,bolt@0.963,51 f; bolt grab f61 38.6 u straight / 49.8 u arc: reach 30
+zr68l.draw_resume_drop_dry,v_jinrai_zr68l;v_nsf_zr68l,draw_resume_drop_dry,,drawpark:draw->reload:30;reload:30-81,seat=1.533;slap=1.900;bolt=2.467,seat@1.535;slap@1.891;bolt@2.196,88 f; resume after the drop (user 2026-10-15): one-handed draw with the arm and magazine parked out of view
+zr68l.draw_resume_drop_partial,v_jinrai_zr68l;v_nsf_zr68l,draw_resume_drop_partial,,drawpark:draw->reload:30;reload:30-56;exit:10:pose,seat=1.533;slap=1.900,seat@1.535;slap@1.891,73 f
+zr68l.fire_chamber_onehand,v_jinrai_zr68l;v_nsf_zr68l,fire_chamber_onehand,,flick:4:fire->reload:30:6;drawpark:fire->reload:30:12:6;reload:30-81,seat=1.267;slap=1.633;bolt=2.200,seat@1.268;slap@1.624;bolt@1.929,

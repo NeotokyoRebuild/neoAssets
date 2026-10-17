@@ -1,0 +1,9 @@
+id,model,out_seq,activity,pieces,credits,audio,note
+srm.reload,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,reload,ACT_VM_RELOAD,reload:0-92,drop=0.633;seat=1.733;bolt=2.900,drop@0.496;seat@1.634;bolt@2.537,93 f shipped dry reload; drop = the mag-out burst 0.48-0.82 (gap closed); no slap
+srm.reload_partial,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,reload_partial,,reload:0-56;exit:15:straight,drop=0.633;seat=1.733,drop@0.496;seat@1.634,72 f; cut f56 (hand 35 u out)
+srm.reload_from_drop_dry,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,reload_from_drop_dry,,reach:33->reload:34;reload:34-92,seat=1.700;bolt=2.867,seat@1.601;bolt@2.504,92 f
+srm.reload_from_drop_partial,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,reload_from_drop_partial,,reach:33->reload:34;reload:34-56;exit:15:straight,seat=1.700,seat@1.601,71 f
+srm.reload_from_seat_dry,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,reload_from_seat_dry,,reach:17->reload:74;reload:74-92,bolt=1.000,bolt@0.637,36 f; bolt grab f74
+srm.draw_resume_drop_dry,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,draw_resume_drop_dry,,drawpark:draw->reload:34:6;reload:34-92,seat=1.600;bolt=2.767,seat@1.501;bolt@2.404,89 f
+srm.draw_resume_drop_partial,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,draw_resume_drop_partial,,drawpark:draw->reload:34:6;reload:34-56;exit:15:straight,seat=1.600,seat@1.501,68 f
+srm.fire_chamber_onehand,v_jinrai_srm;v_nsf_srm;v_jinrai_srm_s;v_nsf_srm_s,fire_chamber_onehand,,flick:4:fire->reload:34:6;drawpark:fire->reload:34:6:6;reload:34-92,seat=1.333;bolt=2.500,seat@1.234;bolt@2.137,
