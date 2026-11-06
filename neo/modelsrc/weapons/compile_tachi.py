@@ -1,10 +1,10 @@
 """Compile exported Tachi SMDs using Valve's Source SDK 2013 studiomdl.
 
 Run with Python 3: compile_tachi.py --compiler PATH --game PATH
-The destination must be a game folder containing gameinfo.txt. Compilation
-uses a temporary game configuration because SDK tools cannot resolve the
-client's |appid_244630| material mount. Only the resulting Tachi model files
-are copied to the chosen destination; its gameinfo.txt is never changed.
+
+The game path must contain gameinfo.txt.
+Compilation uses a temporary game configuration because SDK tools cannot resolve the client's appid search path.
+The resulting Tachi model files are copied to the chosen destination, while gameinfo.txt is not changed
 """
 import argparse
 from pathlib import Path
@@ -14,9 +14,10 @@ import tempfile
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--compiler', type=Path, required=True,
-                        help='Source SDK Base 2013 Multiplayer/bin/studiomdl.exe')
+                        help='Path to studiomdl.exe in the Source SDK Base 2013 Multiplayer bin folder')
     parser.add_argument('--game', type=Path, required=True,
                         help='Destination neo game directory (contains gameinfo.txt)')
     args = parser.parse_args()

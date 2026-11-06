@@ -1,11 +1,20 @@
-# NEOTOKYO Rebuild assets
+# neoAssets
 
-Runtime content and editable sources live under `neo/`. neo's CMake setup
-copies this tree into its local game directory.
+This repository contains the runtime assets used by the [neo](https://github.com/NeotokyoRebuild/neo/) repo.
 
-## Weapon animation authoring
 
-Start with the [Blender animation workflow](neo/modelsrc/weapons/README.md).
-The Jinrai and NSF Tachi projects include editable rigs, animations, preview
-textures, SMD exports, and QC compile definitions. Edit and save in Blender,
-export with Blender Source Tools, then compile the exported files for Source.
+## Installation
+
+When neo configures CMake, it copies the `neo/` tree from this repository into neo's `game/neo/` directory.
+By default, CMake downloads and installs the `NeotokyoRebuild/neoAssets` `master` branch.
+
+
+## Using a local checkout
+
+To use a local neoAssets checkout, set neo's CMake variable `NEO_EXTRA_ASSETS_ALT_PATH` to the `neoAssets` checkout root configuring CMake.
+(Do not set it to the `neo/` subfolder.)
+
+Without a local checkout override, a later neo CMake configure can replace changes in the game copy with files from the downloaded `master` branch.
+This can result in lost work if the only copies were in the local neo/game/neo installation.
+
+Setting this override allows one to edit this repository to version changes locally, while enabling the use of CMake configure from `neo` to update the game copy.

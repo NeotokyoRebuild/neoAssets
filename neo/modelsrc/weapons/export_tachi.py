@@ -1,9 +1,8 @@
 """Export the saved Tachi Blender sources with Blender Source Tools.
 
 Run: blender --background --python-exit-code 1 --python export_tachi.py
-Runtime: approximately 5 seconds for both models on an i7-12700H.
-Requires Blender 5.2 or newer and Blender Source Tools 3.4.3.
-This reads .blend sources; it never reconstructs them from SMD exports.
+Requires Blender 5.2.2 and Blender Source Tools 3.4.3 or newer.
+This helper reads .blend sources, and writes SMD exports.
 """
 from pathlib import Path
 
