@@ -1,10 +1,12 @@
-"""Export the saved Tachi Blender sources with Blender Source Tools.
+"""Export saved viewmodel Blender sources with Blender Source Tools.
 
-Run: blender --background --python-exit-code 1 --python export_tachi.py
+Run: blender --background --python-exit-code 1 --python export_viewmodels.py -- SOURCE [SOURCE ...]
+Each SOURCE is a folder beside this script that contains one .blend file.
 Requires Blender 5.2.2 and Blender Source Tools 3.4.3 or newer.
 This helper reads .blend sources, and writes SMD exports.
 """
 from pathlib import Path
+import sys
 
 import bpy
 
@@ -38,5 +40,14 @@ def export_project(project):
 
 if __name__ == '__main__':
     root = Path(__file__).resolve().parent
-    for team in ('jinrai', 'nsf'):
-        export_project(root / (team + '_tachi') / ('v_' + team + '_tachi.blend'))
+    sources = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+    if not sources:
+        raise RuntimeError('List the source folders to export after --')
+    projects = []
+    for source in sources:
+        found = sorted((root / source).glob('*.blend'))
+        if len(found) != 1:
+            raise RuntimeError('Source folder must contain one .blend file: ' + source)
+        projects.append(found[0])
+    for project in projects:
+        export_project(project)

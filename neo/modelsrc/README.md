@@ -4,7 +4,7 @@
 
 * Use Blender 5.2.2 or newer.
 * Use Blender Source Tools 3.4.3 or later to export SMD files from Blender.
-* Use Python 3 to run the optional helper scripts. Requires [bpy](https://pypi.org/project/bpy/).
+* Use Python 3 to run the optional compile helper scripts. Export helper scripts run inside Blender, which includes `bpy`.
 * Source SDK Base 2013 Multiplayer's `studiomdl.exe` compiles Source models.
 
 ## Exporting animations
