@@ -151,6 +151,10 @@ As on the MPN45, `drawtocycle` carries its own `drawtocycle:3_cycle.sound` marke
 The SRM (four projects) joins `reload` after f33 and f75 and leaves it at f58, the magazine seat (no tap). Slots:
 `drawunloaded` f0-34, `drawtocycle` f0-32, `skipcycle` f0-11.
 
+The SRS (two projects, bolt action) joins `reload` after f30 (its magazine moves into the hand there) and f79, and
+leaves it at f56, the magazine seat. Slots: `drawunloaded` f0-38, `drawtocycle` f0-29, `skipcycle` f0-16 (ends on
+`idle` f0: the SRS idle sequence has no `01`). Its `charge` sequence (the bolt after each shot) is unchanged.
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
