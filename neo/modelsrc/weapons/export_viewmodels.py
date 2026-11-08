@@ -14,8 +14,9 @@ prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (
 The export rewrites each time there, shifted into composites. Both team scenes of a gun must carry the same markers:
 a mismatch fails before any SMD is written.
 A sound entry weapon_GUN.KEY plays sound/weapons/GUN/GUN_KEY.wav (a convention; the sound script is not read).
-A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
-A row's "resume" key names the sequence that resumes the reload interrupted after that step: resume_after_STEP...
+A row's "resume" key names the composite that resumes the reload interrupted after that step; the composite must
+join the row's sequence after that step (part SEQUENCE@STEP...). A resume lists only the steps after STEP:
+it never replays an earlier step's sound.
 A sequence's ammo times come before its last frame, and its sounds finish playing by then: the gun can fire there.
 """
 from pathlib import Path
@@ -32,7 +33,6 @@ SOURCE = 'viewmodels.blend'
 FPS = 30
 SOUND_LEAD = 0.02  # neo starts a reload sound piece this long before its time (RELOAD_SOUND_LEAD)
 EXACT = 1e-4  # below the SMD print precision: the poses match, nothing is eased
-RESUME_PREFIX = 'resume_after_'
 TIME_KEY = re.compile(r'ammo|sound\d*')  # the phases keys the markers set; "sound_name" is not one
 WAV_PATH = 'sound/weapons/{gun}/{gun}_{key}.wav'  # for sound entry weapon_GUN.KEY
 SEAM_LIMIT_UNITS, SEAM_LIMIT_DEGREES = 0.5, 2.0  # eased over 3 frames: less than the reload moves per frame
@@ -85,14 +85,15 @@ def ease_seam(output, joined, target, count):
 
 
 def write_composites(folder, markers):
+    """Write the composites; return the marker frames per sequence and each composite's SLOT@STEP joins."""
     composites = folder / 'composites.txt'
-    times = {}
+    times, joins = {}, {}
     for name, frame in markers.items():
         slot, _, key = name.partition(':')
         if key:
             times.setdefault(slot, {})[key] = frame
     if not composites.is_file():
-        return times
+        return times, joins
     for line in composites.read_text(encoding='ascii').splitlines():
         if not line.strip():
             continue
@@ -103,6 +104,7 @@ def write_composites(folder, markers):
             slot, mark, span = re.match(r'(\w+)([:@]?)(.*)', part).groups()
             if mark == '@':
                 step, _, last = span.partition('-')
+                joins.setdefault(output, set()).add((slot, step))
                 join = markers.get(slot + ':' + step + '.join', markers.get(slot + ':' + step))
                 if join is None:
                     raise RuntimeError('No timeline marker %s:%s for %s' % (slot, step, part))
@@ -123,7 +125,7 @@ def write_composites(folder, markers):
         (folder / 'anims' / (output + '.smd')).write_text(
             '\n'.join(header + body + ['end']) + '\n', encoding='ascii')
         print('COMPOSED', output, len(joined), 'frames')
-    return times
+    return times, joins
 
 
 def sound_end(path, name, at):
@@ -193,34 +195,34 @@ def step_order(step):
     return int(step.partition('_')[0])
 
 
-def check_resume_rows(folder, sequence, steps):
-    """A resume sequence lists only later steps, and a row's "resume" names the resume after its own step."""
-    if sequence.startswith(RESUME_PREFIX):
-        after = step_order(sequence.removeprefix(RESUME_PREFIX))
-        for step in steps:
-            if step_order(step) <= after:
-                raise RuntimeError('%s lists step %s: a resume plays only later steps' % (sequence, step))
-    for step, row in steps.items():
-        if 'resume' not in row:
-            continue
-        resume = row['resume'].value
-        own = resume.startswith(RESUME_PREFIX) and step_order(resume.removeprefix(RESUME_PREFIX)) == step_order(step)
-        if not (own and (folder / 'anims' / (resume + '.smd')).is_file()):
-            raise RuntimeError('%s row %s: %s is no %s%s... sequence' % (sequence, step, resume, RESUME_PREFIX, step))
+def check_resume_rows(phases, joins):
+    """A row's "resume" names a composite that joins the row's sequence after its step; a resume lists only later steps."""
+    for sequence, steps in phases.items():
+        for step, row in steps.items():
+            if 'resume' not in row:
+                continue
+            resume = row['resume'].value
+            if (sequence, step) not in joins.get(resume, ()):
+                raise RuntimeError('%s row %s: %s is no composite with a part %s@%s in composites.txt' % (
+                    sequence, step, resume, sequence, step))
+            for later in phases.get(resume, {}):
+                if step_order(later) <= step_order(step):
+                    raise RuntimeError('%s lists step %s: a resume after %s plays only later steps' % (resume, later, step))
 
 
 WRITTEN = {}  # phases file -> text from the first team project of this run
 
 
-def fill_phases(folder, times):
+def fill_phases(folder, times, joins):
     """Set every ammo/sound time in the weapon's ReloadPhases file from the markers; both teams must agree."""
     path = folder.parents[2] / 'scripts' / ('weapon_%s_reload_phases.txt' % folder.name.partition('_')[2])
     if not path.is_file():
         return
     text = path.read_text(encoding='ascii')
     changes = []
-    for sequence, steps in read_phases(text).items():
-        check_resume_rows(folder, sequence, steps)
+    phases = read_phases(text)
+    check_resume_rows(phases, joins)
+    for sequence, steps in phases.items():
         for step, row in steps.items():
             for key in filter(TIME_KEY.fullmatch, row):
                 marker = step if key == 'ammo' else step + '.' + key
@@ -298,7 +300,7 @@ def export_project(folder, scene):
     if reference.read_bytes() != reference_bytes:
         raise RuntimeError('The preview mesh must not overwrite reference.smd')
     print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
-    fill_phases(folder, write_composites(folder, read_markers(scene)))
+    fill_phases(folder, *write_composites(folder, read_markers(scene)))
 
 
 if __name__ == '__main__':
