@@ -7,7 +7,8 @@ Requires Blender 5.2.3 or newer and Blender Source Tools 3.4.3 or newer.
 This helper reads viewmodels.blend, and writes SMD exports.
 An optional composites.txt in a project folder joins exported animations into one more SMD per line:
 OUTPUT PART [PART ...] [blend=N], where PART is SLOT, SLOT:FIRST-LAST (inclusive frames; an empty LAST means
-the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP). Across a join,
+the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP). FIRST and LAST
+may also name a marker STEP.KEY of the slot, meaning its frame (reload:0-2_load.exit). Across a join,
 the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
 Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
 prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
@@ -15,8 +16,8 @@ The export rewrites each time there, shifted into composites. Both team scenes o
 a mismatch fails before any SMD is written.
 A sound entry weapon_GUN.KEY plays sound/weapons/GUN/GUN_KEY.wav (a convention; the sound script is not read).
 A row's "resume" key names the composite that resumes the reload interrupted after that step; the composite must
-join the row's sequence after that step (part SEQUENCE@STEP...). A resume lists only the steps after STEP:
-it never replays an earlier step's sound.
+join the row's sequence after that step (part SEQUENCE@STEP...), or, in a composite row, the part the step's marker
+came from. A resume lists only the steps after STEP: it never replays an earlier step's sound.
 A sequence's ammo times come before its last frame, and its sounds finish playing by then: the gun can fire there.
 """
 from pathlib import Path
@@ -91,16 +92,26 @@ def ease_seam(output, joined, target, count):
     print('SEAM', text)
 
 
+def marker_frame(markers, slot, value, part):
+    """A range end as written: a frame number, empty, or a marker STEP.KEY of the slot (its frame)."""
+    if not value or value.isdigit():
+        return value
+    if slot + ':' + value not in markers:
+        raise RuntimeError('No timeline marker %s:%s for %s' % (slot, value, part))
+    return str(markers[slot + ':' + value])
+
+
 def write_composites(folder, markers):
-    """Write the composites; return the marker frames per sequence and each composite's SLOT@STEP joins."""
+    """Write the composites; return the marker frames per sequence, each composite's SLOT@STEP joins, and the
+    exported slot each composite marker came from."""
     composites = folder / 'composites.txt'
-    times, joins = {}, {}
+    times, joins, sources = {}, {}, {}
     for name, frame in markers.items():
         slot, _, key = name.partition(':')
         if key:
             times.setdefault(slot, {})[key] = frame
     if not composites.is_file():
-        return times, joins
+        return times, joins, sources
     for line in composites.read_text(encoding='ascii').splitlines():
         if not line.strip():
             continue
@@ -120,19 +131,20 @@ def write_composites(folder, markers):
             if header is not None and part_header != header:
                 raise RuntimeError('Composite parts have different nodes: ' + part)
             header = part_header
-            first, _, last = span.partition('-')
+            first, last = (marker_frame(markers, slot, value, part) for value in span.partition('-')[::2])
             first, last = int(first or 0), int(last) if last else len(frames) - 1
             if joined and first > 0 and count > 0:
                 ease_seam(output, joined, frames[first - 1], count)
             for key, frame in times.get(slot, {}).items():
                 if first <= frame <= last:
                     times.setdefault(output, {})[key] = len(joined) + frame - first
+                    sources.setdefault(output, {})[key] = sources.get(slot, {}).get(key, slot)
             joined += frames[first:last + 1]
         body = [text for time, frame in enumerate(joined) for text in ['time %d' % time] + frame]
         (folder / 'anims' / (output + '.smd')).write_text(
             '\n'.join(header + body + ['end']) + '\n', encoding='ascii')
         print('COMPOSED', output, len(joined), 'frames')
-    return times, joins
+    return times, joins, sources
 
 
 def sound_end(path, name, at):
@@ -202,16 +214,18 @@ def step_order(step):
     return int(step.partition('_')[0])
 
 
-def check_resume_rows(phases, joins):
-    """A row's "resume" names a composite that joins the row's sequence after its step; a resume lists only later steps."""
+def check_resume_rows(phases, joins, sources):
+    """A row's "resume" names a composite that joins the row's sequence, or the part its step came from, after the
+    step; a resume lists only later steps."""
     for sequence, steps in phases.items():
         for step, row in steps.items():
             if 'resume' not in row:
                 continue
             resume = row['resume'].value
-            if (sequence, step) not in joins.get(resume, ()):
+            source = sources.get(sequence, {}).get(step, sequence)
+            if not {(sequence, step), (source, step)} & joins.get(resume, set()):
                 raise RuntimeError('%s row %s: %s is no composite with a part %s@%s in composites.txt' % (
-                    sequence, step, resume, sequence, step))
+                    sequence, step, resume, source, step))
             for later in phases.get(resume, {}):
                 if step_order(later) <= step_order(step):
                     raise RuntimeError('%s lists step %s: a resume after %s plays only later steps' % (resume, later, step))
@@ -220,7 +234,7 @@ def check_resume_rows(phases, joins):
 WRITTEN = {}  # phases file -> text from the first team project of this run
 
 
-def fill_phases(folder, times, joins):
+def fill_phases(folder, times, joins, sources):
     """Set every ammo/sound time in the weapon's ReloadPhases file from the markers; both teams must agree."""
     path = folder.parents[2] / 'scripts' / ('weapon_%s_reload_phases.txt' % folder.name.partition('_')[2])
     if not path.is_file():
@@ -228,7 +242,7 @@ def fill_phases(folder, times, joins):
     text = path.read_text(encoding='ascii')
     changes = []
     phases = read_phases(text)
-    check_resume_rows(phases, joins)
+    check_resume_rows(phases, joins, sources)
     for sequence, steps in phases.items():
         for step, row in steps.items():
             for key in filter(TIME_KEY.fullmatch, row):
