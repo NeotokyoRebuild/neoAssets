@@ -5,6 +5,9 @@
 // SKETCH (sunzenshen): the M41 needs the three sound slots of 2_load (seat rattle, tap, slap), all of
 // RELOAD_SOUNDS_PER_ROW; a resume_after_2_load would drop them all (the sound rule), so the M41 has none yet.
 // NEO TODO (sunzenshen): placeholder wavs, re-cut from m41_reload.wav the way zr68_reload_*.wav were (zr68c-sound-align.md).
+// Combinatorics: only row 3 (resume_after_1_unload_empty) exists, with a placeholder transition (research glued clip).
+// TODO: rows 2, 4, 5 if wanted (reload_partial has no meaning without a chamber rule; M41 has no 30+1), resume after
+// 2_load (drops 3 sounds: seat, tap, slap), real base Blender projects, re-cut sounds, fire point, ship base models.
 "WeaponData"
 {
 	"ReloadPhases"

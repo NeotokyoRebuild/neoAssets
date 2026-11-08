@@ -10,6 +10,9 @@
 //  - Not here (full-slice work): a resume after 2_load on the dry pistol would be the slide release alone, but
 //    ResumeReload zeroes the clip and Holster drops a loaded magazine's resume; see the plan, "Sketch S3".
 // NEO TODO (sunzenshen): placeholder wav (research cut of the seat + tap), re-cut from milso_reload.wav.
+// Combinatorics (pistol): rows 1 and 2 are the shipped reloadempty (dry) and reload (tactical); resume after unload exists
+// for both; row 5 (dry, after load) is the slide release alone and is not done (needs a resume that keeps the clip).
+// TODO: row 5, chambered round on a tactical resume, fire point, ship models, replace the placeholder seat wav.
 "WeaponData"
 {
 	"ReloadPhases"

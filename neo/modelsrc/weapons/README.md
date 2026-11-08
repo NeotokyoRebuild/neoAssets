@@ -117,3 +117,20 @@ Second gun after the M41 sketch, resume after `1_unload`; it has two reload sequ
 - The slide release has no sound; `3_cycle` carries only an ammo time.
 - Both transition slots are the research glued clips (placeholders); composites take frames 0-34 (f34 equals `reload` / `reloadempty` f24).
 - Compiled `v_*_milso.*` are new in neoAssets.
+
+## Sketch status
+
+Parked until the ZR68C MVP gets reviewer feedback.
+
+### Per-gun TODO (M41)
+
+`composites.txt` takes no comments. Open: real base projects (animator pass, arm textures), name for a one-reload gun
+(`_empty` or bare), fire point (clip end vs `ReloadReadyBeforeEnd` 0.393 s), ship the compiled base models, six projects
+(M41, M41S, M41L, two teams) or shared clips, resume after `2_load`, run tests (flag on/off, bots, third person).
+
+### Per-gun TODO (MilSO)
+
+`composites.txt` takes no comments. Open: row 5 (resume after the load on the dry pistol, needs a resume that keeps the
+clip), chambered round kept on a tactical resume, `holsterempty` vs `holster` choice during a dry resume, slot and glue names
+for a gun with two families, fire point (`ReloadReadyBeforeEnd` 0.467 s vs 1.167 s load), ship `v_*_milso`, replace the
+placeholder seat wav.
