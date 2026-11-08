@@ -137,6 +137,10 @@ which `drawtocycle_reload` replaces with the last frame of `drawtocycle`, so tha
 The MX (four projects) joins `reload` after f30 and f61 and leaves it at f56, after the magazine tap. Slots:
 `drawunloaded` f0-37, `drawtocycle` f0-32, `skipcycle` f0-14. Its load step has one sound piece, the tap.
 
+The ZR68-S and ZR68-L reuse the ZR68C's transitions, moved onto their own poses at each end, with the same frame
+counts. Their step markers sit where their own magazines move: `1_unload` f20, `2_load` f42. The ZR68-S plays
+the ZR68C's sound pieces (`weapon_zr68.reload_*`); the ZR68-L has its own (`weapon_zr68l.reload_*`).
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
