@@ -19,10 +19,10 @@ blender --background --python-exit-code 1 --python export_viewmodels.py -- jinra
 
 A sequence made of parts of other animations is written after the export, when the source folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
-(inclusive, an empty `last` runs to the end), or `slot@step-` to start after the step's join marker (see below).
-For example, `resume_after_1_unload_empty resume_after_1_unload reload@1_unload-` writes
-`anims/resume_after_1_unload_empty.smd`: all of the `resume_after_1_unload` slot, then `reload` from the frame after
-the marker `reload:1_unload.join`. Across each join, the last 3 frames of the previous part are eased onto the pose the
+(inclusive, an empty `last` runs to the end), or `slot@step-last` to start after the step's join marker (see below);
+`last` may name a marker. For example, `resume_after_1_unload_empty resume_after_1_unload reload@1_unload-4_ready`
+writes `anims/resume_after_1_unload_empty.smd`: all of the `resume_after_1_unload` slot, then `reload` from the frame
+after the marker `reload:1_unload.join` up to the marker `reload:4_ready`. Across each join, the last 3 frames of the previous part are eased onto the pose the
 next part continues from (`blend=N` at the end of the line sets the count). The export prints the gap and fails if it
 exceeds 0.5 units or 2 degrees.
 
@@ -42,6 +42,7 @@ The `README_ANIMATOR` text block in each `.blend` repeats these rules.
 | `1_unload`, `2_load`, `3_cycle` | reload steps: old magazine out, new magazine in, round chambered. The number belongs to the step type; a gun without a step skips its number. |
 | `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of `resume_after_1_unload` |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
+| `reload:4_ready` | both hands are back on the gun and it can fire. A glued resume ends here: the reload is done, ammo included, when the clip ends. |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `resume_after_1_unload` | authored slot: the draw up to the join pose, named after the last finished step |
 | `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. `_empty` as in `reloadempty`, `idle01empty`. |
@@ -62,7 +63,7 @@ To add a resume clip after another step:
 
 1. Place the step marker `reload:STEP` (and `reload:STEP.join` if the join is elsewhere), and add a slot
    `resume_after_STEP` that ends on that pose.
-2. Add a line to `composites.txt`, such as `resume_after_STEP_empty resume_after_STEP reload@STEP-`, and a `$sequence`
+2. Add a line to `composites.txt`, such as `resume_after_STEP_empty resume_after_STEP reload@STEP-4_ready`, and a `$sequence`
    line for it to the `.qc`.
 3. Add the rows for the later steps to `neo/scripts/weapon_<gun>_reload_phases.txt` (any time), then export and compile.
    A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
