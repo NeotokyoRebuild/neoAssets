@@ -15,3 +15,7 @@ $sequence "lowtoidle" "anims/lowtoidle.smd" activity ACT_VM_IDLE_TO_LOWERED 1 fp
 $sequence "lowidle" "anims/lowidle.smd" activity ACT_VM_IDLE_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 loop node "0"
 $sequence "changemode" "anims/changemode.smd" activity ACT_VM_CHANGEMODE 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
 $sequence "melee01" "anims/melee01.smd" activity ACT_VM_MELEEATTACK1 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
+$sequence "drawunloaded_reload" "anims/drawunloaded_reload.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "drawunloaded_reload_skipcycle" "anims/drawunloaded_reload_skipcycle.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "drawtocycle_reload" "anims/drawtocycle_reload.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "reload_skipcycle" "anims/reload_skipcycle.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"

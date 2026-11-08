@@ -131,6 +131,9 @@ Slots: `drawunloaded` f0-47, `drawtocycle` f0-43, `skipcycle` f0-13. Its `3_cycl
 which `drawtocycle_reload` replaces with the last frame of `drawtocycle`, so that slot carries its own
 `drawtocycle:3_cycle.sound` marker at f43.
 
+The MX (four projects) joins `reload` after f30 and f61 and leaves it at f56, after the magazine tap. Slots:
+`drawunloaded` f0-37, `drawtocycle` f0-32, `skipcycle` f0-14. Its load step has one sound piece, the tap.
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
