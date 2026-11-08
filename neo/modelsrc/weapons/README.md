@@ -104,9 +104,17 @@ compiled model. Do not edit its SMD; edit the slots it is made of and export aga
 
 ## Reload resume animations (ZR68C)
 
-When the player switches weapons after the old magazine is out, the reload continues when the gun is drawn again.
-The game plays `drawunloaded_reload` for this: a one-handed draw with the magazine out, then the rest of `reload`.
-The `"resume"` key on the `1_unload` row of `reload` in the phases file names it.
+When the player switches weapons during a reload, the reload continues when the gun is drawn again.
+The ZR68C has four glued clips besides `reload`:
+
+| sequence | plays when | made of |
+| :-- | :-- | :-- |
+| `drawunloaded_reload` | drawn after `1_unload`, chamber empty | `drawunloaded`, then `reload` from f31 |
+| `drawloaded_reload` | drawn after `2_load`, chamber empty | `drawloaded`, then `reload` from f61 (the bolt pull) |
+| `reload_reloadexit` | a reload with a round chambered | `reload` f0-56, then `reloadexit` (no bolt pull) |
+| `drawunloaded_reload_reloadexit` | drawn after `1_unload` of `reload_reloadexit` | `drawunloaded`, `reload` f31-56, `reloadexit` |
+
+The `"resume"` key on a row of the phases file names the clip to draw after that step.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
@@ -118,18 +126,23 @@ The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 | `1_unload`, `2_load`, `3_cycle` | reload steps: old magazine out, new magazine in, round chambered. The number belongs to the step type; a gun without a step skips its number. |
 | `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of a resume composite (`reload@1_unload`) |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
+| `reload:2_load.join` | the join after `2_load` (f60): the bolt reach is done, the handle has not moved |
+| `reload:2_load.exit` | where a reload with a round chambered leaves `reload` (f56, after the tap) |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `drawunloaded` | authored slot: a one-handed draw with the magazine out, up to the join pose (Source style, as `drawempty`) |
-| `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: `TRANSITION_CLIP`, the authored transition and the shipped clip it glues into. |
-| `weapon_zr68.reload_2_load`, `reload_2_load_2` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same |
+| `drawloaded` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f32) |
+| `reloadexit` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f12), magazine seated |
+| `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: the parts in play order, joined by `_`. |
+| `weapon_zr68.reload_1_unload`, `reload_2_load`, `reload_2_load_2`, `reload_3_cycle` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
 
 A resume after step N plays only the sounds of the steps after N: a resume after `2_load` would never play the tap.
 The export fails when a resume's table lists step N or earlier.
 
 ### Markers and times
 
-- The `drawunloaded` slot holds only the new motion. It ends on the `reload` pose at the join marker.
-  A small difference is eased out at export.
+- The `drawunloaded` and `drawloaded` slots hold only the new motion. Each ends on the `reload` pose at its join
+  marker; `reloadexit` starts on the `reload` pose at `2_load.exit`. A small difference is eased out at export.
+- A `composites.txt` range may end at a marker: `reload:0-2_load.exit` is `reload` f0-56.
 - The export shifts the timing markers into every composite and rewrites every time in
   `neo/scripts/weapon_<gun>_reload_phases.txt`, the `ReloadPhases` block that neo's weapon script includes with `#base`.
   A row without a marker fails the export, and so does an ammo time at or after the sequence's last frame.
@@ -143,7 +156,9 @@ The export fails when a resume's table lists step N or earlier.
   step's sounds; `SLOT:STEP.join` moves the join. The sound's own length comes from its wav (below).
 - A row's `"resume"` key names the sequence the draw plays when a switch interrupts that sequence after the step.
   The export keeps the key and fails unless it names a composite that joins that sequence after the row's step
-  (a part such as `reload@1_unload` in `composites.txt`).
+  (a part such as `reload@1_unload` in `composites.txt`). In a glued clip, the composite may instead join the
+  part the step came from: `reload_reloadexit`'s `1_unload` comes from `reload`, so its resume
+  `drawunloaded_reload_reloadexit` joins `reload@1_unload`.
 - A sequence ends where the gun can fire: the export fails if one of its sounds plays past its last frame. A clip
   that keeps moving after both hands are at rest is trimmed in its source slot; there is no marker for it.
 
@@ -152,7 +167,7 @@ To add a resume clip after another step:
 1. Place the step marker `reload:STEP` (and `reload:STEP.join` if the join is elsewhere), and add a slot
    for the draw that ends on that pose (ZR68C: `drawunloaded`).
 2. Add a line to `composites.txt`, such as `DRAW_reload DRAW reload@STEP-`, and a
-   `$sequence` line for it to the `.qc`.
+   `$sequence` line for it to the gun's shared `GUN/viewmodel.qci`.
 3. In `neo/scripts/weapon_<gun>_reload_phases.txt`, add `"resume" "DRAW_reload"` to the `STEP` row of
    `reload`, and a table for the resume with the rows of the later steps (any time). Then export and compile.
    A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
@@ -216,6 +231,5 @@ Files in the neo repo:
 ## Sketch status (`sketch-zr68c-full`, not for review)
 
 This branch carries the whole ZR68C reload slice on top of the MVP (`reload-zr68c-resume`): every switch during a
-reload resumes it, dry or with a round chambered. It adds the slots `drawloaded` and `reloadexit` and the glued clips
-`drawunloaded_reload_reloadexit`, `drawloaded_reload` and `reload_reloadexit`. Until they are authored, the export
-covers only the MVP clips. Plan: `proposals/0057-reload-cue-timing/zr68c-slice-plan.md` in the ntre harness.
+reload resumes it, dry or with a round chambered. The neo side picks `reload_reloadexit` when a round is chambered.
+Plan: `proposals/0057-reload-cue-timing/zr68c-slice-plan.md` in the ntre harness.
