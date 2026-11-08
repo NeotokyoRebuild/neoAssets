@@ -36,6 +36,13 @@ EXACT = 1e-4  # below the SMD print precision: the poses match, nothing is eased
 TIME_KEY = re.compile(r'ammo|sound\d*')  # the phases keys the markers set; "sound_name" is not one
 WAV_PATH = 'sound/weapons/{gun}/{gun}_{key}.wav'  # for sound entry weapon_GUN.KEY
 SEAM_LIMIT_UNITS, SEAM_LIMIT_DEGREES = 0.5, 2.0  # eased over 3 frames: less than the reload moves per frame
+# Each project's rig and the one action it may export. A new project needs a row here.
+RIGS = {
+    'jinrai_tachi': ('jinrai_tachi_rig', 'jinrai_tachi_animations'),
+    'nsf_tachi': ('nsf_tachi_rig', 'nsf_tachi_animations'),
+    'jinrai_zr68c': ('jinrai_zr68c_rig', 'jinrai_zr68c_animations'),
+    'nsf_zr68c': ('nsf_zr68c_rig', 'nsf_zr68c_animations'),
+}
 
 
 def read_frames(path):
@@ -259,6 +266,22 @@ def check_teams_agree(scenes):
                     name, expected.get(name, 'missing'), other.name, markers.get(name, 'missing'), scene.name))
 
 
+def project_rig(scene):
+    """The scene's rig, failing unless it holds the project's own action."""
+    if scene.name not in RIGS:
+        raise RuntimeError('Scene %s has no row in RIGS in export_viewmodels.py: add its rig and action there' % scene.name)
+    rig_name, action_name = RIGS[scene.name]
+    rig = scene.objects.get(rig_name)
+    if rig is None or rig.type != 'ARMATURE':
+        raise RuntimeError('Scene %s has no armature named %s' % (scene.name, rig_name))
+    action = rig.animation_data.action if rig.animation_data else None
+    if action is None or action.name != action_name:
+        raise RuntimeError('Scene %s: rig %s has action %s but needs %s. In Blender, select the rig, open '
+                           'Dope Sheet > Action Editor and pick %s, then save; or use File > Revert' % (
+                               scene.name, rig_name, action.name if action else 'none', action_name, action_name))
+    return rig
+
+
 def check_images():
     missing = [image.filepath for image in bpy.data.images
                if image.source == 'FILE' and not image.packed_file
@@ -284,7 +307,7 @@ def export_project(folder, scene):
         raise RuntimeError('Scene %s must play at %d fps' % (scene.name, FPS))
     reference = folder / 'reference.smd'
     reference_bytes = reference.read_bytes()
-    armature = next(obj for obj in scene.objects if obj.type == 'ARMATURE')
+    armature = project_rig(scene)
     expected = [folder / 'anims' / (slot.name_display + '.smd')
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
@@ -313,6 +336,8 @@ if __name__ == '__main__':
         unknown = [project for project in projects if project not in found or not (root / project).is_dir()]
         if unknown:
             raise RuntimeError('No scene and folder named ' + ', '.join(unknown))
+        for project in projects:
+            project_rig(found[project])
         check_teams_agree([found[project] for project in projects])
         check_images()
         for project in projects:

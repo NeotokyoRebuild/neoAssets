@@ -196,6 +196,8 @@ Files in neoAssets (this repo):
   (Scene selector > New Scene > Full Copy), name the scene, rig and action after the project, and set the scene's
   Source Engine Export path to `//TEAM_GUN/`. Name the camera `TEAM_GUN_camera` and place it from the gun's
   `ViewModelOffset` (see Preview camera).
+- `neo/modelsrc/weapons/export_viewmodels.py`: add a row per project to `RIGS`, the project's rig and its action
+  (`"TEAM_GUN": ("TEAM_GUN_rig", "TEAM_GUN_animations")`). The export fails for a project without one.
 - `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `composites.txt` (if used), `reference.smd` and `anims/`, for each team.
 - `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
 - `neo/scripts/weapon_GUN_reload_phases.txt`: the phases file. Copy the ZR68C one and edit the sequences and steps.
