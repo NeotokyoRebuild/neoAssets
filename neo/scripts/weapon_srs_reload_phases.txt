@@ -27,6 +27,11 @@
 		{
 			"3_cycle" { "ammo" "1.567" "sound" "1.100" "sound_name" "weapon_srs.reload_3_cycle" }
 		}
+		// The bolt cycle after a shot: the round counts as chambered when the Bolt bone is home (charge f25 at 30 fps)
+		"charge"
+		{
+			"3_cycle" { "ammo" "0.833" }
+		}
 		"reload_skipcycle"
 		{
 			"1_unload" { "ammo" "1.000" "sound" "0.467" "sound_name" "weapon_srs.reload_1_unload" "resume" "drawunloaded_reload_skipcycle" }
