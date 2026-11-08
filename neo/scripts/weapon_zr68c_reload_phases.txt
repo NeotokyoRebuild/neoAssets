@@ -13,7 +13,7 @@
 		}
 		"resume_after_1_unload_empty"
 		{
-			"4_ready" "2.467"
+			"4_ready" "2.700"
 			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
 			"3_cycle" { "ammo" "2.267" "sound" "2.033" "sound_name" "weapon_zr68.reload_3_cycle" }
 		}

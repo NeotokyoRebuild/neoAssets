@@ -42,7 +42,7 @@ The `README_ANIMATOR` text block in each `.blend` repeats these rules.
 | `1_unload`, `2_load`, `3_cycle` | reload steps: old magazine out, new magazine in, round chambered. The number belongs to the step type; a gun without a step skips its number. |
 | `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of `resume_after_1_unload` |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
-| `reload:4_ready` | the gun can fire. In a resume the reload is done and fire is allowed here (the phases file's `4_ready` key); the clip plays on to the end unless a shot interrupts it. Not before the last sound of the last step has finished playing (wav length, started 0.02 s before its `.sound` time); the export fails otherwise. ZR68C: f74, the cycle sound ends at f73.6. |
+| `reload:4_ready` | both hands are back at rest; the gun can fire. In a resume the reload is done and fire is allowed here (the phases file's `4_ready` key); the clip plays on to the end unless a shot interrupts it. Not before the last sound of the last step has finished playing (wav length, started 0.02 s before its `.sound` time); the export fails otherwise. ZR68C: f81, `reload`'s last frame (the cycle sound ends at f73.5). |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `resume_after_1_unload` | authored slot: the draw up to the join pose, named after the last finished step |
 | `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. `_empty` as in `reloadempty`, `idle01empty`. |
