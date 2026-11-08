@@ -6,10 +6,12 @@ Requires Blender 5.2.2 and Blender Source Tools 3.4.3 or newer.
 This helper reads .blend sources, and writes SMD exports.
 An optional composites.txt in a source folder joins exported animations into one more SMD per line:
 OUTPUT PART [PART ...] [blend=N], where PART is SLOT, SLOT:FIRST-LAST (inclusive frames; an empty LAST means
-the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP). Across a join,
-the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
-Timeline markers SLOT:STEP.KEY (KEY ammo, sound, sound2, ...) time the rows of neo/scripts/weapon_GUN_reload_phases.txt
-(GUN: the folder name after its team prefix). The export rewrites each time there, shifted into composites.
+the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP; LAST may name a
+marker SLOT:LAST, such as 4_ready). Across a join, the last N frames (default 3) of the previous part are eased onto
+the pose the next part continues from.
+Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
+prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
+The export rewrites each time there, shifted into composites.
 A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
 """
 from pathlib import Path
@@ -72,7 +74,7 @@ def write_composites(folder, markers):
     times = {}
     for name, frame in markers.items():
         slot, _, key = name.partition(':')
-        if '.' in key:
+        if key:
             times.setdefault(slot, {})[key] = frame
     if not composites.is_file():
         return times
@@ -89,6 +91,11 @@ def write_composites(folder, markers):
                 join = markers.get(slot + ':' + step + '.join', markers.get(slot + ':' + step))
                 if join is None:
                     raise RuntimeError('No timeline marker %s:%s for %s' % (slot, step, part))
+                if last and not last.isdigit():
+                    end = markers.get(slot + ':' + last)
+                    if end is None:
+                        raise RuntimeError('No timeline marker %s:%s for %s' % (slot, last, part))
+                    last = str(end)
                 span = '%d-%s' % (join + 1, last)
             part_header, frames = read_frames(folder / 'anims' / (slot + '.smd'))
             if header is not None and part_header != header:
@@ -130,9 +137,10 @@ def fill_phases(folder, times):
         if step and sequence.startswith('resume_after_') and step_order(step[1]) <= step_order(sequence[13:]):
             raise RuntimeError('%s lists step %s: a resume plays only later steps' % (sequence, step[1]))
         for key in re.findall(r'"(ammo|sound\d*)" "[^"]*"', line) if step else []:
-            frame = times.get(sequence, {}).get(step[1] + '.' + key)
+            marker = step[1] if key == 'ammo' else step[1] + '.' + key
+            frame = times.get(sequence, {}).get(marker)
             if frame is None:
-                raise RuntimeError('No timeline marker %s:%s.%s for %s' % (sequence, step[1], key, path.name))
+                raise RuntimeError('No timeline marker %s:%s for %s' % (sequence, marker, path.name))
             lines[number] = line = re.sub(r'("%s" )"[^"]*"' % key, r'\1"%.3f"' % (frame / FPS), line)
     text = '\n'.join(lines) + '\n'
     if WRITTEN.setdefault(path, text) != text:

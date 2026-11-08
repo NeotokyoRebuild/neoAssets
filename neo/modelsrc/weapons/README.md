@@ -40,9 +40,9 @@ The `README_ANIMATOR` text block in each `.blend` repeats these rules.
 | name | meaning |
 | :-- | :-- |
 | `1_unload`, `2_load`, `3_cycle` | reload steps: old magazine out, new magazine in, round chambered. The number belongs to the step type; a gun without a step skips its number. |
-| `reload:1_unload` | step marker on `reload`: the frame the step is done, and the default join of `resume_after_1_unload` |
+| `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of `resume_after_1_unload` |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
-| `slot:step.ammo`, `.sound`, `.sound2` | timing markers: when the step's ammo counts, when each of its sounds first hits |
+| `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `resume_after_1_unload` | authored slot: the draw up to the join pose, named after the last finished step |
 | `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. `_empty` as in `reloadempty`, `idle01empty`. |
 | `weapon_zr68.reload_2_load`, `reload_2_load_2` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same |
