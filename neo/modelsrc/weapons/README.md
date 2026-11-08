@@ -17,9 +17,12 @@ blender --background --python-exit-code 1 --python export_viewmodels.py -- jinra
 ```
 
 A sequence made of parts of other animations is written after the export, when the source folder has a `composites.txt`.
-Each line names the output animation and its parts in order; a part is a slot, or `slot:first-last` for a frame range
-(inclusive, an empty `last` runs to the end). For example, `draw_resume_drop_dry draw_resume_drop reload:31-` writes
-`anims/draw_resume_drop_dry.smd`: all of the `draw_resume_drop` slot, then `reload` from frame 31.
+Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
+(inclusive, an empty `last` runs to the end), or `slot@key-` to start after the timeline marker `slot:key`.
+For example, `draw_resume_drop_dry draw_resume_drop reload@resume_insert-` writes `anims/draw_resume_drop_dry.smd`:
+all of the `draw_resume_drop` slot, then `reload` from the frame after the marker `reload:resume_insert`.
+Across each join, the last 3 frames of the previous part are eased onto the pose the next part continues from
+(`blend=N` at the end of the line sets the count). The export prints the gap and fails if it exceeds 0.5 units or 2 degrees.
 
 
 ## Reload resume animations (ZR68C)
@@ -27,17 +30,25 @@ Each line names the output animation and its parts in order; a part is a slot, o
 When the player switches weapons after the old magazine has dropped out, the reload continues when the gun is drawn again.
 The game plays `draw_resume_drop_dry` for this: a draw that brings the fresh magazine up, then the rest of `reload`.
 
-- The `draw_resume_drop` slot holds only the new motion. Its last frame must match the pose of `reload` frame 30.
-  A timeline marker in the `.blend` marks that frame.
-- `composites.txt` appends `reload` from frame 31, so the exported sequence plays the reload's own frames after the join.
-- The `.qc` compiles `draw_resume_drop_dry`; the transition slot itself is not compiled.
+The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
+The `README_ANIMATOR` text block in each `.blend` repeats these rules.
+
+- The `draw_resume_drop` slot holds only the new motion. It ends on the `reload` pose at the timeline marker
+  `reload:resume_insert`. A small difference is eased out at export.
+- Timeline markers `slot:phase.key` mark when a reload step counts (`credit`) and when its sound hits (`at`, `at2`).
+  The export shifts them into every composite and writes `reload_phases.txt` in weapon-script form.
+- With `--script` set to the neo weapon script, the export fails when a `ReloadPhases` row differs from its marker by
+  more than half a frame:
+
+```sh
+blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_zr68c nsf_zr68c --script path/to/neo/game/neo/scripts/weapon_zr68c.txt
+```
 
 To add a resume clip for another point in the reload:
 
-1. Add a slot that ends on the pose of the `reload` frame where the reload continues, and mark that frame on the timeline.
-2. Add a line to `composites.txt` that appends `reload` from the next frame.
-3. Add a `$sequence` line for the composite to the `.qc`, then export and compile.
-4. In neo, add the sequence's phase times to the weapon script (`ReloadPhases` in `weapon_*.txt`).
+1. Mark the `reload` frame where the reload continues, and add a slot that ends on that pose.
+2. Add a line to `composites.txt`, such as `NAME CLIP reload@KEY-`, and a `$sequence` line for `NAME` to the `.qc`.
+3. Export, copy the times for `NAME` from `reload_phases.txt` into the weapon script's `ReloadPhases`, and compile.
 
 
 ## Compiling models
