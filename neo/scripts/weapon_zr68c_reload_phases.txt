@@ -25,7 +25,7 @@
 		}
 		"drawtocycle_reload"
 		{
-			"3_cycle" { "ammo" "1.333" "sound" "1.100" "sound_name" "weapon_zr68.reload_3_cycle" }
+			"3_cycle" { "ammo" "1.300" "sound" "1.067" "sound_name" "weapon_zr68.reload_3_cycle" }
 		}
 		"reload_skipcycle"
 		{
