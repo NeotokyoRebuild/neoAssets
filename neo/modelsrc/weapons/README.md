@@ -110,9 +110,9 @@ The ZR68C has four glued clips besides `reload`:
 | sequence | plays when | made of |
 | :-- | :-- | :-- |
 | `drawunloaded_reload` | drawn after `1_unload`, chamber empty | `drawunloaded`, then `reload` from f31 |
-| `drawloaded_reload` | drawn after `2_load`, chamber empty | `drawloaded`, then `reload` from f61 (the bolt pull) |
-| `reload_reloadexit` | a reload with a round chambered | `reload` f0-56, then `reloadexit` (no bolt pull) |
-| `drawunloaded_reload_reloadexit` | drawn after `1_unload` of `reload_reloadexit` | `drawunloaded`, `reload` f31-56, `reloadexit` |
+| `drawtocycle_reload` | drawn after `2_load`, chamber empty | `drawtocycle`, then `reload` from f61 (the bolt pull) |
+| `reload_skipcycle` | a reload with a round chambered | `reload` f0-56, then `skipcycle` (no bolt pull) |
+| `drawunloaded_reload_skipcycle` | drawn after `1_unload` of `reload_skipcycle` | `drawunloaded`, `reload` f31-56, `skipcycle` |
 
 The `"resume"` key on a row of the phases file names the clip to draw after that step.
 
@@ -130,8 +130,8 @@ The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 | `reload:2_load.exit` | where a reload with a round chambered leaves `reload` (f56, after the tap) |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `drawunloaded` | authored slot: a one-handed draw with the magazine out, up to the join pose (Source style, as `drawempty`) |
-| `drawloaded` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f32) |
-| `reloadexit` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f12), magazine seated |
+| `drawtocycle` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f32) |
+| `skipcycle` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f12), magazine seated |
 | `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: the parts in play order, joined by `_`. |
 | `weapon_zr68.reload_1_unload`, `reload_2_load`, `reload_2_load_2`, `reload_3_cycle` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
 
@@ -140,8 +140,8 @@ The export fails when a resume's table lists step N or earlier.
 
 ### Markers and times
 
-- The `drawunloaded` and `drawloaded` slots hold only the new motion. Each ends on the `reload` pose at its join
-  marker; `reloadexit` starts on the `reload` pose at `2_load.exit`. A small difference is eased out at export.
+- The `drawunloaded` and `drawtocycle` slots hold only the new motion. Each ends on the `reload` pose at its join
+  marker; `skipcycle` starts on the `reload` pose at `2_load.exit`. A small difference is eased out at export.
 - A `composites.txt` range may end at a marker: `reload:0-2_load.exit` is `reload` f0-56.
 - The export shifts the timing markers into every composite and rewrites every time in
   `neo/scripts/weapon_<gun>_reload_phases.txt`, the `ReloadPhases` block that neo's weapon script includes with `#base`.
@@ -157,8 +157,8 @@ The export fails when a resume's table lists step N or earlier.
 - A row's `"resume"` key names the sequence the draw plays when a switch interrupts that sequence after the step.
   The export keeps the key and fails unless it names a composite that joins that sequence after the row's step
   (a part such as `reload@1_unload` in `composites.txt`). In a glued clip, the composite may instead join the
-  part the step came from: `reload_reloadexit`'s `1_unload` comes from `reload`, so its resume
-  `drawunloaded_reload_reloadexit` joins `reload@1_unload`.
+  part the step came from: `reload_skipcycle`'s `1_unload` comes from `reload`, so its resume
+  `drawunloaded_reload_skipcycle` joins `reload@1_unload`.
 - A sequence ends where the gun can fire: the export fails if one of its sounds plays past its last frame. A clip
   that keeps moving after both hands are at rest is trimmed in its source slot; there is no marker for it.
 
@@ -231,5 +231,5 @@ Files in the neo repo:
 ## Sketch status (`sketch-zr68c-full`, not for review)
 
 This branch carries the whole ZR68C reload slice on top of the MVP (`reload-zr68c-resume`): every switch during a
-reload resumes it, dry or with a round chambered. The neo side picks `reload_reloadexit` when a round is chambered.
+reload resumes it, dry or with a round chambered. The neo side picks `reload_skipcycle` when a round is chambered.
 Plan: `proposals/0057-reload-cue-timing/zr68c-slice-plan.md` in the ntre harness.

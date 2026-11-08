@@ -3,7 +3,7 @@
 // hits ("sound", "sound2"), in seconds from the sequence start. export_viewmodels.py sets every time from the
 // timeline markers in the .blend. "resume" names the sequence the draw plays when a switch interrupts the reload
 // after the step. A resume after step N lists only the steps after N. reload's own sound plays whole, as on master.
-// A reload with a round chambered plays reload_reloadexit: it ends after 2_load, with no bolt pull.
+// A reload with a round chambered plays reload_skipcycle: it ends after 2_load, with no bolt pull.
 "WeaponData"
 {
 	"ReloadPhases"
@@ -11,25 +11,25 @@
 		"reload"
 		{
 			"1_unload" { "ammo" "0.700" "resume" "drawunloaded_reload" }
-			"2_load" { "ammo" "1.333" "resume" "drawloaded_reload" }
+			"2_load" { "ammo" "1.333" "resume" "drawtocycle_reload" }
 			"3_cycle" { "ammo" "2.267" }
 		}
 		"drawunloaded_reload"
 		{
-			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" "resume" "drawloaded_reload" }
+			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" "resume" "drawtocycle_reload" }
 			"3_cycle" { "ammo" "2.267" "sound" "2.033" "sound_name" "weapon_zr68.reload_3_cycle" }
 		}
-		"drawunloaded_reload_reloadexit"
+		"drawunloaded_reload_skipcycle"
 		{
 			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
 		}
-		"drawloaded_reload"
+		"drawtocycle_reload"
 		{
 			"3_cycle" { "ammo" "1.333" "sound" "1.100" "sound_name" "weapon_zr68.reload_3_cycle" }
 		}
-		"reload_reloadexit"
+		"reload_skipcycle"
 		{
-			"1_unload" { "ammo" "0.700" "sound" "0.033" "sound_name" "weapon_zr68.reload_1_unload" "resume" "drawunloaded_reload_reloadexit" }
+			"1_unload" { "ammo" "0.700" "sound" "0.033" "sound_name" "weapon_zr68.reload_1_unload" "resume" "drawunloaded_reload_skipcycle" }
 			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
 		}
 	}
