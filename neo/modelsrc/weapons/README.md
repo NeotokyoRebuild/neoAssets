@@ -160,6 +160,10 @@ The AA13 (two projects) joins `reload` after f58 (the drum fully out) and f112, 
 Slots: `drawunloaded` f0-44, `drawtocycle` f0-37, `skipcycle` f0-18. Its unload step has two sound pieces
 (`reload_1_unload`, `reload_1_unload_2`: the release tick and the drum pull).
 
+The PZ252 (two projects) joins `reload` after f70 and f143, and leaves it at f141, after the drum latch (the load
+step is credited at f121, the drum seat; its third sound, the latch, plays in the full and after-unload clips only).
+Slots: `drawunloaded` f0-40, `drawtocycle` f0-30, `skipcycle` f0-11.
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
