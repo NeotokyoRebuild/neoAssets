@@ -6,10 +6,11 @@ Requires Blender 5.2.2 and Blender Source Tools 3.4.3 or newer.
 This helper reads .blend sources, and writes SMD exports.
 An optional composites.txt in a source folder joins exported animations into one more SMD per line:
 OUTPUT PART [PART ...] [blend=N], where PART is SLOT, SLOT:FIRST-LAST (inclusive frames; an empty LAST means
-the end) or SLOT@KEY-LAST (from the frame after timeline marker SLOT:KEY). Across a join, the last N frames
-(default 3) of the previous part are eased onto the pose the next part continues from.
-Timeline markers SLOT:PHASE.KEY (KEY credit, at, at2, ...) time the rows of neo/scripts/weapon_GUN_reload_phases.txt
+the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP). Across a join,
+the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
+Timeline markers SLOT:STEP.KEY (KEY ammo, sound, sound2, ...) time the rows of neo/scripts/weapon_GUN_reload_phases.txt
 (GUN: the folder name after its team prefix). The export rewrites each time there, shifted into composites.
+A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
 """
 from pathlib import Path
 import math
@@ -84,10 +85,11 @@ def write_composites(folder, markers):
         for part in parts:
             slot, mark, span = re.match(r'(\w+)([:@]?)(.*)', part).groups()
             if mark == '@':
-                key, _, last = span.partition('-')
-                if slot + ':' + key not in markers:
-                    raise RuntimeError('No timeline marker %s:%s for %s' % (slot, key, part))
-                span = '%d-%s' % (markers[slot + ':' + key] + 1, last)
+                step, _, last = span.partition('-')
+                join = markers.get(slot + ':' + step + '.join', markers.get(slot + ':' + step))
+                if join is None:
+                    raise RuntimeError('No timeline marker %s:%s for %s' % (slot, step, part))
+                span = '%d-%s' % (join + 1, last)
             part_header, frames = read_frames(folder / 'anims' / (slot + '.smd'))
             if header is not None and part_header != header:
                 raise RuntimeError('Composite parts have different nodes: ' + part)
@@ -107,11 +109,16 @@ def write_composites(folder, markers):
     return times
 
 
+def step_order(step):
+    """The order of a reload step, from its name (1_unload -> 1)."""
+    return int(step.partition('_')[0])
+
+
 WRITTEN = {}  # phases file -> text from the first team project of this run
 
 
 def fill_phases(folder, times):
-    """Set every credit/at time in the weapon's ReloadPhases file from the markers; both teams must agree."""
+    """Set every ammo/sound time in the weapon's ReloadPhases file from the markers; both teams must agree."""
     path = folder.parents[2] / 'scripts' / ('weapon_%s_reload_phases.txt' % folder.name.partition('_')[2])
     if not path.is_file():
         return
@@ -119,11 +126,13 @@ def fill_phases(folder, times):
     for number, line in enumerate(lines):
         if re.fullmatch(r'\s*"\w+"\s*', line):
             sequence = line.strip().strip('"')
-        phase = re.match(r'\s*"(\w+)"\s*\{', line)
-        for key in re.findall(r'"(credit|at\d*)" "[^"]*"', line) if phase else []:
-            frame = times.get(sequence, {}).get(phase[1] + '.' + key)
+        step = re.match(r'\s*"(\w+)"\s*\{', line)
+        if step and sequence.startswith('resume_after_') and step_order(step[1]) <= step_order(sequence[13:]):
+            raise RuntimeError('%s lists step %s: a resume plays only later steps' % (sequence, step[1]))
+        for key in re.findall(r'"(ammo|sound\d*)" "[^"]*"', line) if step else []:
+            frame = times.get(sequence, {}).get(step[1] + '.' + key)
             if frame is None:
-                raise RuntimeError('No timeline marker %s:%s.%s for %s' % (sequence, phase[1], key, path.name))
+                raise RuntimeError('No timeline marker %s:%s.%s for %s' % (sequence, step[1], key, path.name))
             lines[number] = line = re.sub(r'("%s" )"[^"]*"' % key, r'\1"%.3f"' % (frame / FPS), line)
     text = '\n'.join(lines) + '\n'
     if WRITTEN.setdefault(path, text) != text:
