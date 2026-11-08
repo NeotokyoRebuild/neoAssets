@@ -1,20 +1,23 @@
 # Weapon model sources
 
 The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C, the
-M41 family (M41, M41S, M41L), the MPN45 (silenced and unsilenced) and the MX (MX, MX silenced).
+M41 family (M41, M41S, M41L), the MPN45 (silenced and unsilenced), the MX (MX, MX silenced)
+and the ZR68-S and ZR68-L.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
   `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`, and `jinrai_mosok41`, `jinrai_mosok41s`,
-  `jinrai_mosok41l`, `jinrai_mpn`, `jinrai_mpn_s`, `jinrai_mx`, `jinrai_mxs` with their `nsf_` pairs.
+  `jinrai_mosok41l`, `jinrai_mpn`, `jinrai_mpn_s`, `jinrai_mx`, `jinrai_mxs`, `jinrai_zr68s`, `jinrai_zr68l` with their
+  `nsf_` pairs.
 - `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
   `composites.txt` (if used). The scripts take project names.
 - `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
   sets only `$modelname` and includes this file. The M41 family shares one `mosok41/viewmodel.qci` (attachments and
   sequences) across its six models, the MPN45 one `mpn/viewmodel.qci` across its four,
-  and the MX one `mx/viewmodel.qci` across its four; each of their `.qc` files
+  and the MX one `mx/viewmodel.qci` across its four (the ZR68-S and ZR68-L follow the ZR68C layout:
+  `zr68s/viewmodel.qci`, `zr68l/viewmodel.qci`); each of their `.qc` files
   keeps its own `$definebone` lines, because the rigs differ.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 
