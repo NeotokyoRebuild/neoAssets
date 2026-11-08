@@ -1,6 +1,7 @@
 # Weapon model sources
 
-The Tachi viewmodels are the first weapons maintained under these conventions.
+The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C (`jinrai_zr68c/`, `nsf_zr68c/`).
+Preview images the `.blend` files load live in a shared weapon folder, such as `tachi/textures/` or `zr68c/textures/`.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 Each model has a source folder here, such as `jinrai_tachi/`, containing one `.blend` file and one `.qc` file.
@@ -29,4 +30,4 @@ Set `--compiler` to Source SDK Base 2013 Multiplayer's `studiomdl.exe`, and `--g
 python compile_viewmodels.py jinrai_tachi nsf_tachi --compiler "C:/Program Files (x86)/Steam/steamapps/common/Source SDK Base 2013 Multiplayer/bin/studiomdl.exe" --game "C:/path/to/neo/game/neo"
 ```
 
-To save the compiled models in neoAssets, copy the generated files (`v_*_tachi.*` for the Tachi) from the neo game directory's `models/weapons/` folder to `neo/models/weapons/`.
+To save the compiled models in neoAssets, copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the neo game directory's `models/weapons/` folder to `neo/models/weapons/`.
