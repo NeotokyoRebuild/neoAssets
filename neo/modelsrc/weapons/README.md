@@ -156,6 +156,10 @@ The SRS (two projects, bolt action) joins `reload` after f30 (its magazine moves
 leaves it at f56, the magazine seat. Slots: `drawunloaded` f0-38, `drawtocycle` f0-29, `skipcycle` f0-16 (ends on
 `idle` f0: the SRS idle sequence has no `01`). Its `charge` sequence (the bolt after each shot) is unchanged.
 
+The AA13 (two projects) joins `reload` after f58 (the drum fully out) and f112, and leaves it at f104, the drum seat.
+Slots: `drawunloaded` f0-44, `drawtocycle` f0-37, `skipcycle` f0-18. Its unload step has two sound pieces
+(`reload_1_unload`, `reload_1_unload_2`: the release tick and the drum pull).
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
