@@ -130,8 +130,8 @@ The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 | `reload:2_load.exit` | where a reload with a round chambered leaves `reload` (f56, after the tap) |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `drawunloaded` | authored slot: a one-handed draw with the magazine out, up to the join pose (Source style, as `drawempty`) |
-| `drawtocycle` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f32) |
-| `skipcycle` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f12), magazine seated |
+| `drawtocycle` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f31) |
+| `skipcycle` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f9), magazine seated |
 | `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: the parts in play order, joined by `_`. |
 | `weapon_zr68.reload_1_unload`, `reload_2_load`, `reload_2_load_2`, `reload_3_cycle` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
 
