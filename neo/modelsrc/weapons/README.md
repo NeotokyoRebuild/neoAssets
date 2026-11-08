@@ -42,7 +42,7 @@ The `README_ANIMATOR` text block in each `.blend` repeats these rules.
 | `1_unload`, `2_load`, `3_cycle` | reload steps: old magazine out, new magazine in, round chambered. The number belongs to the step type; a gun without a step skips its number. |
 | `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of `resume_after_1_unload` |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
-| `reload:4_ready` | both hands are back on the gun and it can fire. A glued resume ends here: the reload is done, ammo included, when the clip ends. |
+| `reload:4_ready` | the gun can fire (ZR68C: f68, the bolt is home). A glued resume ends here: the reload is done and fire is allowed when the clip ends; the silent hand return after it is left to the blend into idle. |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `resume_after_1_unload` | authored slot: the draw up to the join pose, named after the last finished step |
 | `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. `_empty` as in `reloadempty`, `idle01empty`. |
