@@ -73,6 +73,9 @@ the marker `reload:1_unload.join` to its end. Across each join, the last 3 frame
 next part continues from (`blend=N` at the end of the line sets the count). The export prints the gap and fails if it
 exceeds 0.5 units or 2 degrees.
 
+A composite has no slot or action in Blender, so it is not in the action browser: it is an export output, like the
+compiled model. Do not edit its SMD; edit the slots it is made of and export again.
+
 
 ## Reload resume animations (ZR68C)
 
