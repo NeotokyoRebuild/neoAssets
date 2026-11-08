@@ -19,9 +19,13 @@ A row's "resume" key names the composite that resumes the reload interrupted aft
 join the row's sequence after that step (part SEQUENCE@STEP...), or, in a composite row, the part the step's marker
 came from. A resume lists only the steps after STEP: it never replays an earlier step's sound.
 A sequence's ammo times come before its last frame, and its sounds finish playing by then: the gun can fire there.
+Every export then rebuilds viewmodels_post_export.blend, a preview of the glued clips of every project with a
+composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged.
+viewmodels.blend is never saved.
 """
 from pathlib import Path
 from typing import NamedTuple
+import hashlib
 import math
 import re
 import sys
@@ -101,9 +105,9 @@ def marker_frame(markers, slot, value, part):
     return str(markers[slot + ':' + value])
 
 
-def write_composites(folder, markers):
+def write_composites(folder, markers, write=True):
     """Write the composites; return the marker frames per sequence, each composite's SLOT@STEP joins, and the
-    exported slot each composite marker came from."""
+    exported slot each composite marker came from. With write=False, only return them."""
     composites = folder / 'composites.txt'
     times, joins, sources = {}, {}, {}
     for name, frame in markers.items():
@@ -133,13 +137,15 @@ def write_composites(folder, markers):
             header = part_header
             first, last = (marker_frame(markers, slot, value, part) for value in span.partition('-')[::2])
             first, last = int(first or 0), int(last) if last else len(frames) - 1
-            if joined and first > 0 and count > 0:
+            if write and joined and first > 0 and count > 0:
                 ease_seam(output, joined, frames[first - 1], count)
             for key, frame in times.get(slot, {}).items():
                 if first <= frame <= last:
                     times.setdefault(output, {})[key] = len(joined) + frame - first
                     sources.setdefault(output, {})[key] = sources.get(slot, {}).get(key, slot)
             joined += frames[first:last + 1]
+        if not write:
+            continue
         body = [text for time, frame in enumerate(joined) for text in ['time %d' % time] + frame]
         (folder / 'anims' / (output + '.smd')).write_text(
             '\n'.join(header + body + ['end']) + '\n', encoding='ascii')
@@ -260,6 +266,99 @@ def fill_phases(folder, times, joins, sources):
     print('PHASES', path.name, '\n' + text)
 
 
+POST_EXPORT = 'viewmodels_post_export.blend'
+POST_EXPORT_INPUTS = 'post_export_inputs'  # text block: digest of the inputs, so an unchanged file is not rewritten
+POST_EXPORT_NOTE = """Export output: never edit this file. export_viewmodels.py rebuilds it on every export.
+Commit it with the exported SMDs whenever a glued clip changes.
+
+It shows the glued clips (composites.txt) exactly as the game plays them, easing included: one scene per
+project with a composites.txt, its rig, preview mesh and in-game camera, and one action PROJECT_glued whose
+slots are the glued clips, imported from PROJECT/anims/*.smd. The timeline markers are the step and sound
+markers shifted into each clip (CLIP:STEP, CLIP:STEP.sound), the times the phases file gets.
+Pick a clip: Scene selector (top right), then Dope Sheet > Action Editor > Slot dropdown. Numpad 0 looks
+through the camera. Edit the animations in viewmodels.blend, never here.
+"""
+
+
+def post_export_inputs(root, projects):
+    """A digest of everything the post-export file is built from."""
+    digest = hashlib.sha1((root / SOURCE).read_bytes() + POST_EXPORT_NOTE.encode())
+    for name in projects:
+        composites = (root / name / 'composites.txt').read_text(encoding='ascii')
+        digest.update(composites.encode())
+        for line in filter(str.strip, composites.splitlines()):
+            digest.update((root / name / 'anims' / (line.split()[0] + '.smd')).read_bytes())
+    return digest.hexdigest()
+
+
+def saved_inputs(path):
+    """The input digest stored in an earlier post-export file, if any."""
+    if not path.is_file():
+        return None
+    with bpy.data.libraries.load(str(path)) as (source, target):
+        target.texts = [name for name in source.texts if name == POST_EXPORT_INPUTS]
+    if not target.texts:
+        return None
+    text = target.texts[0]
+    digest = text.as_string().strip()
+    bpy.data.texts.remove(text)
+    for library in list(bpy.data.libraries):  # else Blender refuses to save over the file
+        if Path(bpy.path.abspath(library.filepath)) == path:
+            bpy.data.libraries.remove(library)
+    return digest
+
+
+def build_post_export(root):
+    """Rebuild viewmodels_post_export.blend for every project with a composites.txt (all of them, whichever were
+    exported), from viewmodels.blend and the glued SMDs now in each project's anims/. viewmodels.blend is not saved."""
+    open_scenes(root / SOURCE)
+    projects = [scene.name for scene in bpy.data.scenes if (root / scene.name / 'composites.txt').is_file()]
+    inputs = post_export_inputs(root, projects)
+    if saved_inputs(root / POST_EXPORT) == inputs:
+        print('POST-EXPORT unchanged', POST_EXPORT)  # Blender would save the same content with other bytes
+        return
+    for scene in list(bpy.data.scenes):
+        if scene.name not in projects:
+            bpy.data.scenes.remove(scene)
+    for text in list(bpy.data.texts):
+        bpy.data.texts.remove(text)
+    for name in projects:
+        scene, folder = bpy.data.scenes[name], root / name
+        rig = project_rig(scene)
+        times = write_composites(folder, read_markers(scene), write=False)[0]
+        outputs = [line.split()[0] for line in (folder / 'composites.txt').read_text(encoding='ascii').splitlines()
+                   if line.strip()]
+        action = bpy.data.actions.new(name + '_glued')
+        rig.animation_data.action = action
+        with bpy.context.temp_override(scene=scene, view_layer=scene.view_layers[0], active_object=rig, object=rig,
+                                       selected_objects=[rig]):
+            scene.view_layers[0].objects.active = rig
+            for output in outputs:
+                if bpy.ops.import_scene.smd(filepath=str(folder / 'anims' / (output + '.smd'))) != {'FINISHED'}:
+                    raise RuntimeError('Source Tools could not import %s/anims/%s.smd' % (name, output))
+        rig.animation_data.action = action
+        rig.animation_data.action_slot = action.slots[0]
+        scene.timeline_markers.clear()
+        for output in outputs:
+            for key, frame in sorted(times.get(output, {}).items(), key=lambda item: (item[1], item[0])):
+                step, _, time_key = key.partition('.')
+                if not time_key or TIME_KEY.fullmatch(time_key):  # the phases times, not join or range markers
+                    scene.timeline_markers.new(output + ':' + key, frame=frame)
+        print('POST-EXPORT', name, len(action.slots), 'glued clips,', len(scene.timeline_markers), 'markers')
+    glued = {name + '_glued' for name in projects}
+    for action in list(bpy.data.actions):
+        if action.name not in glued:
+            bpy.data.actions.remove(action)
+    bpy.data.texts.new('README_POST_EXPORT').from_string(POST_EXPORT_NOTE)
+    bpy.data.texts.new(POST_EXPORT_INPUTS).from_string(inputs)
+    bpy.data.orphans_purge(do_recursive=True)
+    bpy.ops.wm.save_as_mainfile(filepath=str(root / POST_EXPORT), compress=True)
+    backup = root / (POST_EXPORT + '1')
+    if backup.exists():
+        backup.unlink()
+    print('POST-EXPORT written', POST_EXPORT)
+
+
 def read_markers(scene):
     return {marker.name: marker.frame for marker in scene.timeline_markers}
 
@@ -356,6 +455,7 @@ if __name__ == '__main__':
         check_images()
         for project in projects:
             export_project(root / project, open_scenes(root / SOURCE, keep=project))
+        build_post_export(root)
     except RuntimeError as problem:
         print('EXPORT FAILED:', problem)
         sys.exit(1)
