@@ -47,6 +47,12 @@ RIGS = {
     'nsf_tachi': ('nsf_tachi_rig', 'nsf_tachi_animations'),
     'jinrai_zr68c': ('jinrai_zr68c_rig', 'jinrai_zr68c_animations'),
     'nsf_zr68c': ('nsf_zr68c_rig', 'nsf_zr68c_animations'),
+    'jinrai_mosok41': ('jinrai_mosok41_rig', 'jinrai_mosok41_animations'),
+    'jinrai_mosok41s': ('jinrai_mosok41s_rig', 'jinrai_mosok41s_animations'),
+    'jinrai_mosok41l': ('jinrai_mosok41l_rig', 'jinrai_mosok41l_animations'),
+    'nsf_mosok41': ('nsf_mosok41_rig', 'nsf_mosok41_animations'),
+    'nsf_mosok41s': ('nsf_mosok41s_rig', 'nsf_mosok41s_animations'),
+    'nsf_mosok41l': ('nsf_mosok41l_rig', 'nsf_mosok41l_animations'),
 }
 
 

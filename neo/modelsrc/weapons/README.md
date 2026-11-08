@@ -1,16 +1,19 @@
 # Weapon model sources
 
-The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C.
+The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C and the
+M41 family (M41, M41S, M41L).
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
-  `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`.
+  `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`, and `jinrai_mosok41`, `jinrai_mosok41s`,
+  `jinrai_mosok41l` with their `nsf_` pairs.
 - `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
   `composites.txt` (if used). The scripts take project names.
 - `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
-  sets only `$modelname` and includes this file.
+  sets only `$modelname` and includes this file. The M41 family shares one `mosok41/viewmodel.qci` (attachments and
+  sequences) across its six models; each `.qc` keeps its own `$definebone` lines, because the rigs differ.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 
 Run the scripts from this folder (`neo/modelsrc/weapons`).
