@@ -36,19 +36,15 @@ The `README_ANIMATOR` text block in each `.blend` repeats these rules.
 - The `draw_resume_drop` slot holds only the new motion. It ends on the `reload` pose at the timeline marker
   `reload:resume_insert`. A small difference is eased out at export.
 - Timeline markers `slot:phase.key` mark when a reload step counts (`credit`) and when its sound hits (`at`, `at2`).
-  The export shifts them into every composite and writes `reload_phases.txt` in weapon-script form.
-- With `--script` set to the neo weapon script, the export fails when a `ReloadPhases` row differs from its marker by
-  more than half a frame:
-
-```sh
-blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_zr68c nsf_zr68c --script path/to/neo/game/neo/scripts/weapon_zr68c.txt
-```
+  The export shifts them into every composite and rewrites every time in `neo/scripts/weapon_<gun>_reload_phases.txt`,
+  the `ReloadPhases` block that neo's weapon script includes with `#base`. A row without a marker fails the export.
 
 To add a resume clip for another point in the reload:
 
 1. Mark the `reload` frame where the reload continues, and add a slot that ends on that pose.
 2. Add a line to `composites.txt`, such as `NAME CLIP reload@KEY-`, and a `$sequence` line for `NAME` to the `.qc`.
-3. Export, copy the times for `NAME` from `reload_phases.txt` into the weapon script's `ReloadPhases`, and compile.
+3. Add the rows for `NAME` to `neo/scripts/weapon_<gun>_reload_phases.txt` (any time), then export and compile.
+   A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
 
 
 ## Compiling models

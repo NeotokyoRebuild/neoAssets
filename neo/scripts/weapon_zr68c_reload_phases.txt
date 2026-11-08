@@ -1,0 +1,18 @@
+// ZR68C ReloadPhases (sv_neo_reload_experimental), included by neo's scripts/weapon_zr68c.txt through #base.
+// Per viewmodel sequence: when each phase counts ("credit") and when each sound piece's first transient plays ("at"),
+// in seconds from the sequence start. export_viewmodels.py sets every time from the timeline markers in the .blend.
+"WeaponData"
+{
+	"ReloadPhases"
+	{
+		"reload"
+		{
+			"drop" { "credit" "0.700" }
+		}
+		"draw_resume_drop_dry"
+		{
+			"seat" { "credit" "1.433" "sound" "weapon_zr68.reload_seat" "at" "1.400" "sound2" "weapon_zr68.reload_slap" "at2" "1.833" }
+			"bolt" { "credit" "2.367" "sound" "weapon_zr68.reload_bolt" "at" "2.133" }
+		}
+	}
+}
