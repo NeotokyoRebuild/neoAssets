@@ -12,7 +12,8 @@ Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN:
 prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
 The export rewrites each time there, shifted into composites.
 A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
-A sequence's sounds must finish playing by its last frame: the sequence ends where the gun can fire.
+A row's "resume" key names the sequence that resumes the reload interrupted after that step: resume_after_STEP...
+A sequence's ammo times come before its last frame, and its sounds finish playing by then: the gun can fire there.
 """
 from pathlib import Path
 import math
@@ -124,6 +125,9 @@ def check_ready(folder, path, text):
     """Fail when a sound of a sequence plays past the sequence's last frame, where the gun can fire."""
     for sequence, body in re.findall(r'"(\w+)"\s*\{((?:[^{}]|\{[^{}]*\})*)\}', text):
         ready = (len(read_frames(folder / 'anims' / (sequence + '.smd'))[1]) - 1) / FPS
+        for at in re.findall(r'"ammo" "([^"]*)"', body):
+            if float(at) >= ready - 1e-6:
+                raise RuntimeError('%s ends at %.3f s, not after an ammo time %s s' % (sequence, ready, at))
         for key, at in re.findall(r'"(sound\d*)" "([^"]*)"', body):
             name = re.search(r'"%s_name" "([^"]*)"' % key, body.split('"%s" "%s"' % (key, at), 1)[1])[1]
             end = sound_end(path, name, float(at))
@@ -152,6 +156,10 @@ def fill_phases(folder, times):
         step = re.match(r'\s*"(\w+)"\s*\{', line)
         if step and sequence.startswith('resume_after_') and step_order(step[1]) <= step_order(sequence[13:]):
             raise RuntimeError('%s lists step %s: a resume plays only later steps' % (sequence, step[1]))
+        resume = re.search(r'"resume" "(\w+)"', line) if step else None
+        if resume and not (resume[1].startswith('resume_after_') and step_order(resume[1][13:]) == step_order(step[1])
+                           and (folder / 'anims' / (resume[1] + '.smd')).is_file()):
+            raise RuntimeError('%s row %s: %s is no resume_after_%s... sequence' % (sequence, step[1], resume[1], step[1]))
         for key in re.findall(r'"(ammo|sound\d*)" "[^"]*"', line) if step else []:
             marker = step[1] if key == 'ammo' else step[1] + '.' + key
             frame = times.get(sequence, {}).get(marker)

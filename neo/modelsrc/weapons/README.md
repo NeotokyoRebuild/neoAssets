@@ -20,8 +20,8 @@ blender --background --python-exit-code 1 --python export_viewmodels.py -- jinra
 A sequence made of parts of other animations is written after the export, when the source folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
 (inclusive, an empty `last` runs to the end), or `slot@step-last` to start after the step's join marker (see below).
-For example, `resume_after_1_unload_empty resume_after_1_unload reload@1_unload-` writes
-`anims/resume_after_1_unload_empty.smd`: all of the `resume_after_1_unload` slot, then `reload` from the frame after
+For example, `resume_after_1_unload_empty resume_after_1_unload_transition reload@1_unload-` writes
+`anims/resume_after_1_unload_empty.smd`: all of the `resume_after_1_unload_transition` slot, then `reload` from the frame after
 the marker `reload:1_unload.join` to its end. Across each join, the last 3 frames of the previous part are eased onto the pose the
 next part continues from (`blend=N` at the end of the line sets the count). The export prints the gap and fails if it
 exceeds 0.5 units or 2 degrees.
@@ -31,6 +31,7 @@ exceeds 0.5 units or 2 degrees.
 
 When the player switches weapons after the old magazine is out, the reload continues when the gun is drawn again.
 The game plays `resume_after_1_unload_empty` for this: a draw that brings the fresh magazine up, then the rest of `reload`.
+The `"resume"` key on the `1_unload` row of `reload` in the phases file names it.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in each `.blend` repeats these rules.
@@ -43,8 +44,8 @@ The `README_ANIMATOR` text block in each `.blend` repeats these rules.
 | `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of `resume_after_1_unload` |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
-| `resume_after_1_unload` | authored slot: the draw up to the join pose, named after the last finished step |
-| `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. `_empty` as in `reloadempty`, `idle01empty`. |
+| `resume_after_1_unload_transition` | authored slot: the draw up to the join pose, named after the last finished step |
+| `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. Source style: `_empty` (as in `reloadempty`, `idle01empty`) is the clip for an empty gun, the bare name `resume_after_1_unload` the one with a round left. |
 | `weapon_zr68.reload_2_load`, `reload_2_load_2` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same |
 
 A resume after step N plays only the sounds of the steps after N: `resume_after_2_load` would never play the tap.
@@ -52,21 +53,24 @@ The export fails on a `resume_after_N` row for step N or earlier.
 
 ### Markers and times
 
-- The `resume_after_1_unload` slot holds only the new motion. It ends on the `reload` pose at the join marker.
+- The `resume_after_1_unload_transition` slot holds only the new motion. It ends on the `reload` pose at the join marker.
   A small difference is eased out at export.
 - The export shifts the timing markers into every composite and rewrites every time in
   `neo/scripts/weapon_<gun>_reload_phases.txt`, the `ReloadPhases` block that neo's weapon script includes with `#base`.
-  A row without a marker fails the export.
+  A row without a marker fails the export, and so does an ammo time at or after the sequence's last frame.
+- A row's `"resume"` key names the sequence the draw plays when a switch interrupts that sequence after the step.
+  The export keeps the key and fails unless it names a `resume_after_STEP...` sequence of the row's own step.
 - A sequence ends where the gun can fire: the export fails if one of its sounds plays past its last frame. A clip
   that keeps moving after both hands are at rest is trimmed in its source slot; there is no marker for it.
 
 To add a resume clip after another step:
 
 1. Place the step marker `reload:STEP` (and `reload:STEP.join` if the join is elsewhere), and add a slot
-   `resume_after_STEP` that ends on that pose.
-2. Add a line to `composites.txt`, such as `resume_after_STEP_empty resume_after_STEP reload@STEP-`, and a `$sequence`
-   line for it to the `.qc`.
-3. Add the rows for the later steps to `neo/scripts/weapon_<gun>_reload_phases.txt` (any time), then export and compile.
+   `resume_after_STEP_transition` that ends on that pose.
+2. Add a line to `composites.txt`, such as `resume_after_STEP_empty resume_after_STEP_transition reload@STEP-`, and a
+   `$sequence` line for it to the `.qc`.
+3. In `neo/scripts/weapon_<gun>_reload_phases.txt`, add `"resume" "resume_after_STEP_empty"` to the `STEP` row of
+   `reload`, and a table for the resume with the rows of the later steps (any time). Then export and compile.
    A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
 
 
