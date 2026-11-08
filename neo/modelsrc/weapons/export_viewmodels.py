@@ -10,8 +10,9 @@ the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join,
 marker SLOT:LAST, such as 4_ready). Across a join, the last N frames (default 3) of the previous part are eased onto
 the pose the next part continues from.
 Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
-prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
-The export rewrites each time there, shifted into composites.
+prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others,
+and a sequence key such as "4_ready" the time of the marker SLOT:4_ready. The export rewrites each time there, shifted
+into composites.
 A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
 """
 from pathlib import Path
@@ -134,6 +135,12 @@ def fill_phases(folder, times):
         if re.fullmatch(r'\s*"\w+"\s*', line):
             sequence = line.strip().strip('"')
         step = re.match(r'\s*"(\w+)"\s*\{', line)
+        mark = re.fullmatch(r'\s*"(\d+_\w+)" "[^"]*"\s*', line)
+        if mark:
+            frame = times.get(sequence, {}).get(mark[1])
+            if frame is None:
+                raise RuntimeError('No timeline marker %s:%s for %s' % (sequence, mark[1], path.name))
+            lines[number] = line = re.sub(r'"[^"]*"\s*$', '"%.3f"' % (frame / FPS), line)
         if step and sequence.startswith('resume_after_') and step_order(step[1]) <= step_order(sequence[13:]):
             raise RuntimeError('%s lists step %s: a resume plays only later steps' % (sequence, step[1]))
         for key in re.findall(r'"(ammo|sound\d*)" "[^"]*"', line) if step else []:
