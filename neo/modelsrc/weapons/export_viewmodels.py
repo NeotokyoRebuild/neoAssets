@@ -75,6 +75,8 @@ RIGS = {
     'nsf_srm_s': ('nsf_srm_s_rig', 'nsf_srm_s_animations'),
     'jinrai_srs': ('jinrai_srs_rig', 'jinrai_srs_animations'),
     'nsf_srs': ('nsf_srs_rig', 'nsf_srs_animations'),
+    'jinrai_aa13': ('jinrai_aa13_rig', 'jinrai_aa13_animations'),
+    'nsf_aa13': ('nsf_aa13_rig', 'nsf_aa13_animations'),
 }
 
 
