@@ -141,6 +141,10 @@ The ZR68-S and ZR68-L reuse the ZR68C's transitions, moved onto their own poses 
 counts. Their step markers sit where their own magazines move: `1_unload` f20, `2_load` f42. The ZR68-S plays
 the ZR68C's sound pieces (`weapon_zr68.reload_*`); the ZR68-L has its own (`weapon_zr68l.reload_*`).
 
+The Jitte (four projects) joins `reload` after f40 (its magazine moves into the hand there, off screen) and f72, and
+leaves it at f66, the magazine seat (no tap). Slots: `drawunloaded` f0-50, `drawtocycle` f0-41, `skipcycle` f0-19.
+As on the MPN45, `drawtocycle` carries its own `drawtocycle:3_cycle.sound` marker (f41) for the cycle sound on the join.
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
