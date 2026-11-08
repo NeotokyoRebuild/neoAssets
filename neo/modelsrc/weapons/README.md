@@ -55,6 +55,31 @@ The last frame must match that pose; a small difference is eased at export.
 Success looks like `EXPORTED ...` for each project, a `SEAM` line with small gaps, and one `READY` line per sound.
 A failure prints one `EXPORT FAILED: ...` line.
 
+### Preview camera
+
+Each scene's camera (`PROJECT_camera`) shows the viewmodel as a player sees it in game on a 16:9 screen
+(1920x1080), with default settings and the player standing still. To look through it:
+
+1. Move the mouse over the 3D Viewport.
+2. Press Numpad 0, or pick View > Cameras > Active Camera.
+3. To leave the camera view, rotate the view with the middle mouse button.
+
+The player's field of view setting (75 to 90) does not change the picture: the game draws the viewmodel with its own
+field of view. The camera matches the game this way:
+
+- The game puts the model at the player's eye, then moves it by `ViewModelOffset` (`forward`, `right`, `up`) in
+  `game/neo/scripts/weapon_GUN.txt`. The camera moves by the opposite amount instead, so the export is unchanged.
+  Forward in Blender is -Y, right is -X, up is +Z, so the camera sits at (right, forward, -up): ZR68C (8, 10, 0),
+  Tachi (5, 5, 0). It looks along -Y with +Z up.
+- The lens has a vertical field of view of 46.83 degrees (Sensor Fit: Vertical). That is the game's `VMFov` of 60,
+  which Source measures horizontally on a 4:3 screen. The game reads `VMFov` at the top level of the weapon script
+  (60 if absent); the `fov` key inside `ViewModelOffset` is not used.
+- If a gun's `ViewModelOffset` or `VMFov` changes, move the camera or change its lens to match.
+
+Units: one Blender unit is one Hammer unit. Blender Source Tools writes Blender coordinates to the SMD unchanged;
+the "m" that Blender shows is only its label for the metric system at unit scale 1. So the offsets from the weapon
+script can be typed into Blender as they are.
+
 
 ## Exporting animations
 
@@ -169,7 +194,8 @@ Files in neoAssets (this repo):
 
 - `neo/modelsrc/weapons/viewmodels.blend`: one scene `TEAM_GUN` per team. Start from a copy of a similar scene
   (Scene selector > New Scene > Full Copy), name the scene, rig and action after the project, and set the scene's
-  Source Engine Export path to `//TEAM_GUN/`.
+  Source Engine Export path to `//TEAM_GUN/`. Name the camera `TEAM_GUN_camera` and place it from the gun's
+  `ViewModelOffset` (see Preview camera).
 - `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `composites.txt` (if used), `reference.smd` and `anims/`, for each team.
 - `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
 - `neo/scripts/weapon_GUN_reload_phases.txt`: the phases file. Copy the ZR68C one and edit the sequences and steps.
