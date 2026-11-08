@@ -1,7 +1,8 @@
 # Weapon model sources
 
 The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C (`jinrai_zr68c/`, `nsf_zr68c/`).
-Preview images the `.blend` files load live in a shared weapon folder, such as `tachi/textures/` or `zr68c/textures/`.
+Preview images the `.blend` files load live in `arms/textures/` for the Jinrai and NSF arms (shared by every weapon)
+and in a weapon folder for the weapon, such as `tachi/textures/` or `zr68c/textures/`.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 Each model has a source folder here, such as `jinrai_tachi/`, containing one `.blend` file and one `.qc` file.
