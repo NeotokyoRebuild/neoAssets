@@ -22,6 +22,24 @@ Each line names the output animation and its parts in order; a part is a slot, o
 `anims/draw_resume_drop_dry.smd`: all of the `draw_resume_drop` slot, then `reload` from frame 31.
 
 
+## Reload resume animations (ZR68C)
+
+When the player switches weapons after the old magazine has dropped out, the reload continues when the gun is drawn again.
+The game plays `draw_resume_drop_dry` for this: a draw that brings the fresh magazine up, then the rest of `reload`.
+
+- The `draw_resume_drop` slot holds only the new motion. Its last frame must match the pose of `reload` frame 30.
+  A timeline marker in the `.blend` marks that frame.
+- `composites.txt` appends `reload` from frame 31, so the exported sequence plays the reload's own frames after the join.
+- The `.qc` compiles `draw_resume_drop_dry`; the transition slot itself is not compiled.
+
+To add a resume clip for another point in the reload:
+
+1. Add a slot that ends on the pose of the `reload` frame where the reload continues, and mark that frame on the timeline.
+2. Add a line to `composites.txt` that appends `reload` from the next frame.
+3. Add a `$sequence` line for the composite to the `.qc`, then export and compile.
+4. In neo, add the sequence's phase times to the weapon script (`ReloadPhases` in `weapon_*.txt`).
+
+
 ## Compiling models
 
 Set `--compiler` to Source SDK Base 2013 Multiplayer's `studiomdl.exe`, and `--game` to the neo game directory containing `gameinfo.txt`:
