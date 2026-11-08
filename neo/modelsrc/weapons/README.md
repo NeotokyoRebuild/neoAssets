@@ -146,6 +146,9 @@ The Jitte (four projects) joins `reload` after f40 (its magazine moves into the 
 leaves it at f66, the magazine seat (no tap). Slots: `drawunloaded` f0-50, `drawtocycle` f0-41, `skipcycle` f0-19.
 As on the MPN45, `drawtocycle` carries its own `drawtocycle:3_cycle.sound` marker (f41) for the cycle sound on the join.
 
+The SRM (four projects) joins `reload` after f33 and f75 and leaves it at f58, the magazine seat (no tap). Slots:
+`drawunloaded` f0-34, `drawtocycle` f0-32, `skipcycle` f0-11.
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
