@@ -15,6 +15,11 @@ To export from Blender to SMD, for example for both Tachi projects, run:
 blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_tachi nsf_tachi
 ```
 
+A sequence made of parts of other animations is written after the export, when the source folder has a `composites.txt`.
+Each line names the output animation and its parts in order; a part is a slot, or `slot:first-last` for a frame range
+(inclusive, an empty `last` runs to the end). For example, `draw_resume_drop_dry draw_resume_drop reload:31-` writes
+`anims/draw_resume_drop_dry.smd`: all of the `draw_resume_drop` slot, then `reload` from frame 31.
+
 
 ## Compiling models
 
