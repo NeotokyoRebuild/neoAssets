@@ -1,0 +1,19 @@
+// MilSO ReloadPhases (sv_neo_reload_experimental), included by neo's scripts/weapon_milso.txt through #base.
+// Chamber tracking only: the shipped reload and reloadempty play with their whole original sound, and the magazine
+// still loads at ReloadReadyBeforeEnd. "3_cycle" is when the chamber holds a round: in reloadempty the slide release,
+// in reload the same frame (the chamber is already full; the row lets a reload interrupted after its ammo credit
+// recover through reload). export_viewmodels.py sets the times from the timeline markers in the .blend.
+"WeaponData"
+{
+	"ReloadPhases"
+	{
+		"reload"
+		{
+			"3_cycle" { "ammo" "1.767" }
+		}
+		"reloadempty"
+		{
+			"3_cycle" { "ammo" "1.767" }
+		}
+	}
+}
