@@ -3,7 +3,7 @@
 The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C, the
 M41 family (M41, M41S, M41L), the MPN45 (silenced and unsilenced), the MX (MX, MX silenced),
 the ZR68-S and ZR68-L, the Jitte (plain and scoped), the SRM (plain and silenced),
-the SRS, the AA13 and the PZ252.
+the SRS, the AA13, the PZ252 and the MilSO.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 Layout:
@@ -12,7 +12,7 @@ Layout:
   `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`, and `jinrai_mosok41`, `jinrai_mosok41s`,
   `jinrai_mosok41l`, `jinrai_mpn`, `jinrai_mpn_s`, `jinrai_mx`, `jinrai_mxs`, `jinrai_zr68s`, `jinrai_zr68l`,
   `jinrai_jitte`, `jinrai_jittes`, `jinrai_srm`, `jinrai_srm_s`, `jinrai_srs`, `jinrai_aa13`,
-  `jinrai_pz` with their `nsf_` pairs.
+  `jinrai_pz`, `jinrai_milso` with their `nsf_` pairs.
 - `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
   `composites.txt` (if used). The scripts take project names.
 - `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
@@ -21,7 +21,8 @@ Layout:
   and the MX one `mx/viewmodel.qci` across its four (the ZR68-S and ZR68-L follow the ZR68C layout:
   `zr68s/viewmodel.qci`, `zr68l/viewmodel.qci`, and so do `jitte/viewmodel.qci`, `jittes/viewmodel.qci`, `srm/viewmodel.qci`,
   `srm_s/viewmodel.qci`; the SRS shares `srs/viewmodel.qci` and keeps `$definebone` per team, as the M41;
-  the AA13 follows the ZR68C layout with `aa13/viewmodel.qci`; the PZ252 shares `pz/viewmodel.qci` as the SRS); each of their `.qc` files
+  the AA13 follows the ZR68C layout with `aa13/viewmodel.qci`; the PZ252 shares `pz/viewmodel.qci` as the SRS;
+  the MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones); each of their `.qc` files
   keeps its own `$definebone` lines, because the rigs differ.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 
@@ -113,6 +114,13 @@ exceeds 0.5 units or 2 degrees.
 A composite has no slot or action in Blender, so it is not in the action browser: it is an export output, like the
 compiled model. Do not edit its SMD; edit the slots it is made of and export again.
 
+
+## Chamber tracking for pistols (MilSO, Tachi)
+
+The MilSO and the Tachi keep their shipped `reload` and `reloadempty` and get no glued clips. Each scene carries two
+markers, `reloadempty:3_cycle` at the slide release (the first frame the slide moves forward: MilSO f53, Tachi f55)
+and `reload:3_cycle` on the same frame, and the export writes `weapon_milso_reload_phases.txt` and
+`weapon_tachi_reload_phases.txt` from them: the time the chamber holds a round.
 
 ## Reload resume animations (ZR68C)
 
