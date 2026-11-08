@@ -125,6 +125,11 @@ The M41 family (all six projects) has the same four clips, glued at its own mark
 `reload` at f77, after the magazine tap. Its slots: `drawunloaded` f0-33 (draw, then a 9-frame tilt), `drawtocycle`
 f0-39 (draw, then a 15-frame reach), `skipcycle` f0-20 (support hand back through the start of `reload`).
 
+The MPN45 (four projects) joins `reload` after f27 and f72 and leaves it at f51 (the magazine seat; it has no tap).
+Slots: `drawunloaded` f0-47, `drawtocycle` f0-43, `skipcycle` f0-13. Its `3_cycle.sound` marker sits on the f72 join,
+which `drawtocycle_reload` replaces with the last frame of `drawtocycle`, so that slot carries its own
+`drawtocycle:3_cycle.sound` marker at f43.
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
