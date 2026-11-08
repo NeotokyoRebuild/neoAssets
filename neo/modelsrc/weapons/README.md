@@ -173,6 +173,22 @@ To add a resume clip after another step:
    A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
 
 
+### Previewing the glued clips
+
+`viewmodels_post_export.blend` shows each glued clip exactly as the game plays it, easing included. It is an export
+output: every export rebuilds it from `viewmodels.blend` and the glued SMDs, for every project with a
+`composites.txt`. Never edit it; edit `viewmodels.blend` and export. Commit it together with the SMDs whenever a
+glued clip changes.
+
+1. Open `viewmodels_post_export.blend` in Blender.
+2. Pick the project in the Scene box at the top right.
+3. Select the rig. Open Dope Sheet > Action Editor and pick a clip in the Slot dropdown.
+4. Move the mouse over the 3D Viewport and press Numpad 0 to look through the in-game camera.
+
+The timeline markers carry the step and sound times of each clip (`CLIP:STEP`, `CLIP:STEP.sound`), the times the
+phases file gets. The export rewrites the file only when its inputs change: two builds show the same content, but
+Blender saves the window layout and some camera properties in a varying order, so the bytes differ.
+
 ## Compiling models
 
 `--compiler` is Source SDK Base 2013 Multiplayer's `studiomdl.exe` (the 32-bit one in `bin/`). `--game` is a game
