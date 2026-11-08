@@ -1,6 +1,8 @@
 # Weapon model sources
 
 The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C (`jinrai_zr68c/`, `nsf_zr68c/`).
+SKETCH (sunzenshen): `jinrai_mosok41/` and `nsf_mosok41/` add the M41 resume after `1_unload`; their transition slot,
+sounds and arm previews are placeholders (see "M41 sketch" below).
 Preview images the `.blend` files load live in `arms/textures/` for the Jinrai and NSF arms (shared by every weapon)
 and in a weapon folder for the weapon, such as `tachi/textures/` or `zr68c/textures/`.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
@@ -83,3 +85,19 @@ python compile_viewmodels.py jinrai_tachi nsf_tachi --compiler "C:/Program Files
 ```
 
 To save the compiled models in neoAssets, copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the neo game directory's `models/weapons/` folder to `neo/models/weapons/`.
+
+
+## M41 sketch (`jinrai_mosok41/`, `nsf_mosok41/`)
+
+Sketch of adding a second gun the same way as the ZR68C, resume after `1_unload` only. Source folders are named after the
+model (`mosok41`), sound entries and wavs after the weapon (`weapon_m41.reload_2_load`, `m41_reload_2_load.wav`), so the
+phases file is `weapon_mosok41_reload_phases.txt` and neo's `weapon_m41.txt` includes it.
+
+- Built from the research M41 sources (decompiled shipped viewmodel): `reference.smd`, the 14 shipped sequences, and the
+  QC with the generated `resume_after_1_unload_empty` added. The `.blend` files have no preview images yet.
+- `resume_after_1_unload_transition` is a placeholder: the research glued clip (draw into `reload`), of which
+  `composites.txt` takes frames 0-40; frame 40 equals `reload` f33, the join (`reload:1_unload.join` f33).
+- `reload` has 3 sounds in step `2_load` (seat rattle, tap, slap) and 1 in `3_cycle` (bolt click). The `2_load` row uses
+  all three sound slots. The wavs are the research cuts, not re-cut by the ZR68C method.
+- Compiled `v_jinrai_mosok41.*`, `v_nsf_mosok41.*` are new in neoAssets (only the `mosok41l` models were here); their
+  vertex data has the shipped size and 5 materials, not compared byte for byte.
