@@ -2,7 +2,8 @@
 
 The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C, the
 M41 family (M41, M41S, M41L), the MPN45 (silenced and unsilenced), the MX (MX, MX silenced),
-the ZR68-S and ZR68-L, the Jitte (plain and scoped) and the SRM (plain and silenced).
+the ZR68-S and ZR68-L, the Jitte (plain and scoped), the SRM (plain and silenced)
+and the SRS.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 Layout:
@@ -10,7 +11,8 @@ Layout:
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
   `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`, and `jinrai_mosok41`, `jinrai_mosok41s`,
   `jinrai_mosok41l`, `jinrai_mpn`, `jinrai_mpn_s`, `jinrai_mx`, `jinrai_mxs`, `jinrai_zr68s`, `jinrai_zr68l`,
-  `jinrai_jitte`, `jinrai_jittes`, `jinrai_srm`, `jinrai_srm_s` with their `nsf_` pairs.
+  `jinrai_jitte`, `jinrai_jittes`, `jinrai_srm`, `jinrai_srm_s`, `jinrai_srs` with their `nsf_`
+  pairs.
 - `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
   `composites.txt` (if used). The scripts take project names.
 - `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
@@ -18,7 +20,7 @@ Layout:
   sequences) across its six models, the MPN45 one `mpn/viewmodel.qci` across its four,
   and the MX one `mx/viewmodel.qci` across its four (the ZR68-S and ZR68-L follow the ZR68C layout:
   `zr68s/viewmodel.qci`, `zr68l/viewmodel.qci`, and so do `jitte/viewmodel.qci`, `jittes/viewmodel.qci`, `srm/viewmodel.qci`,
-  `srm_s/viewmodel.qci`); each of their `.qc` files
+  `srm_s/viewmodel.qci`; the SRS shares `srs/viewmodel.qci` and keeps `$definebone` per team, as the M41); each of their `.qc` files
   keeps its own `$definebone` lines, because the rigs differ.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 
