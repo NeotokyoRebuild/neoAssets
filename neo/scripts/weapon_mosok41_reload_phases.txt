@@ -1,0 +1,23 @@
+// M41 ReloadPhases (sv_neo_reload_experimental), included by neo's scripts/weapon_m41.txt through #base.
+// Same shape as weapon_zr68c_reload_phases.txt. export_viewmodels.py sets every time from the timeline markers in the
+// .blend; the placeholder values here only name the rows and sounds. "<gun>" in a sound entry is the sound folder
+// (m41), while this file and the model folders carry the model name (mosok41).
+// SKETCH (sunzenshen): the M41 needs the three sound slots of 2_load (seat rattle, tap, slap), all of
+// RELOAD_SOUNDS_PER_ROW; a resume_after_2_load would drop them all (the sound rule), so the M41 has none yet.
+// NEO TODO (sunzenshen): placeholder wavs, re-cut from m41_reload.wav the way zr68_reload_*.wav were (zr68c-sound-align.md).
+"WeaponData"
+{
+	"ReloadPhases"
+	{
+		"reload"
+		{
+			"1_unload" { "ammo" "0.633" "resume" "resume_after_1_unload_empty" }
+			"2_load" { "ammo" "1.300" }
+		}
+		"resume_after_1_unload_empty"
+		{
+			"2_load" { "ammo" "1.533" "sound" "2.000" "sound_name" "weapon_m41.reload_2_load" "sound2" "2.100" "sound2_name" "weapon_m41.reload_2_load_2" "sound3" "2.733" "sound3_name" "weapon_m41.reload_2_load_3" }
+			"3_cycle" { "ammo" "3.600" "sound" "3.400" "sound_name" "weapon_m41.reload_3_cycle" }
+		}
+	}
+}
