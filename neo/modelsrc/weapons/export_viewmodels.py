@@ -1,16 +1,17 @@
 """Export saved viewmodel Blender sources with Blender Source Tools.
 
-Run: blender --background --python-exit-code 1 --python export_viewmodels.py -- SOURCE [SOURCE ...]
-Each SOURCE is a folder beside this script that contains one .blend file.
+Run: blender --background --python-exit-code 1 --python export_viewmodels.py -- PROJECT [PROJECT ...]
+Each PROJECT (such as jinrai_zr68c) is a scene of viewmodels.blend beside this script, exported into the folder
+of the same name, which holds the project's .qc, reference.smd and anims/.
 Requires Blender 5.2.3 or newer and Blender Source Tools 3.4.3 or newer.
-This helper reads .blend sources, and writes SMD exports.
-An optional composites.txt in a source folder joins exported animations into one more SMD per line:
+This helper reads viewmodels.blend, and writes SMD exports.
+An optional composites.txt in a project folder joins exported animations into one more SMD per line:
 OUTPUT PART [PART ...] [blend=N], where PART is SLOT, SLOT:FIRST-LAST (inclusive frames; an empty LAST means
 the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP). Across a join,
 the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
 Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
 prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
-The export rewrites each time there, shifted into composites. Both team projects of a gun must carry the same markers:
+The export rewrites each time there, shifted into composites. Both team scenes of a gun must carry the same markers:
 a mismatch fails before any SMD is written.
 A sound entry weapon_GUN.KEY plays sound/weapons/GUN/GUN_KEY.wav (a convention; the sound script is not read).
 A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
@@ -27,6 +28,7 @@ import wave
 import bpy
 from mathutils import Euler, Quaternion
 
+SOURCE = 'viewmodels.blend'
 FPS = 30
 SOUND_LEAD = 0.02  # neo starts a reload sound piece this long before its time (RELOAD_SOUND_LEAD)
 EXACT = 1e-4  # below the SMD print precision: the poses match, nothing is eased
@@ -235,45 +237,59 @@ def fill_phases(folder, times):
     print('PHASES', path.name, '\n' + text)
 
 
-def read_markers(project):
-    bpy.ops.wm.open_mainfile(filepath=str(project))
-    return {marker.name: marker.frame for marker in bpy.context.scene.timeline_markers}
+def read_markers(scene):
+    return {marker.name: marker.frame for marker in scene.timeline_markers}
 
 
-def check_teams_agree(projects):
-    """Fail before any export when the team projects of a gun carry different markers."""
+def check_teams_agree(scenes):
+    """Fail before any export when the team scenes of a gun carry different markers."""
     first = {}
-    for project in projects:
-        gun = project.parent.name.partition('_')[2]
-        markers = read_markers(project)
+    for scene in scenes:
+        gun = scene.name.partition('_')[2]
+        markers = read_markers(scene)
         if gun not in first:
-            first[gun] = (project, markers)
+            first[gun] = (scene, markers)
             continue
         other, expected = first[gun]
         for name in sorted(set(markers) | set(expected)):
             if markers.get(name) != expected.get(name):
-                raise RuntimeError('Marker %s is at frame %s in %s but at frame %s in %s: edit both team projects' % (
-                    name, expected.get(name, 'missing'), other.relative_to(other.parents[1]),
-                    markers.get(name, 'missing'), project.relative_to(project.parents[1])))
+                raise RuntimeError('Marker %s is at frame %s in scene %s but at frame %s in scene %s: edit both team scenes' % (
+                    name, expected.get(name, 'missing'), other.name, markers.get(name, 'missing'), scene.name))
 
 
-def export_project(project):
-    bpy.ops.wm.open_mainfile(filepath=str(project))
-    bpy.ops.preferences.addon_enable(module='io_scene_valvesource')
+def check_images():
     missing = [image.filepath for image in bpy.data.images
                if image.source == 'FILE' and not image.packed_file
                and not Path(bpy.path.abspath(image.filepath)).is_file()]
     if missing:
         raise RuntimeError('Missing preview images: ' + ', '.join(missing))
-    folder = project.parent
+
+
+def open_scenes(path, keep=None):
+    """Open the source file; with keep, drop the other scenes so Source Tools exports the kept one."""
+    bpy.ops.wm.open_mainfile(filepath=str(path))
+    bpy.ops.preferences.addon_enable(module='io_scene_valvesource')
+    if keep is None:
+        return bpy.data.scenes
+    for scene in list(bpy.data.scenes):
+        if scene.name != keep:
+            bpy.data.scenes.remove(scene)
+    return bpy.context.scene
+
+
+def export_project(folder, scene):
+    if scene.render.fps != FPS or scene.render.fps_base != 1:
+        raise RuntimeError('Scene %s must play at %d fps' % (scene.name, FPS))
     reference = folder / 'reference.smd'
     reference_bytes = reference.read_bytes()
-    armature = next(obj for obj in bpy.context.scene.objects if obj.type == 'ARMATURE')
+    armature = next(obj for obj in scene.objects if obj.type == 'ARMATURE')
     expected = [folder / 'anims' / (slot.name_display + '.smd')
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
                 for path in expected}
+    name = scene.name
     result = bpy.ops.export_scene.smd(export_scene=True)
+    scene = bpy.data.scenes[name]  # the export replaces the scene's Python object
     if result != {'FINISHED'}:
         raise RuntimeError('Source Tools export failed: ' + str(result))
     if any(not path.is_file() or path.stat().st_mtime_ns == previous[path]
@@ -281,26 +297,24 @@ def export_project(project):
         raise RuntimeError('Source Tools did not freshly export every expected SMD')
     if reference.read_bytes() != reference_bytes:
         raise RuntimeError('The preview mesh must not overwrite reference.smd')
-    print('EXPORTED', project.name, len(expected), 'animation SMD files; reference retained')
-    markers = {marker.name: marker.frame for marker in bpy.context.scene.timeline_markers}
-    fill_phases(folder, write_composites(folder, markers))
+    print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
+    fill_phases(folder, write_composites(folder, read_markers(scene)))
 
 
 if __name__ == '__main__':
     root = Path(__file__).resolve().parent
-    sources = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
-    if not sources:
-        raise RuntimeError('List the source folders to export after --')
-    projects = []
-    for source in sources:
-        found = sorted((root / source).glob('*.blend'))
-        if len(found) != 1:
-            raise RuntimeError('Source folder must contain one .blend file: ' + source)
-        projects.append(found[0])
+    projects = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+    if not projects:
+        raise RuntimeError('List the projects to export after --')
     try:
-        check_teams_agree(projects)
+        found = open_scenes(root / SOURCE)
+        unknown = [project for project in projects if project not in found or not (root / project).is_dir()]
+        if unknown:
+            raise RuntimeError('No scene and folder named ' + ', '.join(unknown))
+        check_teams_agree([found[project] for project in projects])
+        check_images()
         for project in projects:
-            export_project(project)
+            export_project(root / project, open_scenes(root / SOURCE, keep=project))
     except RuntimeError as problem:
         print('EXPORT FAILED:', problem)
         sys.exit(1)
