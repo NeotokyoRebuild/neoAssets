@@ -8,6 +8,11 @@
 // .blend files yet: reload:1_unload.sound, reload:2_load.exit (f56), reload:2_load.join (f60), and the markers the
 // new slots carry. NEO TODO (sunzenshen): add the markers, author the slots, export; until then the export fails on
 // "No timeline marker".
+// Combinatorics (plan, six paths for one gun): 1 fresh dry = reload (shipped); 2 fresh tactical = reload_partial;
+// 3 after unload, dry = resume_after_1_unload_empty (MVP); 4 after unload, tactical = resume_after_1_unload;
+// 5 after load, dry = resume_after_2_load_empty; 6 after load, tactical = plain draw. Rows 2, 4, 5 are placeholders here.
+// TODO: author exit_after_2_load_transition and resume_after_2_load_transition at the original pace, add the markers
+// 1_unload.sound, 2_load.exit, 2_load.join, cut the unload piece, export and compile.
 "WeaponData"
 {
 	"ReloadPhases"

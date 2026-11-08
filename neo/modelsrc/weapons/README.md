@@ -95,3 +95,15 @@ The phases-file times of the new tables are placeholders too.
 NEO TODO (sunzenshen): before the export can run, both .blend files need the markers `reload:1_unload.sound`,
 `reload:2_load.exit` (f56), `reload:2_load.join` (f60) and the two authored slots at the original pace (U3: E, R).
 Composite ranges may now end at a marker (`reload:0-2_load.exit`, M3).
+
+## Sketch status
+
+Discovery branch, parked until the ZR68C MVP gets reviewer feedback.
+
+### Per-gun TODO (ZR68C full slice)
+
+`composites.txt` takes no comments, so its stubs live here. Lines 1 and 3 are MVP-shaped; `resume_after_1_unload`,
+`resume_after_2_load_empty`, `reload_partial` are glued from placeholder slots (combinatorics rows 4, 5, 2).
+Open: author 3 transitions (U3 E and R), markers `reload:1_unload.sound`, `2_load.exit`, `2_load.join`, the unload sound
+cut, export, compile; RELOAD_END port (U5b); dry-reload fallback for a lost resume; bot threshold; client tests. Plan:
+`proposals/0057-reload-cue-timing/zr68c-slice-plan.md`, "Open TODO list (2026-11-07)".
