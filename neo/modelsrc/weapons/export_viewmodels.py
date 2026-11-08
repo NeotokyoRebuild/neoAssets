@@ -124,6 +124,10 @@ def write_composites(folder, markers, write=True):
         header, joined = None, []
         for part in parts:
             slot, mark, span = re.match(r'(\w+)([:@]?)(.*)', part).groups()
+            part_path = folder / 'anims' / (slot + '.smd')
+            if not part_path.is_file():
+                raise RuntimeError('%s in composites.txt names %s, which is no slot or earlier composite of %s' % (
+                    part, slot, folder.name))
             if mark == '@':
                 step, _, last = span.partition('-')
                 joins.setdefault(output, set()).add((slot, step))
@@ -131,7 +135,7 @@ def write_composites(folder, markers, write=True):
                 if join is None:
                     raise RuntimeError('No timeline marker %s:%s for %s' % (slot, step, part))
                 span = '%d-%s' % (join + 1, last)
-            part_header, frames = read_frames(folder / 'anims' / (slot + '.smd'))
+            part_header, frames = read_frames(part_path)
             if header is not None and part_header != header:
                 raise RuntimeError('Composite parts have different nodes: ' + part)
             header = part_header
