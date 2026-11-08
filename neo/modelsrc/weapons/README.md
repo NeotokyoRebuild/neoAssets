@@ -119,6 +119,11 @@ The ZR68C has four glued clips besides `reload`:
 
 The `"resume"` key on a row of the phases file names the clip to draw after that step.
 
+The M41 family (all six projects) has the same four clips, glued at its own markers: `drawunloaded_reload` joins
+`reload` after f31, `drawtocycle_reload` after f93 (the handle pull starts at f94), and the `skipcycle` clips leave
+`reload` at f77, after the magazine tap. Its slots: `drawunloaded` f0-33 (draw, then a 9-frame tilt), `drawtocycle`
+f0-39 (draw, then a 15-frame reach), `skipcycle` f0-20 (support hand back through the start of `reload`).
+
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
