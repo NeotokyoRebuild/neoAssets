@@ -14,16 +14,19 @@ prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (
 and a sequence key such as "4_ready" the time of the marker SLOT:4_ready. The export rewrites each time there, shifted
 into composites.
 A sequence resume_after_STEP... may list only the steps after STEP: a resume never replays an earlier step's sound.
+A sequence's "4_ready" (fire allowed) may not come before its last sound has finished playing.
 """
 from pathlib import Path
 import math
 import re
 import sys
+import wave
 
 import bpy
 from mathutils import Euler, Quaternion
 
 FPS = 30
+SOUND_LEAD = 0.02  # neo starts a reload sound piece this long before its time (RELOAD_SOUND_LEAD)
 EXACT = 1e-4  # below the SMD print precision: the poses match, nothing is eased
 SEAM_LIMIT_UNITS, SEAM_LIMIT_DEGREES = 0.5, 2.0  # eased over 3 frames: less than the reload moves per frame
 
@@ -117,6 +120,27 @@ def write_composites(folder, markers):
     return times
 
 
+def sound_end(path, name, at):
+    """When the sound entry name (weapon_GUN.KEY, wav sound/weapons/GUN/GUN_KEY.wav) started for time at stops playing."""
+    gun, _, key = name.partition('_')[2].partition('.')
+    with wave.open(str(path.parents[1] / 'sound' / 'weapons' / gun / ('%s_%s.wav' % (gun, key)))) as clip:
+        return at - SOUND_LEAD + clip.getnframes() / clip.getframerate()
+
+
+def check_ready(path, text):
+    """Fail when a sequence's 4_ready comes before the end of one of its sounds."""
+    for sequence, body in re.findall(r'"(\w+)"\s*\{((?:[^{}]|\{[^{}]*\})*)\}', text):
+        ready = re.search(r'"4_ready" "([^"]*)"', body)
+        if not ready:
+            continue
+        for key, at in re.findall(r'"(sound\d*)" "([^"]*)"', body):
+            name = re.search(r'"%s_name" "([^"]*)"' % key, body.split('"%s" "%s"' % (key, at), 1)[1])[1]
+            end = sound_end(path, name, float(at))
+            if float(ready[1]) < end - 1e-6:
+                raise RuntimeError('%s: 4_ready %s s is before %s ends at %.3f s' % (sequence, ready[1], name, end))
+            print('READY %s %s s >= %s end %.3f s (%s - %.2f + wav)' % (sequence, ready[1], name, end, at, SOUND_LEAD))
+
+
 def step_order(step):
     """The order of a reload step, from its name (1_unload -> 1)."""
     return int(step.partition('_')[0])
@@ -150,6 +174,7 @@ def fill_phases(folder, times):
                 raise RuntimeError('No timeline marker %s:%s for %s' % (sequence, marker, path.name))
             lines[number] = line = re.sub(r'("%s" )"[^"]*"' % key, r'\1"%.3f"' % (frame / FPS), line)
     text = '\n'.join(lines) + '\n'
+    check_ready(path, text)
     if WRITTEN.setdefault(path, text) != text:
         raise RuntimeError('The team projects give different times for ' + path.name)
     path.write_text(text, encoding='ascii')
