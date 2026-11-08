@@ -65,6 +65,10 @@ RIGS = {
     'jinrai_zr68l': ('jinrai_zr68l_rig', 'jinrai_zr68l_animations'),
     'nsf_zr68s': ('nsf_zr68s_rig', 'nsf_zr68s_animations'),
     'nsf_zr68l': ('nsf_zr68l_rig', 'nsf_zr68l_animations'),
+    'jinrai_jitte': ('jinrai_jitte_rig', 'jinrai_jitte_animations'),
+    'jinrai_jittes': ('jinrai_jittes_rig', 'jinrai_jittes_animations'),
+    'nsf_jitte': ('nsf_jitte_rig', 'nsf_jitte_animations'),
+    'nsf_jittes': ('nsf_jittes_rig', 'nsf_jittes_animations'),
 }
 
 
