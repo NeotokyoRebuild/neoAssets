@@ -101,3 +101,19 @@ phases file is `weapon_mosok41_reload_phases.txt` and neo's `weapon_m41.txt` inc
   all three sound slots. The wavs are the research cuts, not re-cut by the ZR68C method.
 - Compiled `v_jinrai_mosok41.*`, `v_nsf_mosok41.*` are new in neoAssets (only the `mosok41l` models were here); their
   vertex data has the shipped size and 5 materials, not compared byte for byte.
+
+
+## MilSO sketch (`jinrai_milso/`, `nsf_milso/`)
+
+Second gun after the M41 sketch, resume after `1_unload`; it has two reload sequences, so two families:
+
+| family | reload | resume slot (authored) | resume clip (glued) |
+| :-- | :-- | :-- | :-- |
+| tactical, slide forward | `reload` | `resume_after_1_unload_transition` | `resume_after_1_unload` |
+| dry, slide back, `3_cycle` = slide release | `reloadempty` | `resume_after_1_unload_empty_transition` | `resume_after_1_unload_empty` |
+
+- Each `1_unload` row of the phases file names its own resume, so the code needs nothing MilSO-specific.
+- Markers exist per sequence: `reload:1_unload`, `reloadempty:1_unload` (+ `.join`), `:2_load` (+ `.sound`), `reloadempty:3_cycle`.
+- The slide release has no sound; `3_cycle` carries only an ammo time.
+- Both transition slots are the research glued clips (placeholders); composites take frames 0-34 (f34 equals `reload` / `reloadempty` f24).
+- Compiled `v_*_milso.*` are new in neoAssets.
