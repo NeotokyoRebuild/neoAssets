@@ -1,12 +1,84 @@
 # Weapon model sources
 
-The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C (`jinrai_zr68c/`, `nsf_zr68c/`).
-Preview images the `.blend` files load live in `arms/textures/` for the Jinrai and NSF arms (shared by every weapon)
-and in a weapon folder for the weapon, such as `tachi/textures/` or `zr68c/textures/`.
+The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
-Each model has a source folder here, such as `jinrai_tachi/`, containing one `.blend` file and one `.qc` file.
-The scripts take the names of the source folders to work on.
+Layout:
+
+- `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
+  `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`.
+- `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
+  `composites.txt` (if used). The scripts take project names.
+- `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
+  sets only `$modelname` and includes this file.
+- `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
+
+Run the scripts from this folder (`neo/modelsrc/weapons`).
+
+Requirements: Blender 5.2.3 or newer with Blender Source Tools 3.4.3 or newer enabled; Python 3 and Valve's
+`studiomdl.exe` (Source SDK Base 2013 Multiplayer) for compiling.
+
+Each gun has one project per team (`jinrai_zr68c`, `nsf_zr68c`), so **edit both team scenes the same way**: the same
+poses, the same markers at the same frames. The export fails, before it writes any SMD, when the two scenes give a
+marker different frames.
+
+| term | meaning |
+| :-- | :-- |
+| sequence | one animation the game plays, such as `reload`. One SMD file in `anims/`, one `$sequence` line in the `.qc`. |
+| slot | one animation inside the single Blender action of a project. One slot becomes one SMD, named like the slot. |
+| marker | a named flag on the Blender timeline. Its frame sets a time in the phases file. |
+| composite | a sequence the export builds by gluing parts of slots together (`composites.txt`). |
+| join | the frame where the glued parts meet. The export eases the poses across it (the "seam"). |
+| phases file | `neo/scripts/weapon_GUN_reload_phases.txt`: per sequence and reload step, when its ammo counts and its sounds play. The export writes its times. |
+| flag | a plain command-line option such as `--game`, or a `blend=N` option in `composites.txt`. |
+
+
+## Working in Blender
+
+1. Open `viewmodels.blend` and pick the project in the **Scene** selector at the top right (for example
+   `jinrai_zr68c`). The `README_ANIMATOR` text block (Text Editor) summarizes the rules.
+2. All animations of a project live in **one action** (`PROJECT_animations`, such as `jinrai_zr68c_animations`), one
+   slot per sequence. To work on a slot: select the project's armature (`PROJECT_rig`), open an Action Editor
+   (Dope Sheet > Action Editor), and pick the slot in the **Slot** dropdown beside the action name. To add a slot, use
+   the new-slot button next to that dropdown and give it the sequence name. Do not rename existing slots: the `.qc`
+   and the weapon script use the names. The action browser lists every project's action; keep each rig on its own.
+3. Pose the bones of the two arms: `bone forearm01` / `bone hand01` (and the finger bones under `bone hand01`)
+   for one arm, `bone forearm` / `bone hand` for the other, under the roots `Dummy01` and `Dummy02`.
+   Key them at the frames you edit.
+4. Place markers on the timeline (Marker menu > Add Marker, then rename). Marker names are listed below.
+5. Repeat in the other team's scene, save, then export (next section).
+
+Landmarks of `drawunloaded` (frames 0-30), a one-handed draw with the magazine out: the draw brings the gun up from frame 0 to about frame 24;
+from frame 24 to the end of the slot (frame 30, the join) the hands tilt to the pose of `reload` at its join marker.
+The last frame must match that pose; a small difference is eased at export.
+
+Success looks like `EXPORTED ...` for each project, a `SEAM` line with small gaps, and one `READY` line per sound.
+A failure prints one `EXPORT FAILED: ...` line.
+
+### Preview camera
+
+Each scene's camera (`PROJECT_camera`) shows the viewmodel as a player sees it in game on a 16:9 screen
+(1920x1080), with default settings and the player standing still. To look through it:
+
+1. Move the mouse over the 3D Viewport.
+2. Press Numpad 0, or pick View > Cameras > Active Camera.
+3. To leave the camera view, rotate the view with the middle mouse button.
+
+The player's field of view setting (75 to 90) does not change the picture: the game draws the viewmodel with its own
+field of view. The camera matches the game this way:
+
+- The game puts the model at the player's eye, then moves it by `ViewModelOffset` (`forward`, `right`, `up`) in
+  `game/neo/scripts/weapon_GUN.txt`. The camera moves by the opposite amount instead, so the export is unchanged.
+  Forward in Blender is -Y, right is -X, up is +Z, so the camera sits at (right, forward, -up): ZR68C (8, 10, 0),
+  Tachi (5, 5, 0). It looks along -Y with +Z up.
+- The lens has a vertical field of view of 46.83 degrees (Sensor Fit: Vertical). That is the game's `VMFov` of 60,
+  which Source measures horizontally on a 4:3 screen. The game reads `VMFov` at the top level of the weapon script
+  (60 if absent); the `fov` key inside `ViewModelOffset` is not used.
+- If a gun's `ViewModelOffset` or `VMFov` changes, move the camera or change its lens to match.
+
+Units: one Blender unit is one Hammer unit. Blender Source Tools writes Blender coordinates to the SMD unchanged;
+the "m" that Blender shows is only its label for the metric system at unit scale 1. So the offsets from the weapon
+script can be typed into Blender as they are.
 
 
 ## Exporting animations
@@ -17,93 +89,133 @@ To export from Blender to SMD, for example for both Tachi projects, run:
 blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_tachi nsf_tachi
 ```
 
-A sequence made of parts of other animations is written after the export, when the source folder has a `composites.txt`.
+A sequence made of parts of other animations is written after the export, when the project folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
 (inclusive, an empty `last` runs to the end), or `slot@step-last` to start after the step's join marker (see below).
-For example, `resume_after_1_unload_empty resume_after_1_unload_transition reload@1_unload-` writes
-`anims/resume_after_1_unload_empty.smd`: all of the `resume_after_1_unload_transition` slot, then `reload` from the frame after
+For example, `drawunloaded_reload drawunloaded reload@1_unload-` writes
+`anims/drawunloaded_reload.smd`: all of the `drawunloaded` slot, then `reload` from the frame after
 the marker `reload:1_unload.join` to its end. Across each join, the last 3 frames of the previous part are eased onto the pose the
 next part continues from (`blend=N` at the end of the line sets the count). The export prints the gap and fails if it
 exceeds 0.5 units or 2 degrees.
+
+A composite has no slot or action in Blender, so it is not in the action browser: it is an export output, like the
+compiled model. Do not edit its SMD; edit the slots it is made of and export again.
 
 
 ## Reload resume animations (ZR68C)
 
 When the player switches weapons after the old magazine is out, the reload continues when the gun is drawn again.
-The game plays `resume_after_1_unload_empty` for this: a draw that brings the fresh magazine up, then the rest of `reload`.
+The game plays `drawunloaded_reload` for this: a one-handed draw with the magazine out, then the rest of `reload`.
 The `"resume"` key on the `1_unload` row of `reload` in the phases file names it.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
-The `README_ANIMATOR` text block in each `.blend` repeats these rules.
+The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
 ### Naming
 
 | name | meaning |
 | :-- | :-- |
 | `1_unload`, `2_load`, `3_cycle` | reload steps: old magazine out, new magazine in, round chambered. The number belongs to the step type; a gun without a step skips its number. |
-| `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of `resume_after_1_unload` |
+| `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of a resume composite (`reload@1_unload`) |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
-| `resume_after_1_unload_transition` | authored slot: the draw up to the join pose, named after the last finished step |
-| `resume_after_1_unload_empty` | generated: the slot glued to the rest of `reload`. Source style: `_empty` (as in `reloadempty`, `idle01empty`) is the clip for an empty gun, the bare name `resume_after_1_unload` the one with a round left. |
+| `drawunloaded` | authored slot: a one-handed draw with the magazine out, up to the join pose (Source style, as `drawempty`) |
+| `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: `TRANSITION_CLIP`, the authored transition and the shipped clip it glues into. |
 | `weapon_zr68.reload_2_load`, `reload_2_load_2` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same |
 
-A resume after step N plays only the sounds of the steps after N: `resume_after_2_load` would never play the tap.
-The export fails on a `resume_after_N` row for step N or earlier.
+A resume after step N plays only the sounds of the steps after N: a resume after `2_load` would never play the tap.
+The export fails when a resume's table lists step N or earlier.
 
 ### Markers and times
 
-- The `resume_after_1_unload_transition` slot holds only the new motion. It ends on the `reload` pose at the join marker.
+- The `drawunloaded` slot holds only the new motion. It ends on the `reload` pose at the join marker.
   A small difference is eased out at export.
 - The export shifts the timing markers into every composite and rewrites every time in
   `neo/scripts/weapon_<gun>_reload_phases.txt`, the `ReloadPhases` block that neo's weapon script includes with `#base`.
   A row without a marker fails the export, and so does an ammo time at or after the sequence's last frame.
+- A marker sits on a frame of the slot it is named after, and is copied to every composite that uses that frame.
+  Worked example: `reload:2_load.sound` is at frame 39 of `reload`. `drawunloaded_reload` is the `drawunloaded`
+  slot (31 frames, composite frames 0-30) followed by `reload` from frame 31 (join 30, plus 1). Frame 39 of `reload`
+  becomes composite frame 31 + (39 - 31) = 39, so the phases file gets `"sound" "1.300"` (39 / 30 fps) on the
+  `2_load` row of `drawunloaded_reload`. `reload` itself lists no `2_load` sound: it plays whole, as on master.
+  The marker still goes on `reload`, because that is where the frame is.
+- Marker kinds: `SLOT:STEP` sets the step's `ammo` time; `SLOT:STEP.sound` and `.sound2` set the first hit of the
+  step's sounds; `SLOT:STEP.join` moves the join. The sound's own length comes from its wav (below).
 - A row's `"resume"` key names the sequence the draw plays when a switch interrupts that sequence after the step.
-  The export keeps the key and fails unless it names a `resume_after_STEP...` sequence of the row's own step.
+  The export keeps the key and fails unless it names a composite that joins that sequence after the row's step
+  (a part such as `reload@1_unload` in `composites.txt`).
 - A sequence ends where the gun can fire: the export fails if one of its sounds plays past its last frame. A clip
   that keeps moving after both hands are at rest is trimmed in its source slot; there is no marker for it.
 
 To add a resume clip after another step:
 
 1. Place the step marker `reload:STEP` (and `reload:STEP.join` if the join is elsewhere), and add a slot
-   `resume_after_STEP_transition` that ends on that pose.
-2. Add a line to `composites.txt`, such as `resume_after_STEP_empty resume_after_STEP_transition reload@STEP-`, and a
+   for the draw that ends on that pose (ZR68C: `drawunloaded`).
+2. Add a line to `composites.txt`, such as `DRAW_reload DRAW reload@STEP-`, and a
    `$sequence` line for it to the `.qc`.
-3. In `neo/scripts/weapon_<gun>_reload_phases.txt`, add `"resume" "resume_after_STEP_empty"` to the `STEP` row of
+3. In `neo/scripts/weapon_<gun>_reload_phases.txt`, add `"resume" "DRAW_reload"` to the `STEP` row of
    `reload`, and a table for the resume with the rows of the later steps (any time). Then export and compile.
    A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
 
 
 ## Compiling models
 
-Set `--compiler` to Source SDK Base 2013 Multiplayer's `studiomdl.exe`, and `--game` to the neo game directory containing `gameinfo.txt`:
+`--compiler` is Source SDK Base 2013 Multiplayer's `studiomdl.exe` (the 32-bit one in `bin/`). `--game` is a game
+directory that contains `gameinfo.txt`: the `game/neo` folder of a neo checkout. neoAssets has no `gameinfo.txt`, so it
+cannot be used. The compile writes the models into that directory's `models/weapons/`, not into the source tree.
 
 ```sh
-python compile_viewmodels.py jinrai_tachi nsf_tachi --compiler "C:/Program Files (x86)/Steam/steamapps/common/Source SDK Base 2013 Multiplayer/bin/studiomdl.exe" --game "C:/path/to/neo/game/neo"
+python compile_viewmodels.py jinrai_zr68c nsf_zr68c --compiler "C:/Program Files (x86)/Steam/steamapps/common/Source SDK Base 2013 Multiplayer/bin/studiomdl.exe" --game "C:/src/neo/game/neo"
 ```
 
-To save the compiled models in neoAssets, copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the neo game directory's `models/weapons/` folder to `neo/models/weapons/`.
+On Linux, run `studiomdl.exe` with Wine. Pass this wrapper script as `--compiler`; it turns path arguments into
+Windows paths, which studiomdl needs:
 
-## Sketch `sketch-zr68c-full` (discovery branch, not for review)
+```bash
+#!/bin/bash
+args=()
+for arg in "$@"; do
+    if [ -e "$arg" ]; then args+=("$(winepath -w "$arg")"); else args+=("$arg"); fi
+done
+exec wine "$HOME/sdk2013mp/bin/studiomdl.exe" "${args[@]}"
+```
 
-Every ZR68C transition on the MVP: dry and chamber-live resume after `1_unload`, dry resume after `2_load`, and the fresh
-chamber-live `reload_partial` (30+1, no cycle). **Placeholders:** `resume_after_2_load_transition.smd` (copy of the
-1_unload slot), `exit_after_2_load_transition.smd` (copy of `idle01`), the composed `resume_after_1_unload`,
-`resume_after_2_load_empty`, `reload_partial` SMDs (copies) and `zr68_reload_1_unload.wav` (copy of the 2_load piece).
-The phases-file times of the new tables are placeholders too.
+```sh
+python3 compile_viewmodels.py jinrai_zr68c nsf_zr68c --compiler ~/bin/studiomdl-wine --game ~/src/neo/game/neo
+```
 
-NEO TODO (sunzenshen): before the export can run, both .blend files need the markers `reload:1_unload.sound`,
-`reload:2_load.exit` (f56), `reload:2_load.join` (f60) and the two authored slots at the original pace (U3: E, R).
-Composite ranges may now end at a marker (`reload:0-2_load.exit`, M3).
+Then copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the game directory's
+`models/weapons/` to neoAssets `neo/models/weapons/`. The compile overwrites older models in the game directory.
 
-## Sketch status
 
-Discovery branch, parked until the ZR68C MVP gets reviewer feedback.
+## Adding a gun
 
-### Per-gun TODO (ZR68C full slice)
+Files in neoAssets (this repo):
 
-`composites.txt` takes no comments, so its stubs live here. Lines 1 and 3 are MVP-shaped; `resume_after_1_unload`,
-`resume_after_2_load_empty`, `reload_partial` are glued from placeholder slots (combinatorics rows 4, 5, 2).
-Open: author 3 transitions (U3 E and R), markers `reload:1_unload.sound`, `2_load.exit`, `2_load.join`, the unload sound
-cut, export, compile; RELOAD_END port (U5b); dry-reload fallback for a lost resume; bot threshold; client tests. Plan:
-`proposals/0057-reload-cue-timing/zr68c-slice-plan.md`, "Open TODO list (2026-11-07)".
+- `neo/modelsrc/weapons/viewmodels.blend`: one scene `TEAM_GUN` per team. Start from a copy of a similar scene
+  (Scene selector > New Scene > Full Copy), name the scene, rig and action after the project, and set the scene's
+  Source Engine Export path to `//TEAM_GUN/`. Name the camera `TEAM_GUN_camera` and place it from the gun's
+  `ViewModelOffset` (see Preview camera).
+- `neo/modelsrc/weapons/export_viewmodels.py`: add a row per project to `RIGS`, the project's rig and its action
+  (`"TEAM_GUN": ("TEAM_GUN_rig", "TEAM_GUN_animations")`). The export fails for a project without one.
+- `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `composites.txt` (if used), `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
+- `neo/scripts/weapon_GUN_reload_phases.txt`: the phases file. Copy the ZR68C one and edit the sequences and steps.
+- `neo/sound/weapons/GUN/GUN_<key>.wav`: one wav per sound entry.
+- `neo/models/weapons/v_TEAM_GUN.*`: the compiled models.
+
+Files in the neo repo:
+
+- `game/neo/scripts/weapon_GUN.txt`: the weapon script. It starts with `#base "weapon_GUN_reload_phases.txt"` and holds
+  an empty `"ReloadPhases" {}` inside `WeaponData`, which the base file fills.
+- `game/neo/scripts/game_sounds_weapons.txt`: one entry per sound, named `weapon_GUN.<key>` (for example
+  `weapon_zr68.reload_2_load`), whose `"wave"` is `)weapons/GUN/GUN_<key>.wav`. The export does not read this file: it
+  assumes the wav path from the entry name (`sound/weapons/GUN/GUN_<key>.wav` in neoAssets) to measure the sound's length.
+- The game uses the phases only while the server cvar `sv_neo_reload_experimental` is 1.
+
+## Sketch status (`sketch-zr68c-full`, not for review)
+
+This branch carries the whole ZR68C reload slice on top of the MVP (`reload-zr68c-resume`): every switch during a
+reload resumes it, dry or with a round chambered. It adds the slots `drawloaded` and `reloadexit` and the glued clips
+`drawunloaded_reload_reloadexit`, `drawloaded_reload` and `reload_reloadexit`. Until they are authored, the export
+covers only the MVP clips. Plan: `proposals/0057-reload-cue-timing/zr68c-slice-plan.md` in the ntre harness.

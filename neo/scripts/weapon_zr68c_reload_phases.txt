@@ -3,49 +3,19 @@
 // hits ("sound", "sound2"), in seconds from the sequence start. export_viewmodels.py sets every time from the
 // timeline markers in the .blend. "resume" names the sequence the draw plays when a switch interrupts the reload
 // after the step. A resume after step N lists only the steps after N. reload's own sound plays whole, as on master.
-// sketch-zr68c-full: PLACEHOLDER times for the new tables (reload_partial, resume_after_1_unload,
-// resume_after_2_load_empty) and the reload 3_cycle row. The export rewrites them from markers that are not in the
-// .blend files yet: reload:1_unload.sound, reload:2_load.exit (f56), reload:2_load.join (f60), and the markers the
-// new slots carry. NEO TODO (sunzenshen): add the markers, author the slots, export; until then the export fails on
-// "No timeline marker".
-// Combinatorics (plan, six paths for one gun): 1 fresh dry = reload (shipped); 2 fresh tactical = reload_partial;
-// 3 after unload, dry = resume_after_1_unload_empty (MVP); 4 after unload, tactical = resume_after_1_unload;
-// 5 after load, dry = resume_after_2_load_empty; 6 after load, tactical = plain draw. Rows 2, 4, 5 are placeholders here.
-// TODO: author exit_after_2_load_transition and resume_after_2_load_transition at the original pace, add the markers
-// 1_unload.sound, 2_load.exit, 2_load.join, cut the unload piece, export and compile.
 "WeaponData"
 {
 	"ReloadPhases"
 	{
 		"reload"
 		{
-			"1_unload" { "ammo" "0.700" "resume" "resume_after_1_unload_empty" }
-			// sketch: new resume key; a switch after the magazine is in (dry) resumes at the cycle
-			"2_load" { "ammo" "1.333" "resume" "resume_after_2_load_empty" }
-			// sketch: new row, ammo time only; clears the empty chamber (neo FinishReloadPhase). Single wav, no sound keys
-			"3_cycle" { "ammo" "2.267" }
+			"1_unload" { "ammo" "0.700" "resume" "drawunloaded_reload" }
+			"2_load" { "ammo" "1.333" }
 		}
-		// sketch: the fresh reload with a round chambered (U2): reload f0-56 then exit_after_2_load_transition, no cycle.
-		// reload's single wav contains the bolt, so this one plays pieces, the unload piece included
-		"reload_partial"
-		{
-			"1_unload" { "ammo" "0.700" "sound" "0.600" "sound_name" "weapon_zr68.reload_1_unload" "resume" "resume_after_1_unload" }
-			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
-		}
-		"resume_after_1_unload_empty"
+		"drawunloaded_reload"
 		{
 			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
 			"3_cycle" { "ammo" "2.267" "sound" "2.033" "sound_name" "weapon_zr68.reload_3_cycle" }
-		}
-		// sketch: Source style (U6), the bare name is the clip with a round left: chamber live, no cycle
-		"resume_after_1_unload"
-		{
-			"2_load" { "ammo" "1.333" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
-		}
-		// sketch: dry, magazine in, chamber empty. Sound rule: no tap. Times assume R = 8 reach frames (U3, not measured)
-		"resume_after_2_load_empty"
-		{
-			"3_cycle" { "ammo" "1.333" "sound" "1.100" "sound_name" "weapon_zr68.reload_3_cycle" }
 		}
 	}
 }
