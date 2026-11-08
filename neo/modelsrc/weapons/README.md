@@ -1,20 +1,26 @@
 # Weapon model sources
 
-The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C (`jinrai_zr68c/`, `nsf_zr68c/`).
-Preview images the `.blend` files load live in `arms/textures/` for the Jinrai and NSF arms (shared by every weapon)
-and in a weapon folder for the weapon, such as `tachi/textures/` or `zr68c/textures/`.
+The Tachi viewmodels are the first weapons maintained under these conventions, followed by the ZR68C.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
-Each model has a source folder here, such as `jinrai_tachi/`, containing one `.blend` file and one `.qc` file.
-The scripts take the names of the source folders to work on.
-Run them from this folder (`neo/modelsrc/weapons`).
+Layout:
+
+- `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
+  `jinrai_tachi`, `nsf_tachi`, `jinrai_zr68c`, `nsf_zr68c`.
+- `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
+  `composites.txt` (if used). The scripts take project names.
+- `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
+  sets only `$modelname` and includes this file.
+- `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
+
+Run the scripts from this folder (`neo/modelsrc/weapons`).
 
 Requirements: Blender 5.2.3 or newer with Blender Source Tools 3.4.3 or newer enabled; Python 3 and Valve's
 `studiomdl.exe` (Source SDK Base 2013 Multiplayer) for compiling.
 
-Each gun has one project per team (`jinrai_zr68c/`, `nsf_zr68c/`). There is no shared project yet, so
-**edit both team projects the same way**: the same poses, the same markers at the same frames. The export fails, before it
-writes any SMD, when the two projects give a marker different frames.
+Each gun has one project per team (`jinrai_zr68c`, `nsf_zr68c`), so **edit both team scenes the same way**: the same
+poses, the same markers at the same frames. The export fails, before it writes any SMD, when the two scenes give a
+marker different frames.
 
 | term | meaning |
 | :-- | :-- |
@@ -29,17 +35,18 @@ writes any SMD, when the two projects give a marker different frames.
 
 ## Working in Blender
 
-1. Open the team's `.blend` (for example `jinrai_zr68c/v_jinrai_zr68c.blend`). The `README_ANIMATOR` text block
-   in it summarizes the rules.
-2. All animations of a project live in **one action** (`jinrai_zr68c_animations`), one slot per sequence. To work on
-   a slot: select the armature (`jinrai_zr68c_rig`), open an Action Editor (Dope Sheet > Action Editor), and pick the
-   slot in the **Slot** dropdown beside the action name. To add a slot, use the new-slot button next to that dropdown
-   and give it the sequence name. Do not rename existing slots: the `.qc` and the weapon script use the names.
+1. Open `viewmodels.blend` and pick the project in the **Scene** selector at the top right (for example
+   `jinrai_zr68c`). The `README_ANIMATOR` text block (Text Editor) summarizes the rules.
+2. All animations of a project live in **one action** (`PROJECT_animations`, such as `jinrai_zr68c_animations`), one
+   slot per sequence. To work on a slot: select the project's armature (`PROJECT_rig`), open an Action Editor
+   (Dope Sheet > Action Editor), and pick the slot in the **Slot** dropdown beside the action name. To add a slot, use
+   the new-slot button next to that dropdown and give it the sequence name. Do not rename existing slots: the `.qc`
+   and the weapon script use the names. The action browser lists every project's action; keep each rig on its own.
 3. Pose the bones of the two arms: `bone forearm01` / `bone hand01` (and the finger bones under `bone hand01`)
    for one arm, `bone forearm` / `bone hand` for the other, under the roots `Dummy01` and `Dummy02`.
    Key them at the frames you edit.
 4. Place markers on the timeline (Marker menu > Add Marker, then rename). Marker names are listed below.
-5. Save, repeat in the other team's project, then export (next section).
+5. Repeat in the other team's scene, save, then export (next section).
 
 Landmarks of `drawunloaded` (frames 0-30), a one-handed draw with the magazine out: the draw brings the gun up from frame 0 to about frame 24;
 from frame 24 to the end of the slot (frame 30, the join) the hands tilt to the pose of `reload` at its join marker.
@@ -57,7 +64,7 @@ To export from Blender to SMD, for example for both Tachi projects, run:
 blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_tachi nsf_tachi
 ```
 
-A sequence made of parts of other animations is written after the export, when the source folder has a `composites.txt`.
+A sequence made of parts of other animations is written after the export, when the project folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
 (inclusive, an empty `last` runs to the end), or `slot@step-last` to start after the step's join marker (see below).
 For example, `drawunloaded_reload drawunloaded reload@1_unload-` writes
@@ -74,7 +81,7 @@ The game plays `drawunloaded_reload` for this: a one-handed draw with the magazi
 The `"resume"` key on the `1_unload` row of `reload` in the phases file names it.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
-The `README_ANIMATOR` text block in each `.blend` repeats these rules.
+The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 
 ### Naming
 
@@ -125,15 +132,29 @@ To add a resume clip after another step:
 
 ## Compiling models
 
-`--compiler` is Source SDK Base 2013 Multiplayer's `studiomdl.exe`. `--game` is a game directory that contains
-`gameinfo.txt`, such as `game/neo` in a neo checkout (neoAssets has no `gameinfo.txt`, so it cannot be used).
-The compile writes the models into that game directory's `models/weapons/`, not into the source tree.
+`--compiler` is Source SDK Base 2013 Multiplayer's `studiomdl.exe` (the 32-bit one in `bin/`). `--game` is a game
+directory that contains `gameinfo.txt`: the `game/neo` folder of a neo checkout. neoAssets has no `gameinfo.txt`, so it
+cannot be used. The compile writes the models into that directory's `models/weapons/`, not into the source tree.
 
 ```sh
-python compile_viewmodels.py jinrai_zr68c nsf_zr68c --compiler "C:/Program Files (x86)/Steam/steamapps/common/Source SDK Base 2013 Multiplayer/bin/studiomdl.exe" --game "C:/path/to/neo/game/neo"
+python compile_viewmodels.py jinrai_zr68c nsf_zr68c --compiler "C:/Program Files (x86)/Steam/steamapps/common/Source SDK Base 2013 Multiplayer/bin/studiomdl.exe" --game "C:/src/neo/game/neo"
 ```
 
-On Linux, run `studiomdl.exe` with Wine: pass a small wrapper script that calls `wine studiomdl.exe "$@"` as `--compiler`.
+On Linux, run `studiomdl.exe` with Wine. Pass this wrapper script as `--compiler`; it turns path arguments into
+Windows paths, which studiomdl needs:
+
+```bash
+#!/bin/bash
+args=()
+for arg in "$@"; do
+    if [ -e "$arg" ]; then args+=("$(winepath -w "$arg")"); else args+=("$arg"); fi
+done
+exec wine "$HOME/sdk2013mp/bin/studiomdl.exe" "${args[@]}"
+```
+
+```sh
+python3 compile_viewmodels.py jinrai_zr68c nsf_zr68c --compiler ~/bin/studiomdl-wine --game ~/src/neo/game/neo
+```
 
 Then copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the game directory's
 `models/weapons/` to neoAssets `neo/models/weapons/`. The compile overwrites older models in the game directory.
@@ -143,7 +164,11 @@ Then copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for th
 
 Files in neoAssets (this repo):
 
-- `neo/modelsrc/weapons/TEAM_GUN/`: the `.blend`, `.qc`, `composites.txt` (if used), `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/viewmodels.blend`: one scene `TEAM_GUN` per team. Start from a copy of a similar scene
+  (Scene selector > New Scene > Full Copy), name the scene, rig and action after the project, and set the scene's
+  Source Engine Export path to `//TEAM_GUN/`.
+- `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `composites.txt` (if used), `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
 - `neo/scripts/weapon_GUN_reload_phases.txt`: the phases file. Copy the ZR68C one and edit the sequences and steps.
 - `neo/sound/weapons/GUN/GUN_<key>.wav`: one wav per sound entry.
 - `neo/models/weapons/v_TEAM_GUN.*`: the compiled models.

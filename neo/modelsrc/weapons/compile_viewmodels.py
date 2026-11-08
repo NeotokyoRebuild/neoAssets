@@ -1,8 +1,8 @@
 """Compile exported viewmodel SMDs using Valve's Source SDK 2013 studiomdl.
 
-Run with Python 3: compile_viewmodels.py SOURCE [SOURCE ...] --compiler PATH --game PATH
+Run with Python 3: compile_viewmodels.py PROJECT [PROJECT ...] --compiler PATH --game PATH
 
-Each SOURCE is a folder beside this script that contains one .qc file.
+Each PROJECT is a folder beside this script that contains one .qc file (it may $include a shared GUN/viewmodel.qci).
 The game path must contain gameinfo.txt.
 Compilation uses a temporary game configuration because SDK tools cannot resolve the client's appid search path.
 The resulting model files are copied to the chosen destination, while gameinfo.txt is not changed
@@ -17,8 +17,8 @@ import tempfile
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('sources', nargs='+', metavar='SOURCE',
-                        help='Source folder beside this script, such as jinrai_tachi')
+    parser.add_argument('sources', nargs='+', metavar='PROJECT',
+                        help='Project folder beside this script, such as jinrai_tachi')
     parser.add_argument('--compiler', type=Path, required=True,
                         help='Path to studiomdl.exe in the Source SDK Base 2013 Multiplayer bin folder')
     parser.add_argument('--game', type=Path, required=True,
@@ -35,7 +35,7 @@ def main():
     for source in args.sources:
         found = sorted((root / source).glob('*.qc'))
         if len(found) != 1:
-            parser.error('Source folder must contain one .qc file: ' + source)
+            parser.error('Project folder must contain one .qc file: ' + source)
         qcs.append(found[0])
     with tempfile.TemporaryDirectory(prefix='neo-viewmodel-') as temporary:
         staging = Path(temporary)
