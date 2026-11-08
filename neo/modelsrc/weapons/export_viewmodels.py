@@ -57,6 +57,10 @@ RIGS = {
     'jinrai_mpn_s': ('jinrai_mpn_s_rig', 'jinrai_mpn_s_animations'),
     'nsf_mpn': ('nsf_mpn_rig', 'nsf_mpn_animations'),
     'nsf_mpn_s': ('nsf_mpn_s_rig', 'nsf_mpn_s_animations'),
+    'jinrai_mx': ('jinrai_mx_rig', 'jinrai_mx_animations'),
+    'jinrai_mxs': ('jinrai_mxs_rig', 'jinrai_mxs_animations'),
+    'nsf_mx': ('nsf_mx_rig', 'nsf_mx_animations'),
+    'nsf_mxs': ('nsf_mxs_rig', 'nsf_mxs_animations'),
 }
 
 
