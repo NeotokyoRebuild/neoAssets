@@ -83,3 +83,15 @@ python compile_viewmodels.py jinrai_tachi nsf_tachi --compiler "C:/Program Files
 ```
 
 To save the compiled models in neoAssets, copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the neo game directory's `models/weapons/` folder to `neo/models/weapons/`.
+
+## Sketch `sketch-zr68c-full` (discovery branch, not for review)
+
+Every ZR68C transition on the MVP: dry and chamber-live resume after `1_unload`, dry resume after `2_load`, and the fresh
+chamber-live `reload_partial` (30+1, no cycle). **Placeholders:** `resume_after_2_load_transition.smd` (copy of the
+1_unload slot), `exit_after_2_load_transition.smd` (copy of `idle01`), the composed `resume_after_1_unload`,
+`resume_after_2_load_empty`, `reload_partial` SMDs (copies) and `zr68_reload_1_unload.wav` (copy of the 2_load piece).
+The phases-file times of the new tables are placeholders too.
+
+NEO TODO (sunzenshen): before the export can run, both .blend files need the markers `reload:1_unload.sound`,
+`reload:2_load.exit` (f56), `reload:2_load.join` (f60) and the two authored slots at the original pace (U3: E, R).
+Composite ranges may now end at a marker (`reload:0-2_load.exit`, M3).

@@ -6,7 +6,8 @@ Requires Blender 5.2.2 and Blender Source Tools 3.4.3 or newer.
 This helper reads .blend sources, and writes SMD exports.
 An optional composites.txt in a source folder joins exported animations into one more SMD per line:
 OUTPUT PART [PART ...] [blend=N], where PART is SLOT, SLOT:FIRST-LAST (inclusive frames; an empty LAST means
-the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP). Across a join,
+the end) or SLOT@STEP-LAST (from the frame after timeline marker SLOT:STEP.join, else SLOT:STEP); FIRST and LAST may
+also name a marker of the slot (STEP.KEY, its frame; reload:0-2_load.exit). Across a join,
 the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
 Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
 prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
@@ -72,6 +73,15 @@ def ease_seam(output, joined, target, count):
     print('SEAM', text)
 
 
+def marker_frame(markers, slot, value, part):
+    """A range end as written: a frame number, empty, or a marker name STEP.KEY of the slot (its frame)."""
+    if not value or value.isdigit():
+        return value
+    if slot + ':' + value not in markers:
+        raise RuntimeError('No timeline marker %s:%s for %s' % (slot, value, part))
+    return str(markers[slot + ':' + value])
+
+
 def write_composites(folder, markers):
     composites = folder / 'composites.txt'
     times = {}
@@ -100,6 +110,9 @@ def write_composites(folder, markers):
                 raise RuntimeError('Composite parts have different nodes: ' + part)
             header = part_header
             first, _, last = span.partition('-')
+            # M3 (sketch-zr68c-full): a range may end (or start) at a timeline marker of the slot, as
+            # reload:0-2_load.exit, so composites.txt names no frame numbers
+            first, last = (marker_frame(markers, slot, value, part) for value in (first, last))
             first, last = int(first or 0), int(last) if last else len(frames) - 1
             if joined and first > 0 and count > 0:
                 ease_seam(output, joined, frames[first - 1], count)
