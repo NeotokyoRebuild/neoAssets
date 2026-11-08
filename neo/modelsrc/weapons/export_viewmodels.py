@@ -53,6 +53,10 @@ RIGS = {
     'nsf_mosok41': ('nsf_mosok41_rig', 'nsf_mosok41_animations'),
     'nsf_mosok41s': ('nsf_mosok41s_rig', 'nsf_mosok41s_animations'),
     'nsf_mosok41l': ('nsf_mosok41l_rig', 'nsf_mosok41l_animations'),
+    'jinrai_mpn': ('jinrai_mpn_rig', 'jinrai_mpn_animations'),
+    'jinrai_mpn_s': ('jinrai_mpn_s_rig', 'jinrai_mpn_s_animations'),
+    'nsf_mpn': ('nsf_mpn_rig', 'nsf_mpn_animations'),
+    'nsf_mpn_s': ('nsf_mpn_s_rig', 'nsf_mpn_s_animations'),
 }
 
 
