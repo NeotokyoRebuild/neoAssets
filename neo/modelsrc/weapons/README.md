@@ -118,9 +118,10 @@ compiled model. Do not edit its SMD; edit the slots it is made of and export aga
 ## Chamber tracking for pistols (MilSO, Tachi)
 
 The MilSO and the Tachi keep their shipped `reload` and `reloadempty` and get no glued clips. Each scene carries two
-markers, `reloadempty:3_cycle` at the slide release (the first frame the slide moves forward: MilSO f53, Tachi f55)
-and `reload:3_cycle` on the same frame, and the export writes `weapon_milso_reload_phases.txt` and
-`weapon_tachi_reload_phases.txt` from them: the time the chamber holds a round.
+markers, `reloadempty:3_cycle` and `reload:3_cycle`, at the ammo credit (the clip's end minus the script's
+`ReloadReadyBeforeEnd`: MilSO f50, Tachi f52), and the export writes `weapon_milso_reload_phases.txt` and
+`weapon_tachi_reload_phases.txt` from them: the time the chamber holds a round. A switch after the credit then keeps
+the chambered round instead of replaying `reloadempty`.
 
 ## Reload resume animations (ZR68C)
 
