@@ -15,7 +15,8 @@ authored (new motion) or ignored (an NSF scene of a sharing gun: author it in th
 - Widen to this slot: ask for the reason, add the selected bones and the active slot to rom_widen.json, then rewrite
   rom_spec.json and the limits of every rig in this session (~8 s). Save the .blend afterwards.
 - Export gun: save the .blend, then run export_viewmodels.py for both team projects of the gun in a background
-  Blender (~20 s with the preview rebuild) and show its result lines (Window > Toggle System Console, or the terminal, has them all).
+  Blender (~20 s with the preview rebuild) and show its result lines (the terminal, or Window > Toggle System
+  Console, has them all).
 Runtime of the panel itself: nothing measurable; the .qc files are read once per project and cached.
 """
 import json
