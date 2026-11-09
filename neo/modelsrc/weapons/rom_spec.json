@@ -1,7 +1,7 @@
 {
   "lock_eps": {"loc": 0.02, "rot_deg": 0.2},
   "margin": {"loc": 0.05, "rot_deg": 0.5},
-  "note": "written by rom_limits.py spec from the shipped slots; change rom_limits.py (WIDEN), not this file",
+  "note": "written by rom_limits.py spec from the shipped slots; change rom_widen.json or rom_limits.py, not this file",
   "space": "LOCAL",
   "version": 2,
   "guns": {

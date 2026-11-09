@@ -27,7 +27,8 @@ Layout:
   the MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones); each of their `.qc` files
   keeps its own `$definebone` lines, because the rigs differ.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
-- `rom_limits.py` and `rom_spec.json`: the range-of-motion limits on the rigs (see Range-of-motion limits).
+- `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
+  Range-of-motion limits).
 
 Run the scripts from this folder (`neo/modelsrc/weapons`).
 
@@ -41,7 +42,8 @@ Each gun has one project per team (`jinrai_zr68c`, `nsf_zr68c`). The two teams s
   from it. The NSF model compiles the same glued SMDs, so both teams play one motion.
 - The shipped slots (`reload`, `draw`, ...) stay the original clip of each team. If one changes, **edit both team
   scenes the same way**: the same poses, the same markers at the same frames. The export fails, before it writes any
-  SMD, when the two scenes give a marker of a shipped slot different frames.
+  SMD, when the two scenes give a marker of a shipped slot different frames. It also fails when a shipped slot's SMD
+  would change, unless it runs with `--edit-shipped` (see Exporting animations).
 - An NSF scene of a sharing gun holds only its shipped slots. The export skips any other slot there and prints a
   `SKIPPED` line: move that work to the Jinrai scene.
 
@@ -125,8 +127,15 @@ prevent a finger that bends backwards or a charging handle that leaves its rail.
 - A key that is already outside a limit (pasted, or moved in the Graph Editor) shows clamped in the viewport only.
   The Graph Editor shows the key as it is, and the export fails on it (next section).
 
-The limits come from `rom_spec.json`; do not edit the constraints by hand. To change a limit, change
-`rom_limits.py` (the margins, or `WIDEN`: an authored pose a limit is widened to cover, with the reason), then:
+The limits come from `rom_spec.json`; do not edit the constraints by hand. To widen a limit for an authored pose,
+add a line to `rom_widen.json`: the gun (folder name without the team prefix), the bone, the slots the limit must
+cover, and the reason. The NSF rig of a sharing gun keeps its own range. For example:
+
+```json
+  {"gun": "zr68c", "bone": "bone index 1", "slots": ["drawunloaded"], "why": "the trigger finger lifts off for the draw"},
+```
+
+The margins are in `rom_limits.py`. After either change, run:
 
 ```sh
 blender -b viewmodels.blend --python-exit-code 1 --python rom_limits.py -- spec
@@ -148,9 +157,18 @@ blender --background --python-exit-code 1 --python export_viewmodels.py -- jinra
 
 Before it writes any SMD, the export checks the range-of-motion limits: it plays every frame of every slot of the
 listed projects and fails when a limit clamps a key. The message names the project, slot, bone, frames and how far
-past the limit the key is. Fix the key, or, if the pose is meant, widen the limit (`WIDEN` in `rom_limits.py`, then
+past the limit the key is. Fix the key, or, if the pose is meant, widen the limit (a line in `rom_widen.json`, then
 `spec` and `apply`). `rom_limits.py -- check` runs the same check alone. The export itself runs with `ROM:*` muted:
 an active constraint changes the exported numbers slightly even when it clamps nothing, so the SMDs are the keys.
+
+The shipped slots stay the original clips. After Source Tools writes them, the export compares each shipped SMD with
+the file it replaced:
+
+- A difference of float round-off only (2e-6 or less): the old file is put back and the export prints `KEPT`.
+- A real change: every shipped SMD of the project is put back and the export fails, naming the slot, frame and bone.
+  Undo the edit in Blender (File > Revert, or delete the keys).
+- A change you mean: edit both team scenes the same way, then add `--edit-shipped` after the project names. The
+  export prints `SHIPPED CHANGED` for each changed file.
 
 A sequence made of parts of other animations is written after the export, when the project folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range

@@ -16,7 +16,8 @@ Each limited bone gets ROM:loc (Limit Location) and ROM:rot (Limit Rotation), Lo
 transform locks on the axes it never moves. The limit is the bone's range in the shipped slots of its gun (both
 teams, where the two rigs have the same rest pose) plus a margin. Gun bones take their range without the melee slot,
 which swings them freely; their ROM:* influence is keyed to 0 in that slot. Bones that move freely (roots,
-forearms, magazines) get no limit. WIDEN lists the authored poses a limit is widened to cover, with the reason.
+forearms, magazines) get no limit. rom_widen.json lists the authored poses a limit is widened to cover, with the
+reason (one entry per line: gun, bone, slots, why).
 apply deletes and re-adds every ROM:* constraint, so a second run changes nothing.
 """
 from pathlib import Path
@@ -40,11 +41,45 @@ REST_TOLERANCE = 1e-3  # two team rigs share a limit only when their rest poses 
 CLAMP_UNITS, CLAMP_DEGREES = 1e-4, 0.01  # above the float round-off of an active constraint (4e-5 u, 1.1e-4 deg)
 ARM_PREFIX = 'bone '
 MELEE = 'melee'
-# Authored poses a limit is widened to cover: (gun, bone) -> (slots, reason). The pose is meant; the limit follows it.
-M41_SKIPCYCLE = ('skipcycle',), ('skipcycle curls the support hand past its range in the shipped clips on the way '
-                                  'back to idle01 (about 1 deg); the pose is meant')
-WIDEN = {(gun, bone): M41_SKIPCYCLE for gun in ('mosok41', 'mosok41s', 'mosok41l')
-         for bone in ('bone pinky 06', 'bone thumb 3')}
+WIDEN_FILE = ROOT / 'rom_widen.json'  # authored poses a limit is widened to cover: one entry per line
+
+
+def read_widen():
+    """{(gun, bone): (slots, reason)} from rom_widen.json: the authored poses a limit is widened to cover. The pose is
+    meant; the limit follows it."""
+    widen = {}
+    if not WIDEN_FILE.is_file():
+        return widen
+    for entry in json.loads(WIDEN_FILE.read_text(encoding='ascii')):
+        if set(entry) != {'gun', 'bone', 'slots', 'why'} or not entry['slots'] or not entry['why'].strip():
+            raise RuntimeError('%s: each entry needs gun, bone, slots and a reason (why): %s' % (
+                WIDEN_FILE.name, entry))
+        key = (entry['gun'], entry['bone'])
+        if key in widen:
+            raise RuntimeError('%s lists %s / %s twice: merge the entries' % ((WIDEN_FILE.name,) + key))
+        widen[key] = (tuple(entry['slots']), entry['why'])
+    return widen
+
+
+def write_widen(widen):
+    """Write rom_widen.json, one entry per line and sorted, so a new widening is a one-line diff."""
+    rows = [json.dumps({'gun': gun, 'bone': bone, 'slots': sorted(slots), 'why': why})
+            for (gun, bone), (slots, why) in sorted(widen.items())]
+    WIDEN_FILE.write_text('[\n' + ',\n'.join('  ' + row for row in rows) + '\n]\n', encoding='ascii')
+
+
+def add_widen(gun, bone, slots, why):
+    """Widen one bone's limit to cover the given slots, with the reason; earlier slots and reasons are kept."""
+    widen = read_widen()
+    old_slots, old_why = widen.get((gun, bone), ((), ''))
+    reasons = old_why if why in old_why.split('; ') else '; '.join(filter(None, (old_why, why)))
+    widen[(gun, bone)] = (tuple(sorted(set(old_slots) | set(slots))), reasons)
+    write_widen(widen)
+    WIDEN.clear()
+    WIDEN.update(widen)
+
+
+WIDEN = read_widen()
 
 
 def project_scenes(names):
@@ -270,7 +305,8 @@ def make_spec(scenes):
         guns.setdefault(gun_of(project), []).append(project)
     spec = {'version': 2, 'space': 'LOCAL', 'margin': {'loc': MARGIN_UNITS, 'rot_deg': MARGIN_DEGREES},
             'lock_eps': {'loc': STILL_UNITS, 'rot_deg': STILL_DEGREES},
-            'note': 'written by rom_limits.py spec from the shipped slots; change rom_limits.py (WIDEN), not this file',
+            'note': 'written by rom_limits.py spec from the shipped slots; change rom_widen.json or rom_limits.py, '
+                    'not this file',
             'guns': {}}
     for gun, projects in sorted(guns.items()):
         section = spec['guns'][gun] = {'projects': projects, 'bones': {}, 'team': {}}
@@ -398,7 +434,7 @@ def plant_key(scene, text):
     print('PLANTED', scene.name, text)
 
 
-def find_clamps(scene):
+def find_clamps(scene, slots=None):
     """[(slot, bone, first frame, last frame, frames, worst units, worst degrees)] where an active ROM constraint
     moves the evaluated pose off the keyed pose. Leaves the rig on its first slot."""
     rig = rig_of(scene)
@@ -408,6 +444,8 @@ def find_clamps(scene):
         depsgraph = bpy.context.evaluated_depsgraph_get()  # a background scene has none until asked
     clamps = []
     for slot, bag, first, last in slot_bags(rig):
+        if slots is not None and slot.name_display not in slots:
+            continue
         rig.animation_data.action_slot = slot
         worst = {}
         for frame in range(first, last + 1):

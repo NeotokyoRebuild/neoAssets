@@ -1,6 +1,6 @@
 """Export saved viewmodel Blender sources with Blender Source Tools.
 
-Run: blender --background --python-exit-code 1 --python export_viewmodels.py -- PROJECT [PROJECT ...]
+Run: blender --background --python-exit-code 1 --python export_viewmodels.py -- PROJECT [PROJECT ...] [--edit-shipped]
 Each PROJECT (such as jinrai_zr68c) is a scene of viewmodels.blend beside this script, exported into the folder
 of the same name, which holds the project's .qc, reference.smd and anims/.
 Requires Blender 5.2.3 or newer and Blender Source Tools 3.4.3 or newer.
@@ -28,6 +28,10 @@ sharing NSF project has no scene there: it plays the same glued clips as its Jin
 Before any SMD is written, the range-of-motion check of rom_limits.py runs over every slot of the listed projects
 and fails the export when a ROM:* constraint clamps a keyed pose; the export itself runs with ROM:* muted, so the
 SMDs are the keyed poses (an active Local-Space constraint changes them by float round-off even when nothing clamps).
+The shipped slots (the SMDs the project's .qc compiles from its own anims/) stay the original clips: after Source
+Tools writes them, a rewrite that differs only by float round-off gets its old bytes back (KEPT), and a real change
+puts every shipped SMD back and fails the export, naming the slot, frame and bone. To change a shipped clip on purpose,
+edit both team scenes the same way and add --edit-shipped after the projects; the export then prints SHIPPED CHANGED.
 viewmodels.blend is never saved.
 """
 from pathlib import Path
@@ -495,9 +499,63 @@ def check_limits(scenes):
     clamps = [rom_limits.clamp_text(scene.name, clamp) for scene in scenes for clamp in rom_limits.find_clamps(scene)]
     if clamps:
         raise RuntimeError('Range-of-motion limits clamp %d keyed poses. Fix the keys, or if the pose is meant, widen '
-                           'the limit (WIDEN in rom_limits.py, then rom_limits.py spec and apply):\n  %s' % (
+                           'the limit (an entry in rom_widen.json, then rom_limits.py spec and apply):\n  %s' % (
                                len(clamps), '\n  '.join(clamps)))
     print('ROM CHECK', len(scenes), 'projects, no clamped pose')
+
+
+SHIPPED_TOLERANCE = 2e-6  # Blender's float round-off in the printed SMD digits (the Tachi drift is 1e-6)
+EDIT_SHIPPED = '--edit-shipped'
+
+
+def smd_change(old, new):
+    """None when two SMD texts hold the same poses within SHIPPED_TOLERANCE, else (frame, bone, difference)."""
+    old_lines, new_lines = old.splitlines(), new.splitlines()
+    if len(old_lines) != len(new_lines):
+        return ('-', '-', 'frame count %d -> %d' % (old_lines.count('end'), new_lines.count('end')))
+    frame, names = None, dict(re.findall(r'^(\d+) "([^"]*)"', old, re.M))
+    for a, b in zip(old_lines, new_lines):
+        if a == b:
+            frame = a[5:] if a.startswith('time ') else frame
+            continue
+        x, y = a.split(), b.split()
+        try:
+            worst = max(abs(float(i) - float(j)) for i, j in zip(x[1:], y[1:]))
+        except ValueError:
+            return (frame, '-', 'text %r -> %r' % (a, b))
+        if len(x) != len(y) or x[0] != y[0] or worst > SHIPPED_TOLERANCE:
+            return (frame, '"%s"' % names.get(x[0], x[0]), '%.4f' % worst)
+    return None
+
+
+def guard_shipped(folder, before, allow):
+    """Keep the shipped SMDs original: restore round-off-only rewrites byte for byte, and fail on a real change
+    unless the export was run with --edit-shipped."""
+    changed = []
+    for path, old in before.items():
+        new = path.read_bytes()
+        if new == old:
+            continue
+        change = smd_change(old.decode('ascii'), new.decode('ascii'))
+        if change is None:
+            path.write_bytes(old)
+            print('KEPT %s/anims/%s (round-off only)' % (folder.name, path.name))
+            continue
+        changed.append((path, old, change))
+    if not changed:
+        return
+    if allow:
+        for path, _, (frame, bone, difference) in changed:
+            print('SHIPPED CHANGED %s/anims/%s frame %s bone %s: %s' % (
+                folder.name, path.name, frame, bone, difference))
+        return
+    for path, old, _ in changed:
+        path.write_bytes(old)
+    raise RuntimeError('Shipped slots of %s changed: %s. Shipped slots stay the original clip; the SMDs were put '
+                       'back. Undo the edit in Blender (File > Revert, or delete the keys), or, if the change is '
+                       'meant, edit both team scenes the same way and export again with %s' % (
+                           folder.name, '; '.join('%s frame %s bone %s by %s' % ((p.stem,) + c) for p, _, c in changed),
+                           EDIT_SHIPPED))
 
 
 def open_scenes(path, keep=None):
@@ -512,7 +570,7 @@ def open_scenes(path, keep=None):
     return bpy.context.scene
 
 
-def export_project(folder, scene):
+def export_project(folder, scene, allow_shipped=False):
     if scene.render.fps != FPS or scene.render.fps_base != 1:
         raise RuntimeError('Scene %s must play at %d fps' % (scene.name, FPS))
     reference = folder / 'reference.smd'
@@ -531,6 +589,8 @@ def export_project(folder, scene):
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
                 for path in expected}
+    before = {path: path.read_bytes() for path in (folder / 'anims' / (slot + '.smd') for slot in shipped_slots(folder))
+              if path.is_file()}
     name = scene.name
     result = bpy.ops.export_scene.smd(export_scene=True)
     scene = bpy.data.scenes[name]  # the export replaces the scene's Python object
@@ -541,6 +601,7 @@ def export_project(folder, scene):
         raise RuntimeError('Source Tools did not freshly export every expected SMD')
     if reference.read_bytes() != reference_bytes:
         raise RuntimeError('The preview mesh must not overwrite reference.smd')
+    guard_shipped(folder, before, allow_shipped)
     print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
     if source:
         print('SHARED', scene.name, 'takes its glued clips and phases from', source)
@@ -551,6 +612,8 @@ def export_project(folder, scene):
 if __name__ == '__main__':
     root = Path(__file__).resolve().parent
     projects = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+    allow_shipped = EDIT_SHIPPED in projects
+    projects = [project for project in projects if project != EDIT_SHIPPED]
     if not projects:
         raise RuntimeError('List the projects to export after --')
     try:
@@ -564,7 +627,7 @@ if __name__ == '__main__':
         check_images()
         check_limits([found[project] for project in projects])
         for project in projects:
-            export_project(root / project, open_scenes(root / SOURCE, keep=project))
+            export_project(root / project, open_scenes(root / SOURCE, keep=project), allow_shipped)
         build_post_export(root)
     except RuntimeError as problem:
         print('EXPORT FAILED:', problem)
