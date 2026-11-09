@@ -1,1 +1,8 @@
-[]
+[
+  {"gun": "mosok41", "bone": "bone pinky 06", "slots": ["skipcycle"], "why": "skipcycle curls the support hand past its range in the shipped clips on the way back to idle01 (about 1 deg); the pose is meant"},
+  {"gun": "mosok41", "bone": "bone thumb 3", "slots": ["skipcycle"], "why": "skipcycle curls the support hand past its range in the shipped clips on the way back to idle01 (about 1 deg); the pose is meant"},
+  {"gun": "mosok41l", "bone": "bone pinky 06", "slots": ["skipcycle"], "why": "skipcycle curls the support hand past its range in the shipped clips on the way back to idle01 (about 1 deg); the pose is meant"},
+  {"gun": "mosok41l", "bone": "bone thumb 3", "slots": ["skipcycle"], "why": "skipcycle curls the support hand past its range in the shipped clips on the way back to idle01 (about 1 deg); the pose is meant"},
+  {"gun": "mosok41s", "bone": "bone pinky 06", "slots": ["skipcycle"], "why": "skipcycle curls the support hand past its range in the shipped clips on the way back to idle01 (about 1 deg); the pose is meant"},
+  {"gun": "mosok41s", "bone": "bone thumb 3", "slots": ["skipcycle"], "why": "skipcycle curls the support hand past its range in the shipped clips on the way back to idle01 (about 1 deg); the pose is meant"}
+]

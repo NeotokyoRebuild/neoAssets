@@ -1,0 +1,16 @@
+$attachment "muzzle" "Muzzle" 0.0000 -0.0000 -0.0000 rotate -0.000 0.000 0.000
+$attachment "eject" "Eject" 0.0000 -0.0000 -0.0000 rotate -0.000 0.000 0.000
+$sequence "idle01" "anims/idle01.smd" activity ACT_VM_IDLE 1 fps 30 fadein 0.20 fadeout 0.20 loop node "0"
+$sequence "fire" "anims/fire.smd" activity ACT_VM_PRIMARYATTACK 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
+$sequence "fire01" "anims/fire01.smd" activity ACT_VM_RECOIL1 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
+$sequence "fire02" "anims/fire02.smd" activity ACT_VM_RECOIL2 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
+$sequence "fire03" "anims/fire03.smd" activity ACT_VM_RECOIL3 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
+$sequence "fire_empty" "anims/fire_empty.smd" activity ACT_VM_DRYFIRE 1 fps 30 fadein 0.20 fadeout 0.20 snap node "2"
+$sequence "draw" "anims/draw.smd" activity ACT_VM_DRAW 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
+$sequence "reload" "anims/reload.smd" activity ACT_VM_RELOAD 1 fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "holster" "anims/holster.smd" activity ACT_VM_HOLSTER 1 fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "idle_to_lowered" "anims/idle_to_lowered.smd" activity ACT_VM_LOWERED_TO_IDLE 1 fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "lowered_to_idle" "anims/lowered_to_idle.smd" activity ACT_VM_IDLE_TO_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 node "0"
+$sequence "idle_lowered" "anims/idle_lowered.smd" activity ACT_VM_IDLE_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 loop node "0"
+$sequence "changemode" "anims/changemode.smd" activity ACT_VM_CHANGEMODE 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"
+$sequence "melee" "anims/melee.smd" activity ACT_VM_MELEEATTACK1 1 fps 30 fadein 0.20 fadeout 0.20 snap node "0"

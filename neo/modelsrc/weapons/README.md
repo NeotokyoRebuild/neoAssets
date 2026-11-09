@@ -1,8 +1,8 @@
 # Weapon model sources
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
-ZR68-L, Kyla, MilSO, AA13, SRS, PZ252, the MPN45 family (MPN45, MPN45-S), the SRM family (SRM, SRM-S) and the
-Jitte family (Jitte, Jitte-S).
+ZR68-L, Kyla, MilSO, AA13, SRS, PZ252, the MPN45 family (MPN45, MPN45-S), the SRM family (SRM, SRM-S), the
+Jitte family (Jitte, Jitte-S) and the M41 family (M41, M41-S, M41-L).
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -28,14 +28,15 @@ Layout:
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
   `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla), `jinrai_milso`,
   `jinrai_aa13`, `jinrai_srs`, `jinrai_pz` (the PZ252), `jinrai_mpn` (the MPN45, unsilenced) and `jinrai_mpn_s`
-  (the MPN45-S, the game's default MPN45), `jinrai_srm`, `jinrai_srm_s`, `jinrai_jitte` and `jinrai_jittes` (the
-  Jitte-S, scoped). Each scene has one rig and one action, and both teams' arms (see One scene per gun).
+  (the MPN45-S, the game's default MPN45), `jinrai_srm`, `jinrai_srm_s`, `jinrai_jitte`, `jinrai_jittes` (the
+  Jitte-S, scoped), `jinrai_mosok41` (the M41), `jinrai_mosok41s` (the M41-S) and `jinrai_mosok41l` (the M41-L).
+  Each scene has one rig and one action, and both teams' arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
-- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252, MPN45, SRM and
-  Jitte): the `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include
+- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252, MPN45, SRM, Jitte
+  and M41): the `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include
   it, so the NSF model compiles the Jinrai glued clips. The variants of a gun family include their base gun's file
   instead (see Gun families).
 - `GUN/viewmodel.qci` (such as `tachi/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
@@ -46,7 +47,8 @@ Layout:
   `mosok41/textures/`. The PZ252 shares `pz/viewmodel.qci` and keeps `$definebone` per team, as the SRS. The
   MPN45 and MPN45-S share `mpn/viewmodel.qci` across their four models and keep `$definebone` per model. The SRM
   and SRM-S follow the ZR68C layout (`srm/viewmodel.qci`, `srm_s/viewmodel.qci`), and so do the Jitte and Jitte-S
-  (`jitte/viewmodel.qci`, `jittes/viewmodel.qci`).
+  (`jitte/viewmodel.qci`, `jittes/viewmodel.qci`). The M41, M41-S and M41-L share `mosok41/viewmodel.qci` across
+  their six models and keep `$definebone` per model.
   The MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
@@ -101,6 +103,7 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 | MPN45 (`jinrai_mpn`) | MPN45-S |
 | SRM (`jinrai_srm`) | SRM-S |
 | Jitte (`jinrai_jitte`) | Jitte-S |
+| M41 (`jinrai_mosok41`) | M41-S, M41-L |
 
 - Both team `.qc` files of a variant end with `$include "../jinrai_BASE/glued.qci"`. The variant has no
   `composites.txt`, no `glued.qci` and no authored or glued SMDs.
@@ -111,7 +114,9 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 - Exporting a base gun also exports its variants (their phases files). Compile the base and its variants.
 - A bone the base's SMDs lack (a silencer, a scope) stays at the variant's own rest pose in the glued clips; the
   shared bones, the `Muzzle` and `Eject` points included, follow the base. The variants' shipped clips have the
-  base's motion and attachment points on the shared bones.
+  base's motion and attachment points on the shared bones, except the M41-S and M41-L: their shipped `reload`
+  carries their own `Muzzle` point, so in the glued clips their `Muzzle` sits at the M41's, about 17 units back
+  along the barrel. The glued clips do not fire.
 - Not in a family: the ZR68-L (its own `reload` motion, markers and sounds). It authors its own slots.
 - **Variant toggle:** the base scene shows each variant's gun on the base rig and action, to check a new slot on
   every gun that plays it. The team collections hold the arms only; the guns are in collections `BASE_gun` and
@@ -352,6 +357,11 @@ The Jitte has the same four clips, and the Jitte-S compiles them (Gun families).
 magazine moves into the hand there, off screen) and f72, and leaves it at f66, the magazine seat (no tap). Slots:
 `drawunloaded` f0-50, `drawtocycle` f0-41, `skipcycle` f0-19. As on the MPN45, `drawtocycle` carries its own
 `drawtocycle:3_cycle.sound` marker (f41) for the cycle sound on the join.
+
+The M41 has the same four clips, and the M41-S and M41-L compile them (Gun families). It joins `reload` after f31
+and f93 (the handle pull starts at f94), and the `skipcycle` clips leave `reload` at f77, after the magazine tap.
+Slots: `drawunloaded` f0-33 (draw, then a 9-frame tilt), `drawtocycle` f0-39 (draw, then a 15-frame reach),
+`skipcycle` f0-20 (support hand back through the start of `reload`).
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
