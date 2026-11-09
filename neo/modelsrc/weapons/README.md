@@ -1,7 +1,7 @@
 # Weapon model sources
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
-ZR68-L and MilSO.
+ZR68-L, Kyla and MilSO.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -25,13 +25,13 @@ For example, a new pose in a slot of the Tachi. Run the commands from this folde
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
-  `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l` and `jinrai_milso`. Each scene has one rig and one action, and
-  both teams' arms (see One scene per gun).
+  `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla) and `jinrai_milso`. Each scene
+  has one rig and one action, and both teams' arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
-- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C and ZR68-L): the `$sequence` lines of the glued
+- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L and Kyla): the `$sequence` lines of the glued
   clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF model compiles the Jinrai glued
   clips. The variants of a gun family include their base gun's file instead (see Gun families).
 - `GUN/viewmodel.qci` (such as `tachi/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
@@ -77,7 +77,8 @@ teams' arm meshes are skinned to that rig, so a key moves both. Each team's mesh
   scene, `merge_teams.py` re-bound the NSF arm vertices for the preview only, so the NSF arms show as the NSF model
   plays them.
 
-The Tachi has no glued clips; its phases file only tracks the chamber (see Chamber tracking for the Tachi).
+The Tachi has no glued clips; its phases file only tracks the chamber (see Chamber tracking for the Tachi). The Kyla
+has one glued clip (see Reload resume for the Kyla).
 
 ### Gun families
 
@@ -268,6 +269,24 @@ The Tachi keeps its shipped `reload` and `reloadempty` and gets no glued clips. 
 `reloadempty:3_cycle` and `reload:3_cycle`, at the ammo credit (the clip's end minus the script's
 `ReloadReadyBeforeEnd`: f52), and the export writes `weapon_tachi_reload_phases.txt` from them: the time the chamber
 holds a round. A switch after the credit then keeps the chambered round instead of replaying `reloadempty`.
+
+## Reload resume for the Kyla
+
+The Kyla is a double-action revolver: its reload throws the cylinder out and puts a new one in. It has no chamber and
+no cycle step, so the gun is ready as soon as the new cylinder is in. Its scene `jinrai_klya9` carries these markers on
+`reload`:
+
+| marker | frame | meaning |
+| :-- | :-- | :-- |
+| `reload:1_unload` | f17 | the old cylinder leaves the gun; its rounds are gone |
+| `reload:1_unload.join` | f28 | the last frame before the new cylinder shows in the support hand |
+| `reload:2_load.sound` | f36 | the first sound of the load (`weapon_kyla.reload_load`) |
+| `reload:2_load` | f53 | the new cylinder is in, after the last click; the ammo credit, as `ReloadReadyBeforeEnd` on master |
+
+When the player switches weapons after `1_unload` and before the reload ends, the draw plays `drawunloaded_reload`:
+the authored `drawunloaded` slot (the shipped `draw` with the cylinder off screen, then a 6-frame tilt to the `reload`
+pose at f28), then `reload` from f29. The support hand stays off screen until the new cylinder comes in, as in `reload`.
+A switch after `2_load` keeps the six rounds and plays the plain draw; a switch before `1_unload` cancels the reload.
 
 ## Reload resume animations (ZR68C)
 

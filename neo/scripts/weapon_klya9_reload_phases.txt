@@ -1,0 +1,21 @@
+// Kyla ReloadPhases (sv_neo_reload_experimental), included by neo's scripts/weapon_kyla.txt through #base.
+// Per viewmodel sequence and reload step: when the step's ammo counts ("ammo") and when each of its sounds first
+// hits ("sound"), in seconds from the sequence start. export_viewmodels.py sets every time from the timeline markers
+// in the .blend. "resume" names the sequence the draw plays when a switch interrupts the reload after the step.
+// The revolver has no chamber and no cycle: the gun is ready when the new cylinder is in (2_load). The old
+// cylinder's rounds go at 1_unload. reload's own sound plays whole, as on master.
+"WeaponData"
+{
+	"ReloadPhases"
+	{
+		"reload"
+		{
+			"1_unload" { "ammo" "0.567" "resume" "drawunloaded_reload" }
+			"2_load" { "ammo" "1.767" }
+		}
+		"drawunloaded_reload"
+		{
+			"2_load" { "ammo" "1.833" "sound" "1.267" "sound_name" "weapon_kyla.reload_load" }
+		}
+	}
+}
