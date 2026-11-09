@@ -170,6 +170,19 @@ the file it replaced:
 - A change you mean: edit both team scenes the same way, then add `--edit-shipped` after the project names. The
   export prints `SHIPPED CHANGED` for each changed file.
 
+After it writes the glued clips, the export checks the pace of each authored slot (`drawunloaded`, `drawtocycle`,
+`skipcycle`, ...) against the shipped clips of the project, leaving out `fire*` and `melee*`. It prints `PACE WARN`
+with the slot, bone and frames where a bone moves more than 10 % faster than in any of them:
+
+- hands, forearms and the gun: world speed in units per frame; the gun also its world turn in degrees per frame;
+- fingers: their turn on the hand;
+- parts on the gun (bolt handle, magazine, clasp): their motion on the gun, since the gun carrying them is judged
+  itself.
+
+Bones that move no vertex of `reference.smd` (`Dummy01`, `Muzzle`, `Eject`, ...) are not seen and are skipped. A
+warning does not fail the export. Compare the motion with the shipped clip it imitates; if it reads too fast, spread
+the move over more frames.
+
 A sequence made of parts of other animations is written after the export, when the project folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
 (inclusive, an empty `last` runs to the end), or `slot@step-last` to start after the step's join marker (see below).
