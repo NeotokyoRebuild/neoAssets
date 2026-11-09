@@ -52,4 +52,4 @@ $definebone "Muzzle" "Mosok41" -1.108360 -64.459068 3.609018 0.615972 -90.157704
 $definebone "Eject" "Mosok41" -1.954080 -0.322927 2.410550 -9.926896 179.905735 -6.902538 0 0 0 0 0 0
 $definebone "Dummy02" "Dummy01" 5.437930 23.108690 8.060459 -0.000000 179.999964 0.000000 0 0 0 0 0 0
 $include "../mosok41/viewmodel.qci"
-$include "../jinrai_mosok41l/glued.qci"
+$include "../jinrai_mosok41/glued.qci"

@@ -88,6 +88,7 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 | base gun | variants that compile its glued clips |
 | :-- | :-- |
 | ZR68C (`jinrai_zr68c`) | ZR68-S |
+| M41 (`jinrai_mosok41`) | M41-S, M41-L |
 | MPN45 (`jinrai_mpn`) | MPN45-S |
 | MX (`jinrai_mx`) | MX-S |
 | SRM (`jinrai_srm`) | SRM-S |
@@ -102,9 +103,10 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 - Exporting a base gun also exports its variants (their phases files). Compile the base and its variants.
 - A bone the base's SMDs lack (a silencer, a scope) stays at the variant's own rest pose in the glued clips; the
   shared bones, the `Muzzle` and `Eject` points included, follow the base. The variants' shipped clips have the
-  base's motion and attachment points on the shared bones.
-- Not in a family: the ZR68-L (its own `reload` motion, markers and sounds) and the M41-S and M41-L (their
-  `Muzzle` point in `reload` differs from the M41's). They author their own slots.
+  base's motion and attachment points on the shared bones, except the M41-S and M41-L: their shipped `reload`
+  carries their own `Muzzle` point, so in the glued clips their `Muzzle` sits at the M41's, about 17 units back
+  along the barrel. The glued clips do not fire.
+- Not in a family: the ZR68-L (its own `reload` motion, markers and sounds). It authors its own slots.
 
 | term | meaning |
 | :-- | :-- |
@@ -279,7 +281,7 @@ The ZR68C has four glued clips besides `reload`:
 
 The `"resume"` key on a row of the phases file names the clip to draw after that step.
 
-The M41 family (all six projects) has the same four clips, glued at its own markers: `drawunloaded_reload` joins
+The M41 family (all six projects) plays the M41's four clips (Gun families), glued at its own markers: `drawunloaded_reload` joins
 `reload` after f31, `drawtocycle_reload` after f93 (the handle pull starts at f94), and the `skipcycle` clips leave
 `reload` at f77, after the magazine tap. Its slots: `drawunloaded` f0-33 (draw, then a 9-frame tilt), `drawtocycle`
 f0-39 (draw, then a 15-frame reach), `skipcycle` f0-20 (support hand back through the start of `reload`).
