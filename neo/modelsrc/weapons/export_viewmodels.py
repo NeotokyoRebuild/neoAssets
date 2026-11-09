@@ -372,6 +372,10 @@ def build_post_export(root):
     open_scenes(root / SOURCE)
     projects = [scene.name for scene in bpy.data.scenes if (root / scene.name / 'composites.txt').is_file()
                 and not shared_from(root / scene.name)]
+    if not projects:
+        # Blender cannot remove the last scene, and with no glued clips there is nothing to preview
+        print('POST-EXPORT none')
+        return
     inputs = post_export_inputs(root, projects)
     if saved_inputs(root / POST_EXPORT) == inputs:
         print('POST-EXPORT unchanged', POST_EXPORT)  # Blender would save the same content with other bytes
