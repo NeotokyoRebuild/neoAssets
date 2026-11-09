@@ -1,7 +1,7 @@
 # Weapon model sources
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
-ZR68-L, Kyla, MilSO, AA13, SRS and PZ252.
+ZR68-L, Kyla, MilSO, AA13, SRS, PZ252 and the MPN45 family (MPN45, MPN45-S).
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -26,13 +26,14 @@ Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
   `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla), `jinrai_milso`,
-  `jinrai_aa13`, `jinrai_srs` and `jinrai_pz` (the PZ252). Each scene has one rig and one action, and both teams'
-  arms (see One scene per gun).
+  `jinrai_aa13`, `jinrai_srs`, `jinrai_pz` (the PZ252), `jinrai_mpn` (the MPN45, unsilenced) and `jinrai_mpn_s`
+  (the MPN45-S, the game's default MPN45). Each scene has one rig and one action, and both teams' arms (see One scene
+  per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
-- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS and PZ252): the
+- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252 and MPN45): the
   `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF
   model compiles the Jinrai glued clips. The variants of a gun family include their base gun's file instead (see Gun
   families).
@@ -41,7 +42,8 @@ Layout:
   (`zr68s/viewmodel.qci`, `zr68l/viewmodel.qci`); the ZR68-L scope's preview images are the MX's, in `mx/textures/`.
   The AA13 follows the ZR68C layout with `aa13/viewmodel.qci`. The SRS shares `srs/viewmodel.qci` and keeps
   `$definebone` per team, as its team rigs differ; a part of its preview mesh uses the M41's image, in
-  `mosok41/textures/`. The PZ252 shares `pz/viewmodel.qci` and keeps `$definebone` per team, as the SRS.
+  `mosok41/textures/`. The PZ252 shares `pz/viewmodel.qci` and keeps `$definebone` per team, as the SRS. The
+  MPN45 and MPN45-S share `mpn/viewmodel.qci` across their four models and keep `$definebone` per model.
   The MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
@@ -93,6 +95,7 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 | base gun | variants that compile its glued clips |
 | :-- | :-- |
 | ZR68C (`jinrai_zr68c`) | ZR68-S |
+| MPN45 (`jinrai_mpn`) | MPN45-S |
 
 - Both team `.qc` files of a variant end with `$include "../jinrai_BASE/glued.qci"`. The variant has no
   `composites.txt`, no `glued.qci` and no authored or glued SMDs.
@@ -107,14 +110,15 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 - Not in a family: the ZR68-L (its own `reload` motion, markers and sounds). It authors its own slots.
 - **Variant toggle:** the base scene shows each variant's gun on the base rig and action, to check a new slot on
   every gun that plays it. The team collections hold the arms only; the guns are in collections `BASE_gun` and
-  `VARIANT_gun` (`zr68c_gun`, `zr68s_gun`), one visible at a time. Pick the gun in the **Variant** dropdown of the
-  Viewmodel panel, or click the eye of its collection in the Outliner.
+  `VARIANT_gun` (such as `mpn_gun`, `mpn_s_gun`), one visible at a time. Pick the gun in the **Variant** dropdown of
+  the Viewmodel panel, or click the eye of its collection in the Outliner. The MPN45 scene lists `mpn_s` as the game
+  default: `weapon_mpn.txt` uses the suppressed model.
 - The variant gun has no bones of its own in that scene: `variant_preview.py` moved the weights of its own parts to
   the nearest bone of the base rig, at the variant's rest pose (the ZR68-S `Silencer` to `zr68c`, `x_silenced` to
-  `Dummy02`). The glued clips carry no track for those bones, so the game also holds the parts at their rest pose
-  under that bone. The preview matches the variant's own scene within 0.025 units in every shared shipped slot (the
-  ZR68-S ships its own `melee01`). Nothing exported depends on these collections: their objects have Source Tools
-  export off.
+  `Dummy02`, the MPN45-S `supressor` to `body`). The glued clips carry no track for those bones, so the game also
+  holds the parts at their rest pose under that bone. The preview matches the variant's own scene within 0.025 units
+  in every shared shipped slot (the ZR68-S ships its own `melee01`). Nothing exported depends on these collections:
+  their objects have Source Tools export off.
 
 | term | meaning |
 | :-- | :-- |
@@ -329,6 +333,11 @@ The PZ252 (drum-fed) has the same four clips. It joins `reload` after f70 and f1
 the drum latch and its jerk (the load step is credited at f121, the drum seat; its third sound, the latch, plays in
 the full and after-unload clips only). Slots: `drawunloaded` f0-40, `drawtocycle` f0-30, `skipcycle` f0-11. Its
 unload step has two sound pieces and its load step three.
+
+The MPN45 has the same four clips, and the MPN45-S compiles them (Gun families). It joins `reload` after f27 and
+f72, and leaves it at f51 (the magazine seat; it has no tap). Slots: `drawunloaded` f0-51, `drawtocycle` f0-45,
+`skipcycle` f0-13. Its `3_cycle.sound` marker sits on the f72 join, which `drawtocycle_reload` replaces with the last
+frame of `drawtocycle`, so that slot carries its own `drawtocycle:3_cycle.sound` marker at f45.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.

@@ -35,7 +35,7 @@ from merge_teams import ARMS_MATERIAL, posed, slot_frames
 
 VARIANT_KEY = 'variant'  # custom property on each gun collection; viewmodel_tools.py reads it
 NOTE_KEY = 'variant_note'  # extra text the Viewmodel panel shows beside the gun name
-GAME_DEFAULT = {}  # {variant gun: note}, for a variant that is the game's default model of its weapon
+GAME_DEFAULT = {'mpn_s': 'game default'}  # weapon_mpn.txt uses the suppressed model
 GUN_TOLERANCE = 0.03  # units: the shipped clips of a variant and its base differ by rest rounding only
 SAME_CLIP = 0.1  # units: a gun bone further apart than this means the variant ships its own clip for the slot
 
