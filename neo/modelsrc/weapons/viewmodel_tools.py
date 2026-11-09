@@ -5,9 +5,10 @@ Load it with the file, from this folder (nothing is installed, and the file is a
 Or, with viewmodels.blend already open: Text Editor > Open > viewmodel_tools.py > Run Script.
 It imports rom_limits.py and export_viewmodels.py from the folder of the open .blend.
 
-The panel shows the project, the active slot and its kind: shipped (keep the original clip; edit both teams),
-authored (new motion) or, with glue.py, ignored (an NSF scene of a sharing gun: author it in the Jinrai scene).
-Buttons:
+The panel shows the project (one scene per gun: one rig and one action move both teams' arms), the team shown,
+the active slot and its kind: shipped (keep the original clip) or authored (new motion). Buttons:
+- Team: show the other team's arms (flips the eye of the jinrai_GUN_preview and nsf_GUN_preview collections, which
+  the Outliner also shows). Nothing exported depends on it.
 - Frame range to slot: set the scene frame range to the active slot's keys and list its markers.
 - Check slot: the export's range-of-motion check on the active slot only; selects the clamped bones.
 - Mute limits / Unmute: every ROM:* constraint of the scene. Transform locks stay on.
@@ -15,9 +16,10 @@ Buttons:
   shipped range. Widen (or rom_limits.py apply) puts the limits back.
 - Widen to this slot: ask for the reason, add the selected bones and the active slot to rom_widen.json, then rewrite
   rom_spec.json and the limits of every rig in this session (~8 s). Save the .blend afterwards.
-- Export gun: save the .blend, then run export_viewmodels.py for both team projects of the gun in a background
-  Blender (~20 s, with glue.py's preview rebuild) and show its result lines (the terminal, or Window > Toggle System
-  Console, has them all).
+- Export gun: save the .blend, then run export_viewmodels.py for the gun's project in a background Blender (~20 s,
+  with glue.py's preview rebuild) and show its result lines (the terminal, or Window > Toggle System Console, has
+  them all). The NSF model needs no export: it compiles from its shipped SMDs (and, with glue.py, the Jinrai glued
+  clips).
 Runtime of the panel itself: nothing measurable; the .qc files are read once per project and cached.
 """
 import json
@@ -31,7 +33,7 @@ bl_info = {'name': 'Viewmodel tools (NT;RE)', 'blender': (5, 2, 0), 'category': 
            'location': '3D Viewport > Sidebar > Viewmodel'}
 
 RESULT_LINES = ('ROM CHECK', 'EXPORTED', 'KEPT', 'SHIPPED', 'PACE', 'EXPORT FAILED', '  ')
-TEAMS = ('jinrai', 'nsf')
+TEAM_KEY = 'team'  # custom property merge_teams.py sets on each team's preview collection
 KIND_CACHE = {}  # (project, slot) -> kind text; the .qc files do not change while Blender runs
 
 
@@ -66,12 +68,28 @@ def slot_kind(scene, slot):
         if not folder.is_dir():
             KIND_CACHE[key] = 'not a project'
         elif slot in export.shipped_slots(folder):
-            KIND_CACHE[key] = 'shipped: keep the original; edit both teams'
-        elif export.glue and export.glue.shared_from(folder):
-            KIND_CACHE[key] = 'ignored: author it in ' + export.glue.shared_from(folder)
+            KIND_CACHE[key] = 'shipped: keep the original clip'
         else:
             KIND_CACHE[key] = 'authored: new motion'
     return KIND_CACHE[key]
+
+
+def team_layers(scene):
+    """{team: layer collection} of the scene's team preview collections."""
+    return {layer.collection[TEAM_KEY]: layer for layer in scene.view_layers[0].layer_collection.children
+            if TEAM_KEY in layer.collection}
+
+
+def shown_team(scene):
+    shown = [team for team, layer in team_layers(scene).items() if not layer.hide_viewport]
+    return ' + '.join(sorted(shown)) or 'none'
+
+
+def show_team(scene, team):
+    """Show one team's preview collection and hide the others, in the viewport and in renders."""
+    for name, layer in team_layers(scene).items():
+        layer.hide_viewport = name != team
+        layer.collection.hide_render = name != team
 
 
 def keep_view(scene, rig):
@@ -215,15 +233,32 @@ class VM_OT_widen(ProjectOperator):
         return {'FINISHED'}
 
 
+class VM_OT_team(bpy.types.Operator):
+    """Show the other team's arms (the eye of the team preview collections); nothing exported depends on it"""
+    bl_idname = 'viewmodel.team'
+    bl_label = 'Team'
+
+    @classmethod
+    def poll(cls, context):
+        return len(team_layers(context.scene)) > 1
+
+    def execute(self, context):
+        teams = sorted(team_layers(context.scene))
+        shown = shown_team(context.scene)
+        team = teams[(teams.index(shown) + 1) % len(teams)] if shown in teams else teams[0]
+        show_team(context.scene, team)
+        self.report({'INFO'}, 'TEAM %s shown' % team)
+        return {'FINISHED'}
+
+
 class VM_OT_export_gun(ProjectOperator):
-    """Save the .blend, then export both team projects of this gun in a background Blender"""
+    """Save the .blend, then export this gun's project in a background Blender"""
     bl_idname = 'viewmodel.export_gun'
     bl_label = 'Export gun'
 
     def execute(self, context):
         root, _, export = tools()
-        gun = context.scene.name.partition('_')[2]
-        projects = [team + '_' + gun for team in TEAMS if team + '_' + gun in bpy.data.scenes]
+        projects = [context.scene.name]
         bpy.ops.wm.save_mainfile()
         run = subprocess.run([bpy.app.binary_path, '--background', '--python-exit-code', '1', '--python',
                               str(root / 'export_viewmodels.py'), '--'] + projects,
@@ -255,6 +290,9 @@ class VM_PT_panel(bpy.types.Panel):
         _, rom, _ = tools()
         slot = active_slot(rig)
         layout.label(text='Project: ' + scene.name)
+        row = layout.row()
+        row.label(text='Arms: ' + shown_team(scene))
+        row.operator(VM_OT_team.bl_idname, icon='HIDE_OFF')
         layout.label(text='Slot: %s' % (slot or 'none'))
         layout.label(text=slot_kind(scene, slot) if slot else 'Pick a slot in the Action Editor')
         muted = any(c.mute for b in rig.pose.bones for c in b.constraints if c.name.startswith(rom.PREFIX))
@@ -269,7 +307,7 @@ class VM_PT_panel(bpy.types.Panel):
         layout.operator(VM_OT_export_gun.bl_idname, icon='EXPORT')
 
 
-CLASSES = (VM_OT_slot_range, VM_OT_check_slot, VM_OT_mute, VM_OT_free_selected, VM_OT_widen, VM_OT_export_gun,
+CLASSES = (VM_OT_team, VM_OT_slot_range, VM_OT_check_slot, VM_OT_mute, VM_OT_free_selected, VM_OT_widen, VM_OT_export_gun,
            VM_PT_panel)
 
 

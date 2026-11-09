@@ -11,25 +11,29 @@ For example, a new pose in a slot of the Tachi. Run the commands from this folde
    Viewport, press N and pick the **Viewmodel** tab.
 2. Pick the scene `jinrai_tachi` (top right) and the slot in Dope Sheet > Action Editor > Slot. The panel shows the
    slot's kind: **authored** (a new slot: edit freely) or **shipped** (keep the original; see Exporting animations).
-   Click **Frame range to slot**.
+   Click **Frame range to slot**. **Team** shows the other team's arms; the same keys move both.
 3. Pose and key the bones. Click **Check slot**: it selects any bone a range-of-motion limit stops.
 4. If such a pose is meant: click **Free selected bones**, key the pose, then click **Widen to this slot** and type
    the reason. This adds a line to `rom_widen.json` and refreshes the limits of every rig (about 8 s).
-5. Click **Export gun**. It saves the file and exports both team projects. The status bar shows the result; the
+5. Click **Export gun**. It saves the file and exports the gun's project. The status bar shows the result; the
    terminal has every line. Read any `PACE WARN` (Exporting animations).
 6. Commit `viewmodels.blend`, the changed SMDs, and `rom_widen.json` and `rom_spec.json` if a limit was widened.
 
 Layout:
 
-- `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
-  `jinrai_tachi` and `nsf_tachi`.
+- `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
+  `jinrai_tachi`. Each scene has one rig and one action, and both teams' arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd` and `anims/*.smd` (written by the
   export). The scripts take project names.
+- `nsf_GUN/` (such as `nsf_tachi/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
+  no scene and is never exported: it compiles from these SMDs.
 - `GUN/viewmodel.qci` (such as `tachi/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
   sets only `$modelname` and includes this file.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
   Range-of-motion limits).
+- `merge_teams.py`: the one-time merge of the two team scenes of each gun into one (already applied; kept for the
+  record and for a gun added later with two scenes).
 - `viewmodel_tools.py`: the Viewmodel sidebar panel (see Change an animation). It is not installed: load it with
   `blender viewmodels.blend --python viewmodel_tools.py`, or, with the file open, Text Editor > Open >
   `viewmodel_tools.py` > Run Script. It always uses the scripts beside the open `.blend`.
@@ -39,11 +43,20 @@ Run the scripts from this folder (`neo/modelsrc/weapons`).
 Requirements: Blender 5.2.3 or newer with Blender Source Tools 3.4.3 or newer enabled; Python 3 and Valve's
 `studiomdl.exe` (Source SDK Base 2013 Multiplayer) for compiling.
 
-Each gun has one project per team (`jinrai_tachi`, `nsf_tachi`). The shipped slots (`reload`, `draw`, ...) stay the
-original clip of each team. If one changes, **edit both team scenes the same way**: the same poses, the same markers
-at the same frames. The export fails, before it writes any SMD, when the two scenes give a marker of a shipped slot
-different frames. It also fails when a shipped slot's SMD would change, unless it runs with `--edit-shipped` (see
-Exporting animations).
+### One scene per gun
+
+Each gun has one scene, `jinrai_GUN`: one rig (`jinrai_GUN_rig`) and one action (`jinrai_GUN_animations`). Both
+teams' arm meshes are skinned to that rig, so a key moves both. Each team's mesh is in its own collection,
+`jinrai_GUN_preview` and `nsf_GUN_preview`; one is visible at a time.
+
+- **Team toggle:** click **Team** in the Viewmodel panel, or click the eye of the two collections in the Outliner.
+  It changes only what the viewport shows; the export does not depend on it.
+- **Author every slot and marker once**, in that scene.
+- **The NSF model has no scene.** It compiles from its shipped SMDs in `nsf_GUN/anims/` (the original NSF clips,
+  never rewritten).
+- The shipped slots (`reload`, `draw`, ...) stay the original clips. The export fails when a shipped slot's SMD would
+  change, unless it runs with `--edit-shipped`; then the changed clip goes to both teams (see Exporting animations).
+- `reference.smd` was not changed by the merge: each team's compiled model keeps its own rest pose.
 
 | term | meaning |
 | :-- | :-- |
@@ -65,7 +78,7 @@ Exporting animations).
 3. Pose the bones of the two arms: `bone forearm01` / `bone hand01` (and the finger bones under `bone hand01`)
    for one arm, `bone forearm` / `bone hand` for the other, under the roots `Dummy01` and `Dummy02`.
    Key them at the frames you edit.
-4. For a shipped slot, repeat in the other team's scene. Save, then export (next section).
+4. Click **Team** to check the pose on the other team's arms. Save, then export (next section).
 
 Success looks like `EXPORTED ...` (or `KEPT ...`) for each SMD. A failure prints one `EXPORT FAILED: ...` line.
 
@@ -104,7 +117,7 @@ prevent a finger that bends backwards or a charging handle that leaves its rail.
 - A limited bone has two constraints, `ROM:loc` (Limit Location) and `ROM:rot` (Limit Rotation), in Local Space with
   *Affect Transform* on: a drag, a rotation or a typed value stops at the limit. The bone's Transform panel also
   locks the axes the bone never moves on (for example, a charging handle moves on one axis only).
-- The limit is the bone's range in the shipped slots of its gun, both teams, plus 0.05 units and 0.5 degrees. Bones
+- The limit is the bone's range in the shipped slots of its gun, plus 0.05 units and 0.5 degrees. Bones
   that move freely (`Dummy01`, the forearms, magazines) have no limit.
 - The melee slot (`melee01`, or `melee` on the M41 family) swings the gun parts freely. Their `ROM:*` influence is
   keyed to 0 in that slot and to 1 in the others, so the Influence field shows as keyed.
@@ -134,15 +147,17 @@ blender -b viewmodels.blend --python-exit-code 1 --python rom_limits.py -- apply
 `spec` writes `rom_spec.json` from the keyed poses of the shipped slots (the slots the project's `.qc` compiles from
 its own `anims/`); `apply` puts its limits on the rigs and saves `viewmodels.blend`. A new shipped slot or a new gun
 needs both. `apply` deletes and re-adds every `ROM:*` constraint, so it can run again at any time. Commit
-`rom_spec.json` with `viewmodels.blend`.
+`rom_spec.json` with `viewmodels.blend`. `rom_spec.json` has one section per gun.
 
 ## Exporting animations
 
-To export from Blender to SMD, for example for both Tachi projects, run:
+To export from Blender to SMD, for example for the Tachi, run:
 
 ```sh
-blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_tachi nsf_tachi
+blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_tachi
 ```
+
+Name the `jinrai_GUN` project; an `nsf_GUN` project has no scene and the export refuses it.
 
 Before it writes any SMD, the export checks the range-of-motion limits: it plays every frame of every slot of the
 listed projects and fails when a limit clamps a key. The message names the project, slot, bone, frames and how far
@@ -156,8 +171,9 @@ the file it replaced:
 - A difference of float round-off only (2e-6 or less): the old file is put back and the export prints `KEPT`.
 - A real change: every shipped SMD of the project is put back and the export fails, naming the slot, frame and bone.
   Undo the edit in Blender (File > Revert, or delete the keys).
-- A change you mean: edit both team scenes the same way, then add `--edit-shipped` after the project names. The
-  export prints `SHIPPED CHANGED` for each changed file.
+- A change you mean: add `--edit-shipped` after the project names. The export prints `SHIPPED CHANGED` for each
+  changed file and copies it into `nsf_GUN/anims/` when the NSF `.qc` compiles that slot, so the NSF model plays the
+  edited clip too.
 
 After the export, the export checks the pace of each authored slot (a slot the project's `.qc` does not compile
 from its own `anims/`) against the shipped clips of the project, leaving out `fire*` and `melee*`. It prints `PACE WARN`
@@ -207,12 +223,14 @@ Then copy the generated files (`v_*_tachi.*` for the Tachi) from the game direct
 
 Files in neoAssets (this repo):
 
-- `neo/modelsrc/weapons/viewmodels.blend`: one scene `TEAM_GUN` per team. Start from a copy of a similar scene
-  (Scene selector > New Scene > Full Copy), name the scene, rig and action after the project (`TEAM_GUN`,
-  `TEAM_GUN_rig`, `TEAM_GUN_animations`), and set the scene's Source Engine Export path to `//TEAM_GUN/`. Name the
-  camera `TEAM_GUN_camera` and place it from the gun's `ViewModelOffset` (see Preview camera). The export finds the
-  rig and the action by these names and fails for a project that does not follow them.
-- `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/viewmodels.blend`: one scene `jinrai_GUN`. Start from a copy of a similar scene
+  (Scene selector > New Scene > Full Copy), name the scene, rig and action after the project (`jinrai_GUN`,
+  `jinrai_GUN_rig`, `jinrai_GUN_animations`), and set the scene's Source Engine Export path to `//jinrai_GUN/`. Name
+  the camera `jinrai_GUN_camera` and place it from the gun's `ViewModelOffset` (see Preview camera). The export finds
+  the rig and the action by these names and fails for a project that does not follow them. Import the NSF preview
+  into a second scene `nsf_GUN` with its own rig, then run `merge_teams.py -- GUN` to move it onto the Jinrai rig.
+- `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `reference.smd` and `anims/`, for each team (the NSF `anims/` holds
+  the shipped clips).
 - `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
 - `neo/modelsrc/weapons/rom_spec.json`: once the shipped slots are in, run `rom_limits.py -- spec` and `apply`
   (Range-of-motion limits) so the new rigs get their limits.

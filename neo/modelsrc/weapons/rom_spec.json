@@ -3,10 +3,10 @@
   "margin": {"loc": 0.05, "rot_deg": 0.5},
   "note": "written by rom_limits.py spec from the shipped slots; change rom_widen.json or rom_limits.py, not this file",
   "space": "LOCAL",
-  "version": 2,
+  "version": 3,
   "guns": {
     "tachi": {
-      "projects": ["jinrai_tachi", "nsf_tachi"],
+      "project": "jinrai_tachi",
       "bones": {
         "Dummy01": {"cls": "free"},
         "Eject": {"cls": "fixed", "loc": [[-0.051, 0.05], [-0.051, 0.051], [-0.051, 0.05]], "lock_loc": [true, true, true], "lock_rot": [true, true, true], "order": "XYZ", "rot_deg": [[-0.5, 0.51], [-0.5, 0.51], [-0.5, 0.51]]},
@@ -62,8 +62,7 @@
         "magrel": {"cls": "fixed", "loc": [[-0.051, 0.05], [-0.051, 0.05], [-0.05, 0.051]], "lock_loc": [true, true, true], "lock_rot": [true, true, true], "order": "XYZ", "rot_deg": [[-0.5, 0.51], [-0.51, 0.5], [-0.51, 0.5]]},
         "slide": {"cls": "rail", "loc": [[-0.051, 0.05], [-0.05, 3.504], [-0.05, 0.051]], "lock_loc": [true, false, true], "lock_rot": [true, true, true], "order": "XYZ", "rot_deg": [[-0.5, 0.51], [-0.51, 0.5], [-0.5, 0.51]]},
         "trigger": {"cls": "rail", "loc": [[-0.051, 0.05], [-0.05, 1.047], [-0.051, 0.051]], "lock_loc": [true, false, true], "lock_rot": [true, true, true], "order": "XYZ", "rot_deg": [[-0.5, 0.51], [-0.51, 0.5], [-0.5, 0.51]]}
-      },
-      "team": {}
+      }
     }
   }
 }

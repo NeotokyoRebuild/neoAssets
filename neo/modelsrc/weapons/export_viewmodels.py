@@ -2,18 +2,20 @@
 
 Run: blender --background --python-exit-code 1 --python export_viewmodels.py -- PROJECT [PROJECT ...] [--edit-shipped]
 Each PROJECT (such as jinrai_tachi) is a scene of viewmodels.blend beside this script, exported into the folder
-of the same name, which holds the project's .qc, reference.smd and anims/.
+of the same name, which holds the project's .qc, reference.smd and anims/. A gun has one scene, jinrai_GUN: one rig
+and one action, with both teams' preview meshes (the Team toggle shows one). The NSF project nsf_GUN has no scene: it
+compiles from its shipped SMDs on disk.
 Requires Blender 5.2.3 or newer and Blender Source Tools 3.4.3 or newer.
 This helper reads viewmodels.blend, and writes SMD exports.
-glue.py beside this script, when present, adds glued clips, reload phase times and team sharing
-(its docstring has the rules).
+glue.py beside this script, when present, adds glued clips and reload phase times (its docstring has the rules).
 Before any SMD is written, the range-of-motion check of rom_limits.py runs over every slot of the listed projects
 and fails the export when a ROM:* constraint clamps a keyed pose; the export itself runs with ROM:* muted, so the
 SMDs are the keyed poses (an active Local-Space constraint changes them by float round-off even when nothing clamps).
 The shipped slots (the SMDs the project's .qc compiles from its own anims/) stay the original clips: after Source
 Tools writes them, a rewrite that differs only by float round-off gets its old bytes back (KEPT), and a real change
 puts every shipped SMD back and fails the export, naming the slot, frame and bone. To change a shipped clip on purpose,
-edit both team scenes the same way and add --edit-shipped after the projects; the export then prints SHIPPED CHANGED.
+add --edit-shipped after the projects: the export then prints SHIPPED CHANGED and copies the changed SMD into the NSF
+project too (nsf_GUN/anims/, when its .qc compiles that slot), so both teams play the edited clip.
 After the export, each authored slot (a slot the .qc does not compile from the project's own anims/) is compared with
 the shipped non-fire, non-melee clips of its project: a PACE WARN names the slot, bone and frames where the slot moves
 a bone more than 10 % faster than any of them: hands and the gun by world speed (the gun also by world turn), fingers
@@ -78,26 +80,11 @@ def read_markers(scene):
     return {marker.name: marker.frame for marker in scene.timeline_markers}
 
 
-def check_teams_agree(root, scenes):
-    """Fail before any export when the team scenes of a gun carry different markers."""
-    first, shipped = {}, glue.compared_slots(root, scenes) if glue else {}
-    for scene in scenes:
-        gun = scene.name.partition('_')[2]
-        markers = read_markers(scene)
-        if gun in shipped:
-            markers = {name: frame for name, frame in markers.items() if name.partition(':')[0] in shipped[gun]}
-        if gun not in first:
-            first[gun] = (scene, markers)
-            continue
-        other, expected = first[gun]
-        for name in sorted(set(markers) | set(expected)):
-            if markers.get(name) != expected.get(name):
-                raise RuntimeError('Marker %s is at frame %s in scene %s but at frame %s in scene %s: edit both team scenes' % (
-                    name, expected.get(name, 'missing'), other.name, markers.get(name, 'missing'), scene.name))
-
-
 def project_rig(scene):
     """The scene's rig, failing unless it holds the project's own action."""
+    if scene.name.startswith('nsf_'):
+        raise RuntimeError('Scene %s: NSF projects have no scene since the team merge; export jinrai_%s' % (
+            scene.name, scene.name[4:]))
     rig_name, action_name = scene.name + '_rig', scene.name + '_animations'  # named after the project
     rig = scene.objects.get(rig_name)
     if rig is None or rig.type != 'ARMATURE':
@@ -263,7 +250,7 @@ def smd_change(old, new):
 
 def guard_shipped(folder, before, allow):
     """Keep the shipped SMDs original: restore round-off-only rewrites byte for byte, and fail on a real change
-    unless the export was run with --edit-shipped."""
+    unless the export was run with --edit-shipped. Return the changed SMDs (allowed changes only)."""
     changed = []
     for path, old in before.items():
         new = path.read_bytes()
@@ -276,19 +263,37 @@ def guard_shipped(folder, before, allow):
             continue
         changed.append((path, old, change))
     if not changed:
-        return
+        return []
     if allow:
         for path, _, (frame, bone, difference) in changed:
             print('SHIPPED CHANGED %s/anims/%s frame %s bone %s: %s' % (
                 folder.name, path.name, frame, bone, difference))
-        return
+        return [path for path, _, _ in changed]
     for path, old, _ in changed:
         path.write_bytes(old)
     raise RuntimeError('Shipped slots of %s changed: %s. Shipped slots stay the original clip; the SMDs were put '
                        'back. Undo the edit in Blender (File > Revert, or delete the keys), or, if the change is '
-                       'meant, edit both team scenes the same way and export again with %s' % (
+                       'meant, export again with %s (both teams then get the edited clip)' % (
                            folder.name, '; '.join('%s frame %s bone %s by %s' % ((p.stem,) + c) for p, _, c in changed),
                            EDIT_SHIPPED))
+
+
+def nsf_project(folder):
+    """The NSF project folder of a Jinrai project, or None. It has no scene: it compiles from its own shipped SMDs."""
+    partner = folder.parent / ('nsf_' + folder.name.partition('_')[2])
+    return partner if folder.name.startswith('jinrai_') and partner.is_dir() else None
+
+
+def copy_shipped(folder, changed):
+    """Copy the shipped SMDs an --edit-shipped export changed into the NSF project, where its .qc compiles them."""
+    partner = nsf_project(folder)
+    if partner is None:
+        return
+    compiled = shipped_slots(partner)
+    for path in changed:
+        if path.stem in compiled:
+            (partner / 'anims' / path.name).write_bytes(path.read_bytes())
+            print('SHIPPED CHANGED %s/anims/%s (copied from %s)' % (partner.name, path.name, folder.name))
 
 
 def open_scenes(path, keep=None):
@@ -310,8 +315,6 @@ def export_project(folder, scene, allow_shipped=False):
     reference_bytes = reference.read_bytes()
     armature = project_rig(scene)
     rom_limits.set_mute(scene, True)  # this copy of the file is never saved
-    if glue:
-        glue.before_export(folder, scene, armature)
     expected = [folder / 'anims' / (slot.name_display + '.smd')
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
@@ -328,10 +331,11 @@ def export_project(folder, scene, allow_shipped=False):
         raise RuntimeError('Source Tools did not freshly export every expected SMD')
     if reference.read_bytes() != reference_bytes:
         raise RuntimeError('The preview mesh must not overwrite reference.smd')
-    guard_shipped(folder, before, allow_shipped)
+    changed = guard_shipped(folder, before, allow_shipped)
     print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
-    if glue and glue.after_export(folder, scene):
-        return
+    copy_shipped(folder, changed)
+    if glue:
+        glue.after_export(folder, scene)
     shipped = shipped_slots(folder)
     check_pace(folder, [path.stem for path in expected if path.stem not in shipped])
 
@@ -345,12 +349,15 @@ if __name__ == '__main__':
         raise RuntimeError('List the projects to export after --')
     try:
         found = open_scenes(root / SOURCE)
+        merged = [project for project in projects if project.startswith('nsf_')]
+        if merged:
+            raise RuntimeError('%s: an NSF project has no scene; it compiles from its shipped SMDs and the Jinrai glued '
+                               'clips. Export %s' % (', '.join(merged), ', '.join('jinrai_' + p[4:] for p in merged)))
         unknown = [project for project in projects if project not in found or not (root / project).is_dir()]
         if unknown:
             raise RuntimeError('No scene and folder named ' + ', '.join(unknown))
         for project in projects:
             project_rig(found[project])
-        check_teams_agree(root, [found[project] for project in projects])
         check_images()
         check_limits([found[project] for project in projects])
         for project in projects:
