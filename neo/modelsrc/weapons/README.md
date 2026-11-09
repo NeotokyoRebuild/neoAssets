@@ -2,7 +2,7 @@
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
 ZR68-L, Kyla, MilSO, AA13, SRS, PZ252, the MPN45 family (MPN45, MPN45-S), the SRM family (SRM, SRM-S), the
-Jitte family (Jitte, Jitte-S) and the M41 family (M41, M41-S, M41-L).
+Jitte family (Jitte, Jitte-S), the M41 family (M41, M41-S, M41-L) and the MX family (MX, MX-S).
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -27,16 +27,17 @@ Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
   `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla), `jinrai_milso`,
-  `jinrai_aa13`, `jinrai_srs`, `jinrai_pz` (the PZ252), `jinrai_mpn` (the MPN45, unsilenced) and `jinrai_mpn_s`
-  (the MPN45-S, the game's default MPN45), `jinrai_srm`, `jinrai_srm_s`, `jinrai_jitte`, `jinrai_jittes` (the
-  Jitte-S, scoped), `jinrai_mosok41` (the M41), `jinrai_mosok41s` (the M41-S) and `jinrai_mosok41l` (the M41-L).
-  Each scene has one rig and one action, and both teams' arms (see One scene per gun).
+  `jinrai_aa13`, `jinrai_srs`, `jinrai_pz` (the PZ252), `jinrai_mpn` (the MPN45, unsilenced) and `jinrai_mpn_s` (the
+  MPN45-S, the game's default MPN45), `jinrai_srm`, `jinrai_srm_s`, `jinrai_jitte`, `jinrai_jittes` (the Jitte-S,
+  scoped), `jinrai_mosok41` (the M41), `jinrai_mosok41s` (the M41-S), `jinrai_mosok41l` (the M41-L), `jinrai_mx` and
+  `jinrai_mxs` (the MX-S, silenced). Each scene has one rig and one action, and both teams' arms (see One scene per
+  gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
-- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252, MPN45, SRM, Jitte
-  and M41): the `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include
+- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252, MPN45, SRM, Jitte,
+  M41 and MX): the `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include
   it, so the NSF model compiles the Jinrai glued clips. The variants of a gun family include their base gun's file
   instead (see Gun families).
 - `GUN/viewmodel.qci` (such as `tachi/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
@@ -48,7 +49,8 @@ Layout:
   MPN45 and MPN45-S share `mpn/viewmodel.qci` across their four models and keep `$definebone` per model. The SRM
   and SRM-S follow the ZR68C layout (`srm/viewmodel.qci`, `srm_s/viewmodel.qci`), and so do the Jitte and Jitte-S
   (`jitte/viewmodel.qci`, `jittes/viewmodel.qci`). The M41, M41-S and M41-L share `mosok41/viewmodel.qci` across
-  their six models and keep `$definebone` per model.
+  their six models and keep `$definebone` per model. The MX and MX-S share `mx/viewmodel.qci` across their four
+  models.
   The MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
@@ -104,6 +106,7 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 | SRM (`jinrai_srm`) | SRM-S |
 | Jitte (`jinrai_jitte`) | Jitte-S |
 | M41 (`jinrai_mosok41`) | M41-S, M41-L |
+| MX (`jinrai_mx`) | MX-S |
 
 - Both team `.qc` files of a variant end with `$include "../jinrai_BASE/glued.qci"`. The variant has no
   `composites.txt`, no `glued.qci` and no authored or glued SMDs.
@@ -123,12 +126,12 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
   `VARIANT_gun` (such as `mpn_gun`, `mpn_s_gun`), one visible at a time. Pick the gun in the **Variant** dropdown of
   the Viewmodel panel, or click the eye of its collection in the Outliner. The MPN45 scene lists `mpn_s` as the game
   default: `weapon_mpn.txt` uses the suppressed model.
-- The variant gun has no bones of its own in that scene: `variant_preview.py` moved the weights of its own parts to
-  the nearest bone of the base rig, at the variant's rest pose (the ZR68-S `Silencer` to `zr68c`, `x_silenced` to
-  `Dummy02`, the MPN45-S `supressor` to `body`). The glued clips carry no track for those bones, so the game also
-  holds the parts at their rest pose under that bone. The preview matches the variant's own scene within 0.025 units
-  in every shared shipped slot (the ZR68-S ships its own `melee01`). Nothing exported depends on these collections:
-  their objects have Source Tools export off.
+- The variant gun has no bones of its own in that scene: `variant_preview.py` moved the weights of its own parts to the
+  nearest bone of the base rig, at the variant's rest pose (the ZR68-S `Silencer` to `zr68c`, `x_silenced` to `Dummy02`,
+  the MPN45-S `supressor` to `body`, the MX-S sight to `Box01`). The glued clips carry no track for those bones, so the
+  game also holds the parts at their rest pose under that bone. The preview matches the variant's own scene within 0.025
+  units in every shared shipped slot (the ZR68-S ships its own `melee01`). Nothing exported depends on these
+  collections: their objects have Source Tools export off.
 
 | term | meaning |
 | :-- | :-- |
@@ -362,6 +365,10 @@ The M41 has the same four clips, and the M41-S and M41-L compile them (Gun famil
 and f93 (the handle pull starts at f94), and the `skipcycle` clips leave `reload` at f77, after the magazine tap.
 Slots: `drawunloaded` f0-33 (draw, then a 9-frame tilt), `drawtocycle` f0-39 (draw, then a 15-frame reach),
 `skipcycle` f0-20 (support hand back through the start of `reload`).
+
+The MX has the same four clips, and the MX-S compiles them (Gun families). It joins `reload` after f30 and f61, and
+leaves it at f56, after the magazine tap. Slots: `drawunloaded` f0-37, `drawtocycle` f0-32, `skipcycle` f0-14. Its
+load step has one sound piece, the tap.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
