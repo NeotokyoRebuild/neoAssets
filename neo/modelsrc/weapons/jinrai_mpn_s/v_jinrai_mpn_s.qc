@@ -52,3 +52,4 @@ $definebone "supressor" "body" -0.003229 43.129997 10.457659 0.000001 -0.000001 
 $definebone "Eject" "body" 1.681228 7.731259 11.314773 -19.782115 -2.449738 -0.476360 0 0 0 0 0 0
 $definebone "Muzzle" "body" -0.034499 27.636433 10.345016 1.615973 89.842243 90.135439 0 0 0 0 0 0
 $include "../mpn/viewmodel.qci"
+$include "../jinrai_mpn_s/glued.qci"

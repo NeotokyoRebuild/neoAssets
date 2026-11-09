@@ -12,7 +12,3 @@ $sequence "idle_to_low" "anims/idle_to_low.smd" activity ACT_VM_LOWERED_TO_IDLE 
 $sequence "low_to_idle" "anims/low_to_idle.smd" activity ACT_VM_IDLE_TO_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 node "0"
 $sequence "idle_low" "anims/idle_low.smd" activity ACT_VM_IDLE_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 loop node "0"
 $sequence "charge" "anims/charge.smd" activity ACT_VM_PULLBACK 1 fps 30 fadein 0.20 fadeout 0.20 node "0"
-$sequence "drawunloaded_reload" "anims/drawunloaded_reload.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
-$sequence "drawunloaded_reload_skipcycle" "anims/drawunloaded_reload_skipcycle.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
-$sequence "drawtocycle_reload" "anims/drawtocycle_reload.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"
-$sequence "reload_skipcycle" "anims/reload_skipcycle.smd" fps 30 fadein 0.20 fadeout 0.20 node "0"

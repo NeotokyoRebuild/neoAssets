@@ -52,3 +52,4 @@ $definebone "bone thumb 06" "bone thumb 05" 0.269052 -3.933445 0.328685 5.133247
 $definebone "Dummy01" "" 0.350537 -6.712466 -19.960323 -0.000000 89.999978 0.000000 0 0 0 0 0 0
 $definebone "Dummy02" "Dummy01" 5.437930 23.108690 8.060459 -0.000000 179.999964 0.000000 0 0 0 0 0 0
 $include "../mosok41/viewmodel.qci"
+$include "../jinrai_mosok41/glued.qci"

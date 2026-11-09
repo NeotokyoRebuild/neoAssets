@@ -54,3 +54,4 @@ $definebone "Stock" "StockMain" 0.000001 0.000001 0.000000 0.000003 0.000004 0.0
 $definebone "Drum" "PZ" -1.370366 -9.614164 4.251130 0.000003 0.000004 0.000057 0 0 0 0 0 0
 $definebone "Dummy02" "Dummy01" 5.437930 23.108690 8.060459 -0.000000 179.999964 0.000000 0 0 0 0 0 0
 $include "../pz/viewmodel.qci"
+$include "../jinrai_pz/glued.qci"

@@ -53,3 +53,4 @@ $definebone "Release" "middleman dummy" -0.024872 2.599812 5.954563 0.000001 0.0
 $definebone "Bipod" "middleman dummy" -0.090534 -1.296302 38.553841 0.000001 0.000001 -0.000062 0 0 0 0 0 0
 $definebone "Clip" "middleman dummy" -0.001843 3.876439 -12.970638 0.000001 0.000001 -0.000062 0 0 0 0 0 0
 $include "../srs/viewmodel.qci"
+$include "../jinrai_srs/glued.qci"

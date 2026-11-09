@@ -59,3 +59,4 @@ $definebone "Line01" "Box01" 1.927288 9.424515 6.856711 -24.999984 0.000001 -0.0
 $definebone "Dummy02" "Dummy01" 5.437930 23.108690 8.060459 -0.000000 -179.999978 0.000000 0 0 0 0 0 0
 $definebone "mx_base" "Dummy02" -0.506437 -7.624062 -4.300354 -0.000000 -179.999964 0.000000 0 0 0 0 0 0
 $include "../mx/viewmodel.qci"
+$include "../jinrai_mxs/glued.qci"

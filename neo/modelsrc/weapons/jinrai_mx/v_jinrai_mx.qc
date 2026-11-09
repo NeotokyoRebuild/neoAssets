@@ -54,3 +54,4 @@ $definebone "Charge" "Box01" -0.000000 -0.000001 0.000000 -0.000005 0.000002 0.0
 $definebone "Dummy02" "Dummy01" 5.437930 23.108690 8.060459 -0.000000 -179.999978 0.000000 0 0 0 0 0 0
 $definebone "mx_base" "Dummy02" -0.506437 -7.624062 -4.300354 -0.000000 -179.999964 0.000000 0 0 0 0 0 0
 $include "../mx/viewmodel.qci"
+$include "../jinrai_mx/glued.qci"

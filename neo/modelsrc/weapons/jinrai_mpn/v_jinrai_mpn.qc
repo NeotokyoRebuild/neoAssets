@@ -51,3 +51,4 @@ $definebone "stock" "body" -3.250779 -1.201531 0.000003 -0.000002 -179.999978 0.
 $definebone "Eject" "body" 1.681229 7.731257 11.314770 -19.782115 -2.449738 -0.476358 0 0 0 0 0 0
 $definebone "Muzzle" "body" -0.034497 27.636433 10.345009 1.615968 89.842240 90.135432 0 0 0 0 0 0
 $include "../mpn/viewmodel.qci"
+$include "../jinrai_mpn/glued.qci"
