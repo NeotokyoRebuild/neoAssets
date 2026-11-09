@@ -35,7 +35,8 @@ Layout:
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
 - `jinrai_GUN/glued.qci` (guns with glued clips): the `$sequence` lines of the glued clips, read from
-  `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF model compiles the Jinrai glued clips.
+  `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF model compiles the Jinrai glued clips. The
+  variants of a gun family include their base gun's file instead (see Gun families).
 - `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
   sets only `$modelname` and includes this file. The M41 family shares one `mosok41/viewmodel.qci` (attachments and
   sequences) across its six models, the MPN45 one `mpn/viewmodel.qci` across its four,
@@ -79,6 +80,31 @@ teams' arm meshes are skinned to that rig, so a key moves both. Each team's mesh
   `Release` 22 degrees, MilSO arms 0.006 units). The NSF mesh keeps these only in its compiled model; in the scene,
   `merge_teams.py` re-bound the NSF `Release` and MilSO arm vertices for the preview only, so the NSF arms show as
   the NSF model plays them (within 0.013 units). `reference.smd` was not changed.
+
+### Gun families
+
+A variant compiles the glued clips of its base gun, so the base gun authors the new slots for the whole family:
+
+| base gun | variants that compile its glued clips |
+| :-- | :-- |
+| ZR68C (`jinrai_zr68c`) | ZR68-S |
+| MPN45 (`jinrai_mpn`) | MPN45-S |
+| MX (`jinrai_mx`) | MX-S |
+| SRM (`jinrai_srm`) | SRM-S |
+| Jitte (`jinrai_jitte`) | Jitte-S |
+
+- Both team `.qc` files of a variant end with `$include "../jinrai_BASE/glued.qci"`. The variant has no
+  `composites.txt`, no `glued.qci` and no authored or glued SMDs.
+- The variant's scene keeps its shipped slots and the step markers on its `reload`. Its export writes the shipped
+  slots and fills its own phases file from the base's `composites.txt`, with the base's markers overridden by the
+  variant's own. It fails if a variant marker moves a join (the glued clips are built at the base's frames). A new
+  slot left in a variant scene prints `FAMILY WARN` and is not exported: author it on the base gun.
+- Exporting a base gun also exports its variants (their phases files). Compile the base and its variants.
+- A bone the base's SMDs lack (a silencer, a scope) stays at the variant's own rest pose in the glued clips; the
+  shared bones, the `Muzzle` and `Eject` points included, follow the base. The variants' shipped clips have the
+  base's motion and attachment points on the shared bones.
+- Not in a family: the ZR68-L (its own `reload` motion, markers and sounds) and the M41-S and M41-L (their
+  `Muzzle` point in `reload` differs from the M41's). They author their own slots.
 
 | term | meaning |
 | :-- | :-- |
@@ -266,8 +292,9 @@ which `drawtocycle_reload` replaces with the last frame of `drawtocycle`, so tha
 The MX (four projects) joins `reload` after f30 and f61 and leaves it at f56, after the magazine tap. Slots:
 `drawunloaded` f0-37, `drawtocycle` f0-32, `skipcycle` f0-14. Its load step has one sound piece, the tap.
 
-The ZR68-S and ZR68-L reuse the ZR68C's transitions, moved onto their own poses at each end, with the same frame
-counts. Their step markers sit where their own magazines move: `1_unload` f20, `2_load` f42. The ZR68-S plays
+The ZR68-S compiles the ZR68C's glued clips (Gun families). The ZR68-L reuses the ZR68C's transitions, moved
+onto its own poses at each end, with the same frame counts. The step markers of both sit at `1_unload` f20,
+`2_load` f42. The ZR68-S plays
 the ZR68C's sound pieces (`weapon_zr68.reload_*`); the ZR68-L has its own (`weapon_zr68l.reload_*`).
 
 The Jitte (four projects) joins `reload` after f40 (its magazine moves into the hand there, off screen) and f72, and
@@ -350,7 +377,7 @@ To add a resume clip after another step:
 
 `viewmodels_post_export.blend` shows each glued clip exactly as the game plays it, easing included. It is an export
 output: every export rebuilds it from `viewmodels.blend` and the glued SMDs, for every project with a
-`composites.txt` (the Jinrai projects; the NSF models play the same clips). Each scene there has both teams' arms:
+`composites.txt` (the Jinrai projects; the NSF models and the family variants play the same clips). Each scene there has both teams' arms:
 **Team** or the collection eye shows the other. Never edit it; edit `viewmodels.blend` and export. Commit it together with the SMDs whenever a
 glued clip changes.
 
@@ -409,7 +436,8 @@ Files in neoAssets (this repo):
 - `neo/modelsrc/weapons/rom_spec.json`: once the shipped slots are in, run `rom_limits.py -- spec` and `apply`
   (Range-of-motion limits) so the new rigs get their limits.
 - `neo/modelsrc/weapons/jinrai_GUN/composites.txt` and `glued.qci` (if the gun has glued clips): Jinrai project only.
-  End both team `.qc` files with `$include "../jinrai_GUN/glued.qci"`.
+  End both team `.qc` files with `$include "../jinrai_GUN/glued.qci"`. A variant of a gun family (same motion on
+  the shared bones in its shipped `reload`) includes the base gun's file instead and gets no new slots.
 - `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
 - `neo/scripts/weapon_GUN_reload_phases.txt`: the phases file. Copy the ZR68C one and edit the sequences and steps.
 - `neo/sound/weapons/GUN/GUN_<key>.wav`: one wav per sound entry.

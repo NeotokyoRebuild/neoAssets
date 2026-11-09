@@ -23,6 +23,11 @@ A sequence's ammo times come before its last frame, and its sounds finish playin
 Every export then rebuilds viewmodels_post_export.blend, a preview of the glued clips of every project with a
 composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged. Each
 scene there carries both teams' preview meshes, like viewmodels.blend.
+A family variant (a gun whose .qc includes another gun's ../jinrai_BASE/glued.qci, such as the ZR68-S with the ZR68C)
+compiles the base's glued clips and authors no slot of its own: its export writes its shipped slots only (FAMILY WARN
+for a slot it still has, which is not exported) and fills its phases file from the base's composites.txt with the
+base's markers, overridden by its own (its shipped reload's step markers); the export fails if that moves a join.
+Exporting a base also exports its variants.
 Before any SMD is written, the range-of-motion check of rom_limits.py runs over every slot of the listed projects
 and fails the export when a ROM:* constraint clamps a keyed pose; the export itself runs with ROM:* muted, so the
 SMDs are the keyed poses (an active Local-Space constraint changes them by float round-off even when nothing clamps).
@@ -139,9 +144,10 @@ def marker_frame(markers, slot, value, part):
     return str(markers[slot + ':' + value])
 
 
-def write_composites(folder, markers, write=True):
+def write_composites(folder, markers, write=True, layout=None):
     """Write the composites; return the marker frames per sequence, each composite's SLOT@STEP joins, and the
-    exported slot each composite marker came from. With write=False, only return them."""
+    exported slot each composite marker came from. With write=False, only return them. layout, a list, gets each
+    part's frame range."""
     composites = folder / 'composites.txt'
     times, joins, sources = {}, {}, {}
     for name, frame in markers.items():
@@ -175,6 +181,8 @@ def write_composites(folder, markers, write=True):
             header = part_header
             first, last = (marker_frame(markers, slot, value, part) for value in span.partition('-')[::2])
             first, last = int(first or 0), int(last) if last else len(frames) - 1
+            if layout is not None:
+                layout.append((output, part, first, last))
             if write and joined and first > 0 and count > 0:
                 ease_seam(output, joined, frames[first - 1], count)
             for key, frame in times.get(slot, {}).items():
@@ -237,10 +245,12 @@ def read_phases(text):
     return {sequence: {step: row.value for step, row in steps.value.items()} for sequence, steps in phases.items()}
 
 
-def check_ready(folder, path, text):
-    """Fail when a sound of a sequence plays past the sequence's last frame, where the gun can fire."""
+def check_ready(folders, path, text):
+    """Fail when a sound of a sequence plays past the sequence's last frame, where the gun can fire. The sequence's SMD
+    is the first found in the folders' anims/."""
     for sequence, steps in read_phases(text).items():
-        ready = (len(read_frames(folder / 'anims' / (sequence + '.smd'))[1]) - 1) / FPS
+        smd = next(smd for smd in (folder / 'anims' / (sequence + '.smd') for folder in folders) if smd.is_file())
+        ready = (len(read_frames(smd)[1]) - 1) / FPS
         for row in steps.values():
             if 'ammo' in row and float(row['ammo'].value) >= ready - 1e-6:
                 raise RuntimeError('%s ends at %.3f s, not after an ammo time %s s' % (sequence, ready, row['ammo'].value))
@@ -275,8 +285,9 @@ def check_resume_rows(phases, joins, sources):
                     raise RuntimeError('%s lists step %s: a resume after %s plays only later steps' % (resume, later, step))
 
 
-def fill_phases(folder, times, joins, sources):
-    """Set every ammo/sound time in the weapon's ReloadPhases file from the markers."""
+def fill_phases(folder, times, joins, sources, base=None):
+    """Set every ammo/sound time in the weapon's ReloadPhases file from the markers. A family variant's glued clips
+    are in its base's anims/."""
     path = folder.parents[2] / 'scripts' / ('weapon_%s_reload_phases.txt' % folder.name.partition('_')[2])
     if not path.is_file():
         return
@@ -294,7 +305,7 @@ def fill_phases(folder, times, joins, sources):
                 changes.append((row[key].span, '%.3f' % (frame / FPS)))
     for (start, end), seconds in sorted(changes, reverse=True):
         text = text[:start] + seconds + text[end:]
-    check_ready(folder, path, text)
+    check_ready([folder] + ([base] if base else []), path, text)
     path.write_text(text, encoding='ascii')
     print('PHASES', path.name, '\n' + text)
 
@@ -425,6 +436,31 @@ def nsf_project(folder):
 def shipped_slots(folder):
     """The slots the project's qc compiles from its own anims/."""
     return set(SHIPPED_SMD.findall(qc_text(folder)))
+
+
+GLUED_INCLUDE = re.compile(r'^\$include\s+"\.\./(jinrai_[^/"]+)/glued\.qci"', re.M)
+
+
+def family_base(folder):
+    """The family base project of a variant (the gun whose glued.qci its .qc includes), or None. A variant compiles the
+    base's glued clips and authors no slot of its own."""
+    bases = [name for name in GLUED_INCLUDE.findall(qc_text(folder)) if name != folder.name]
+    return folder.parent / bases[0] if bases else None
+
+
+def variant_times(folder, base, markers, base_markers):
+    """The phases inputs of a variant: the base's composites with the base's markers, overridden by the variant's own
+    markers. Fail when that moves a join or range, since the glued clips were built at the base's frames."""
+    merged = dict(base_markers, **markers)
+    base_layout, layout = [], []
+    write_composites(base, base_markers, write=False, layout=base_layout)
+    result = write_composites(base, merged, write=False, layout=layout)
+    for expected, got in zip(base_layout, layout):
+        if expected != got:
+            raise RuntimeError('%s: marker of %s puts %s at frames %d-%d, but the shared clip %s of %s uses %d-%d. Move '
+                               'the marker to match the family base' % (
+                                   folder.name, got[1], got[0], got[2], got[3], got[0], base.name, expected[2], expected[3]))
+    return result
 
 
 def read_markers(scene):
@@ -655,13 +691,22 @@ def open_scenes(path, keep=None):
     return bpy.context.scene
 
 
-def export_project(folder, scene, allow_shipped=False):
+def export_project(folder, scene, allow_shipped=False, markers=None):
     if scene.render.fps != FPS or scene.render.fps_base != 1:
         raise RuntimeError('Scene %s must play at %d fps' % (scene.name, FPS))
     reference = folder / 'reference.smd'
     reference_bytes = reference.read_bytes()
     armature = project_rig(scene)
     rom_limits.set_mute(scene, True)  # this copy of the file is never saved
+    base = family_base(folder)
+    if base:
+        action, keep = armature.animation_data.action, shipped_slots(folder)
+        for slot in [slot for slot in action.slots if slot.name_display not in keep]:
+            print('FAMILY WARN %s has its own slot %s, which is not exported: %s authors the family\'s new slots. '
+                  'Delete the slot' % (scene.name, slot.name_display, base.name))
+            action.slots.remove(slot)  # this copy of the file is never saved
+        if armature.animation_data.action_slot is None:
+            armature.animation_data.action_slot = action.slots[0]
     expected = [folder / 'anims' / (slot.name_display + '.smd')
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
@@ -681,6 +726,10 @@ def export_project(folder, scene, allow_shipped=False):
     changed = guard_shipped(folder, before, allow_shipped)
     print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
     copy_shipped(folder, changed)
+    if base:
+        print('FAMILY', scene.name, 'compiles the glued clips of', base.name)
+        fill_phases(folder, *variant_times(folder, base, read_markers(scene), markers[base.name]), base=base)
+        return
     fill_phases(folder, *write_composites(folder, read_markers(scene)))
     shipped = shipped_slots(folder)
     check_pace(folder, [path.stem for path in expected if path.stem not in shipped])
@@ -702,12 +751,18 @@ if __name__ == '__main__':
         unknown = [project for project in projects if project not in found or not (root / project).is_dir()]
         if unknown:
             raise RuntimeError('No scene and folder named ' + ', '.join(unknown))
+        variants = [path.name for path in sorted(root.glob('jinrai_*')) if path.name not in projects and
+                    next(path.glob('*.qc'), None) and family_base(path) and family_base(path).name in projects]
+        if variants:
+            print('FAMILY also exporting', ', '.join(variants), '(their phases files follow the base markers)')
+            projects += variants
         for project in projects:
             project_rig(found[project])
         check_images()
         check_limits([found[project] for project in projects])
+        markers = {scene.name: read_markers(scene) for scene in found}
         for project in projects:
-            export_project(root / project, open_scenes(root / SOURCE, keep=project), allow_shipped)
+            export_project(root / project, open_scenes(root / SOURCE, keep=project), allow_shipped, markers)
         build_post_export(root)
     except RuntimeError as problem:
         print('EXPORT FAILED:', problem)
