@@ -288,8 +288,9 @@ slots are the glued clips, imported from PROJECT/anims/*.smd. The timeline marke
 markers shifted into each clip (CLIP:STEP, CLIP:STEP.sound), the times the phases file gets.
 Pick a clip: Scene selector (top right), then Dope Sheet > Action Editor > Slot dropdown. Numpad 0 looks
 through the camera. Each scene holds both teams' arms: show the other team with the eye of its collection
-(Outliner: jinrai_GUN_preview, nsf_GUN_preview) or Team in the Viewmodel panel. Edit the animations in
-viewmodels.blend, never here.
+(Outliner: jinrai_GUN_preview, nsf_GUN_preview) or Team in the Viewmodel panel. A family base scene also has its
+variants' guns: show one with the eye of its GUN_gun collection or Variant in the Viewmodel panel. Edit the
+animations in viewmodels.blend, never here.
 """
 
 
