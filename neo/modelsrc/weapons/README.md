@@ -27,6 +27,7 @@ Layout:
   the MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones); each of their `.qc` files
   keeps its own `$definebone` lines, because the rigs differ.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
+- `rom_limits.py` and `rom_spec.json`: the range-of-motion limits on the rigs (see Range-of-motion limits).
 
 Run the scripts from this folder (`neo/modelsrc/weapons`).
 
@@ -106,6 +107,37 @@ the "m" that Blender shows is only its label for the metric system at unit scale
 script can be typed into Blender as they are.
 
 
+### Range-of-motion limits
+
+Each rig's bones carry limits that stop a pose outside the range the bone moves through in the shipped clips. They
+prevent a finger that bends backwards or a charging handle that leaves its rail.
+
+- A limited bone has two constraints, `ROM:loc` (Limit Location) and `ROM:rot` (Limit Rotation), in Local Space with
+  *Affect Transform* on: a drag, a rotation or a typed value stops at the limit. The bone's Transform panel also
+  locks the axes the bone never moves on (for example, a charging handle moves on one axis only).
+- The limit is the bone's range in the shipped slots of its gun, both teams, plus 0.05 units and 0.5 degrees. Bones
+  that move freely (`Dummy01`, the forearms, magazines) have no limit.
+- The melee slot (`melee01`, or `melee` on the M41 family) swings the gun parts freely. Their `ROM:*` influence is
+  keyed to 0 in that slot and to 1 in the others, so the Influence field shows as keyed.
+- Bone collection `ROM limited` (Armature > Bone Collections) holds the limited bones: show or select them there.
+- To mute one constraint, click its eye icon in the Bone Constraints tab. To mute or unmute all of them:
+  `blender -b viewmodels.blend --python rom_limits.py -- mute-on` (or `mute-off`). Muted or not, the export is the same.
+- A key that is already outside a limit (pasted, or moved in the Graph Editor) shows clamped in the viewport only.
+  The Graph Editor shows the key as it is, and the export fails on it (next section).
+
+The limits come from `rom_spec.json`; do not edit the constraints by hand. To change a limit, change
+`rom_limits.py` (the margins, or `WIDEN`: an authored pose a limit is widened to cover, with the reason), then:
+
+```sh
+blender -b viewmodels.blend --python-exit-code 1 --python rom_limits.py -- spec
+blender -b viewmodels.blend --python-exit-code 1 --python rom_limits.py -- apply
+```
+
+`spec` writes `rom_spec.json` from the keyed poses of the shipped slots (the slots the project's `.qc` compiles from
+its own `anims/`); `apply` puts its limits on the rigs and saves `viewmodels.blend`. A new shipped slot or a new gun
+needs both. `apply` deletes and re-adds every `ROM:*` constraint, so it can run again at any time. Commit
+`rom_spec.json` with `viewmodels.blend`.
+
 ## Exporting animations
 
 To export from Blender to SMD, for example for both Tachi projects, run:
@@ -113,6 +145,12 @@ To export from Blender to SMD, for example for both Tachi projects, run:
 ```sh
 blender --background --python-exit-code 1 --python export_viewmodels.py -- jinrai_tachi nsf_tachi
 ```
+
+Before it writes any SMD, the export checks the range-of-motion limits: it plays every frame of every slot of the
+listed projects and fails when a limit clamps a key. The message names the project, slot, bone, frames and how far
+past the limit the key is. Fix the key, or, if the pose is meant, widen the limit (`WIDEN` in `rom_limits.py`, then
+`spec` and `apply`). `rom_limits.py -- check` runs the same check alone. The export itself runs with `ROM:*` muted:
+an active constraint changes the exported numbers slightly even when it clamps nothing, so the SMDs are the keys.
 
 A sequence made of parts of other animations is written after the export, when the project folder has a `composites.txt`.
 Each line names the output animation and its parts in order; a part is a slot, `slot:first-last` for a frame range
@@ -299,6 +337,8 @@ Files in neoAssets (this repo):
 - `neo/modelsrc/weapons/export_viewmodels.py`: add a row per project to `RIGS`, the project's rig and its action
   (`"TEAM_GUN": ("TEAM_GUN_rig", "TEAM_GUN_animations")`). The export fails for a project without one.
 - `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/rom_spec.json`: once the shipped slots are in, run `rom_limits.py -- spec` and `apply`
+  (Range-of-motion limits) so the new rigs get their limits.
 - `neo/modelsrc/weapons/jinrai_GUN/composites.txt` and `glued.qci` (if the gun has glued clips): Jinrai project only.
   End both team `.qc` files with `$include "../jinrai_GUN/glued.qci"`.
 - `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.

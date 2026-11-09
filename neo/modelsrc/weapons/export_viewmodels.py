@@ -25,6 +25,9 @@ A sequence's ammo times come before its last frame, and its sounds finish playin
 Every export then rebuilds viewmodels_post_export.blend, a preview of the glued clips of every project with a
 composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged. A
 sharing NSF project has no scene there: it plays the same glued clips as its Jinrai project.
+Before any SMD is written, the range-of-motion check of rom_limits.py runs over every slot of the listed projects
+and fails the export when a ROM:* constraint clamps a keyed pose; the export itself runs with ROM:* muted, so the
+SMDs are the keyed poses (an active Local-Space constraint changes them by float round-off even when nothing clamps).
 viewmodels.blend is never saved.
 """
 from pathlib import Path
@@ -37,6 +40,10 @@ import wave
 
 import bpy
 from mathutils import Euler, Quaternion
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import rom_limits
 
 SOURCE = 'viewmodels.blend'
 FPS = 30
@@ -368,6 +375,9 @@ def build_post_export(root):
     for name in projects:
         scene, folder = bpy.data.scenes[name], root / name
         rig = project_rig(scene)
+        for pose_bone in rig.pose.bones:  # the preview plays the SMDs as they are
+            for constraint in [c for c in pose_bone.constraints if c.name.startswith(rom_limits.PREFIX)]:
+                pose_bone.constraints.remove(constraint)
         times = write_composites(folder, read_markers(scene), write=False)[0]
         outputs = [line.split()[0] for line in (folder / 'composites.txt').read_text(encoding='ascii').splitlines()
                    if line.strip()]
@@ -480,6 +490,16 @@ def check_images():
         raise RuntimeError('Missing preview images: ' + ', '.join(missing))
 
 
+def check_limits(scenes):
+    """Fail when a range-of-motion limit clamps a keyed pose: the SMD would not show what the viewport shows."""
+    clamps = [rom_limits.clamp_text(scene.name, clamp) for scene in scenes for clamp in rom_limits.find_clamps(scene)]
+    if clamps:
+        raise RuntimeError('Range-of-motion limits clamp %d keyed poses. Fix the keys, or if the pose is meant, widen '
+                           'the limit (WIDEN in rom_limits.py, then rom_limits.py spec and apply):\n  %s' % (
+                               len(clamps), '\n  '.join(clamps)))
+    print('ROM CHECK', len(scenes), 'projects, no clamped pose')
+
+
 def open_scenes(path, keep=None):
     """Open the source file; with keep, drop the other scenes so Source Tools exports the kept one."""
     bpy.ops.wm.open_mainfile(filepath=str(path))
@@ -498,6 +518,7 @@ def export_project(folder, scene):
     reference = folder / 'reference.smd'
     reference_bytes = reference.read_bytes()
     armature = project_rig(scene)
+    rom_limits.set_mute(scene, True)  # this copy of the file is never saved
     source = shared_from(folder)
     if source:
         action, keep = armature.animation_data.action, shipped_slots(folder)
@@ -541,6 +562,7 @@ if __name__ == '__main__':
             project_rig(found[project])
         check_teams_agree(root, [found[project] for project in projects])
         check_images()
+        check_limits([found[project] for project in projects])
         for project in projects:
             export_project(root / project, open_scenes(root / SOURCE, keep=project))
         build_post_export(root)
