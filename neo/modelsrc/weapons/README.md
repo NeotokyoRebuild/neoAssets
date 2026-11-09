@@ -1,6 +1,6 @@
 # Weapon model sources
 
-The Tachi viewmodels are the first weapons maintained under these conventions.
+The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -22,7 +22,8 @@ For example, a new pose in a slot of the Tachi. Run the commands from this folde
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
-  `jinrai_tachi`. Each scene has one rig and one action, and both teams' arms (see One scene per gun).
+  `jinrai_tachi`, and the two ZR68C scenes `jinrai_zr68c` and `nsf_zr68c`. The Tachi scene has one rig and one
+  action, and both teams' arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd` and `anims/*.smd` (written by the
   export). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_tachi/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
@@ -96,8 +97,8 @@ field of view. The camera matches the game this way:
 
 - The game puts the model at the player's eye, then moves it by `ViewModelOffset` (`forward`, `right`, `up`) in
   `game/neo/scripts/weapon_GUN.txt`. The camera moves by the opposite amount instead, so the export is unchanged.
-  Forward in Blender is -Y, right is -X, up is +Z, so the camera sits at (right, forward, -up): Tachi (5, 5, 0).
-  It looks along -Y with +Z up.
+  Forward in Blender is -Y, right is -X, up is +Z, so the camera sits at (right, forward, -up): ZR68C (8, 10, 0),
+  Tachi (5, 5, 0). It looks along -Y with +Z up.
 - The lens has a vertical field of view of 46.83 degrees (Sensor Fit: Vertical). That is the game's `VMFov` of 60,
   which Source measures horizontally on a 4:3 screen. The game reads `VMFov` at the top level of the weapon script
   (60 if absent); the `fov` key inside `ViewModelOffset` is not used.
@@ -215,7 +216,7 @@ exec wine "$HOME/sdk2013mp/bin/studiomdl.exe" "${args[@]}"
 python3 compile_viewmodels.py jinrai_tachi nsf_tachi --compiler ~/bin/studiomdl-wine --game ~/src/neo/game/neo
 ```
 
-Then copy the generated files (`v_*_tachi.*` for the Tachi) from the game directory's
+Then copy the generated files (`v_*_tachi.*` for the Tachi, `v_*_zr68c.*` for the ZR68C) from the game directory's
 `models/weapons/` to neoAssets `neo/models/weapons/`. The compile overwrites older models in the game directory.
 
 
