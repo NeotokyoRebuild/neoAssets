@@ -190,7 +190,7 @@ The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 | `drawtocycle` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f31) |
 | `skipcycle` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f9), magazine seated |
 | `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: the parts in play order, joined by `_`. |
-| `weapon_zr68.reload_1_unload`, `reload_2_load`, `reload_2_load_2`, `reload_3_cycle` | sound entries of a step (`_2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
+| `weapon_zr68.reload_unload`, `reload_load`, `reload_load_part2`, `reload_cycle` | sound entries of a step, named `reload_<step>` (`_part2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
 
 A resume after step N plays only the sounds of the steps after N: a resume after `2_load` would never play the tap.
 The export fails when a resume's table lists step N or earlier.
@@ -297,7 +297,7 @@ Files in the neo repo:
 - `game/neo/scripts/weapon_GUN.txt`: the weapon script. It starts with `#base "weapon_GUN_reload_phases.txt"` and holds
   an empty `"ReloadPhases" {}` inside `WeaponData`, which the base file fills.
 - `game/neo/scripts/game_sounds_weapons.txt`: one entry per sound, named `weapon_GUN.<key>` (for example
-  `weapon_zr68.reload_2_load`), whose `"wave"` is `)weapons/GUN/GUN_<key>.wav`. The export does not read this file: it
+  `weapon_zr68.reload_load`), whose `"wave"` is `)weapons/GUN/GUN_<key>.wav`. The export does not read this file: it
   assumes the wav path from the entry name (`sound/weapons/GUN/GUN_<key>.wav` in neoAssets) to measure the sound's length.
 - The game uses the phases only while the server cvar `sv_neo_reload_experimental` is 1.
 
