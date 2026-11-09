@@ -16,21 +16,21 @@
 		}
 		"drawunloaded_reload"
 		{
-			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" "resume" "drawtocycle_reload" }
-			"3_cycle" { "ammo" "2.267" "sound" "2.033" "sound_name" "weapon_zr68.reload_3_cycle" }
+			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_load_part2" "resume" "drawtocycle_reload" }
+			"3_cycle" { "ammo" "2.267" "sound" "2.033" "sound_name" "weapon_zr68.reload_cycle" }
 		}
 		"drawunloaded_reload_skipcycle"
 		{
-			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
+			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_load_part2" }
 		}
 		"drawtocycle_reload"
 		{
-			"3_cycle" { "ammo" "1.300" "sound" "1.067" "sound_name" "weapon_zr68.reload_3_cycle" }
+			"3_cycle" { "ammo" "1.300" "sound" "1.067" "sound_name" "weapon_zr68.reload_cycle" }
 		}
 		"reload_skipcycle"
 		{
-			"1_unload" { "ammo" "0.667" "sound" "0.033" "sound_name" "weapon_zr68.reload_1_unload" "resume" "drawunloaded_reload_skipcycle" }
-			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_2_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_2_load_2" }
+			"1_unload" { "ammo" "0.667" "sound" "0.033" "sound_name" "weapon_zr68.reload_unload" "resume" "drawunloaded_reload_skipcycle" }
+			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_load_part2" }
 		}
 	}
 }

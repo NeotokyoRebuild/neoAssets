@@ -167,7 +167,7 @@ leaves it at f56, the magazine seat. Slots: `drawunloaded` f0-38, `drawtocycle` 
 
 The AA13 (two projects) joins `reload` after f58 (the drum fully out) and f112, and leaves it at f104, the drum seat.
 Slots: `drawunloaded` f0-44, `drawtocycle` f0-37, `skipcycle` f0-18. Its unload step has two sound pieces
-(`reload_1_unload`, `reload_1_unload_2`: the release tick and the drum pull).
+(`reload_unload`, `reload_unload_part2`: the release tick and the drum pull).
 
 The PZ252 (two projects) joins `reload` after f70 and f143, and leaves it at f141, after the drum latch (the load
 step is credited at f121, the drum seat; its third sound, the latch, plays in the full and after-unload clips only).

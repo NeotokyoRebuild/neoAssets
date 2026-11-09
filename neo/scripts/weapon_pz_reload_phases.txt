@@ -16,21 +16,21 @@
 		}
 		"drawunloaded_reload"
 		{
-			"2_load" { "ammo" "3.033" "sound" "1.367" "sound_name" "weapon_pz.reload_2_load" "sound2" "2.367" "sound2_name" "weapon_pz.reload_2_load_2" "sound3" "3.433" "sound3_name" "weapon_pz.reload_2_load_3" "resume" "drawtocycle_reload" }
-			"3_cycle" { "ammo" "4.367" "sound" "3.800" "sound_name" "weapon_pz.reload_3_cycle" }
+			"2_load" { "ammo" "3.033" "sound" "1.367" "sound_name" "weapon_pz.reload_load" "sound2" "2.367" "sound2_name" "weapon_pz.reload_load_part2" "sound3" "3.433" "sound3_name" "weapon_pz.reload_load_part3" "resume" "drawtocycle_reload" }
+			"3_cycle" { "ammo" "4.367" "sound" "3.800" "sound_name" "weapon_pz.reload_cycle" }
 		}
 		"drawunloaded_reload_skipcycle"
 		{
-			"2_load" { "ammo" "3.033" "sound" "1.367" "sound_name" "weapon_pz.reload_2_load" "sound2" "2.367" "sound2_name" "weapon_pz.reload_2_load_2" "sound3" "3.433" "sound3_name" "weapon_pz.reload_2_load_3" }
+			"2_load" { "ammo" "3.033" "sound" "1.367" "sound_name" "weapon_pz.reload_load" "sound2" "2.367" "sound2_name" "weapon_pz.reload_load_part2" "sound3" "3.433" "sound3_name" "weapon_pz.reload_load_part3" }
 		}
 		"drawtocycle_reload"
 		{
-			"3_cycle" { "ammo" "1.600" "sound" "1.033" "sound_name" "weapon_pz.reload_3_cycle" }
+			"3_cycle" { "ammo" "1.600" "sound" "1.033" "sound_name" "weapon_pz.reload_cycle" }
 		}
 		"reload_skipcycle"
 		{
-			"1_unload" { "ammo" "1.433" "sound" "0.333" "sound_name" "weapon_pz.reload_1_unload" "sound2" "0.967" "sound2_name" "weapon_pz.reload_1_unload_2" "resume" "drawunloaded_reload_skipcycle" }
-			"2_load" { "ammo" "4.033" "sound" "2.367" "sound_name" "weapon_pz.reload_2_load" "sound2" "3.367" "sound2_name" "weapon_pz.reload_2_load_2" "sound3" "4.433" "sound3_name" "weapon_pz.reload_2_load_3" }
+			"1_unload" { "ammo" "1.433" "sound" "0.333" "sound_name" "weapon_pz.reload_unload" "sound2" "0.967" "sound2_name" "weapon_pz.reload_unload_part2" "resume" "drawunloaded_reload_skipcycle" }
+			"2_load" { "ammo" "4.033" "sound" "2.367" "sound_name" "weapon_pz.reload_load" "sound2" "3.367" "sound2_name" "weapon_pz.reload_load_part2" "sound3" "4.433" "sound3_name" "weapon_pz.reload_load_part3" }
 		}
 	}
 }
