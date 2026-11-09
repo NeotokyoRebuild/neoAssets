@@ -6,6 +6,23 @@ the ZR68-S and ZR68-L, the Jitte (plain and scoped), the SRM (plain and silenced
 the SRS, the AA13, the PZ252 and the MilSO.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
+## Change a transition (quick recipe)
+
+For example, a new pose in `drawunloaded` of the ZR68C. Run the commands from this folder.
+
+1. Open the file with the Viewmodel panel: `blender viewmodels.blend --python viewmodel_tools.py`. In the 3D
+   Viewport, press N and pick the **Viewmodel** tab.
+2. Pick the scene `jinrai_zr68c` (top right) and the slot in Dope Sheet > Action Editor > Slot. The panel shows the
+   slot's kind: **authored** (edit freely), **shipped** (keep the original; see Exporting animations) or **ignored**
+   (an NSF scene: author it in the Jinrai scene). Click **Frame range to slot**.
+3. Pose and key the bones. Click **Check slot**: it selects any bone a range-of-motion limit stops.
+4. If such a pose is meant: click **Free selected bones**, key the pose, then click **Widen to this slot** and type
+   the reason. This adds a line to `rom_widen.json` and refreshes the limits of every rig (about 8 s).
+5. Click **Export gun**. It saves the file and exports both team projects (about 20 s). The status bar shows the
+   result; the terminal has every line. Read any `PACE WARN` (Exporting animations).
+6. Commit `viewmodels.blend`, `viewmodels_post_export.blend`, the changed SMDs and phases file, and `rom_widen.json`
+   and `rom_spec.json` if a limit was widened.
+
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per model, called a project:
@@ -29,6 +46,9 @@ Layout:
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
   Range-of-motion limits).
+- `viewmodel_tools.py`: the Viewmodel sidebar panel (see Change a transition). It is not installed: load it with
+  `blender viewmodels.blend --python viewmodel_tools.py`, or, with the file open, Text Editor > Open >
+  `viewmodel_tools.py` > Run Script. It always uses the scripts beside the open `.blend`.
 
 Run the scripts from this folder (`neo/modelsrc/weapons`).
 
@@ -122,20 +142,23 @@ prevent a finger that bends backwards or a charging handle that leaves its rail.
 - The melee slot (`melee01`, or `melee` on the M41 family) swings the gun parts freely. Their `ROM:*` influence is
   keyed to 0 in that slot and to 1 in the others, so the Influence field shows as keyed.
 - Bone collection `ROM limited` (Armature > Bone Collections) holds the limited bones: show or select them there.
-- To mute one constraint, click its eye icon in the Bone Constraints tab. To mute or unmute all of them:
+- To mute one constraint, click its eye icon in the Bone Constraints tab. To mute or unmute all of them, use
+  **Mute limits** / **Unmute** in the Viewmodel panel, or, with Blender closed (it saves the file):
   `blender -b viewmodels.blend --python rom_limits.py -- mute-on` (or `mute-off`). Muted or not, the export is the same.
+  Muting leaves the transform locks on; **Free selected bones** clears them too.
 - A key that is already outside a limit (pasted, or moved in the Graph Editor) shows clamped in the viewport only.
   The Graph Editor shows the key as it is, and the export fails on it (next section).
 
 The limits come from `rom_spec.json`; do not edit the constraints by hand. To widen a limit for an authored pose,
-add a line to `rom_widen.json`: the gun (folder name without the team prefix), the bone, the slots the limit must
-cover, and the reason. The NSF rig of a sharing gun keeps its own range. For example:
+use **Widen to this slot** in the Viewmodel panel, or add a line to `rom_widen.json`: the gun (folder name without
+the team prefix), the bone, the slots the limit must cover, and the reason. The NSF rig of a sharing gun keeps its own
+range. For example:
 
 ```json
   {"gun": "zr68c", "bone": "bone index 1", "slots": ["drawunloaded"], "why": "the trigger finger lifts off for the draw"},
 ```
 
-The margins are in `rom_limits.py`. After either change, run:
+The margins are in `rom_limits.py`. After an edit by hand, close Blender and run:
 
 ```sh
 blender -b viewmodels.blend --python-exit-code 1 --python rom_limits.py -- spec
