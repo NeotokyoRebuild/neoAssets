@@ -1,5 +1,4 @@
-"""Glued clips, reload phase times and team sharing for export_viewmodels.py, which runs this module's hooks
-when it is present.
+"""Glued clips and reload phase times for export_viewmodels.py, which runs this module's hooks when it is present.
 
 An optional composites.txt in a project folder joins exported animations into one more SMD per line:
 OUTPUT PART [PART ...] [blend=N], where PART is SLOT, SLOT:FIRST-LAST (inclusive frames; an empty LAST means
@@ -8,19 +7,16 @@ may also name a marker STEP.KEY of the slot, meaning its frame (reload:0-2_load.
 the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
 Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
 prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
-The export rewrites each time there, shifted into composites. Both team scenes of a gun must carry the same markers
-on the shipped slots: a mismatch fails before any SMD is written.
-New assets are shared: an NSF project whose .qc includes ../jinrai_GUN/glued.qci compiles its glued clips from the
-Jinrai SMDs. Its scene holds only the shipped slots; the authored slots, composites and phases file come from the
-Jinrai project, and the export skips any other slot of that scene.
+The export rewrites each time there, shifted into composites.
+The NSF project (no scene) compiles its glued clips from the Jinrai SMDs: its .qc includes ../jinrai_GUN/glued.qci.
 A sound entry weapon_GUN.KEY plays sound/weapons/GUN/GUN_KEY.wav (a convention; the sound script is not read).
 A row's "resume" key names the composite that resumes the reload interrupted after that step; the composite must
 join the row's sequence after that step (part SEQUENCE@STEP...), or, in a composite row, the part the step's marker
 came from. A resume lists only the steps after STEP: it never replays an earlier step's sound.
 A sequence's ammo times come before its last frame, and its sounds finish playing by then: the gun can fire there.
 Every export then rebuilds viewmodels_post_export.blend, a preview of the glued clips of every project with a
-composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged. A
-sharing NSF project has no scene there: it plays the same glued clips as its Jinrai project.
+composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged. Each
+scene there carries both teams' preview meshes, like viewmodels.blend.
 """
 from pathlib import Path
 from typing import NamedTuple
@@ -35,40 +31,12 @@ from mathutils import Euler, Quaternion
 import export_viewmodels as export
 import rom_limits
 
-RESULT_LINES = ('SEAM', 'READY', 'SKIPPED')  # the panel's Export gun shows these lines too
-
-
-def compared_slots(root, scenes):
-    """{gun: slots} for the guns with a sharing NSF project among the scenes: the team scenes of such a gun are
-    compared on the NSF project's shipped slots only."""
-    shipped = {}
-    for scene in scenes:
-        if shared_from(root / scene.name):
-            shipped[scene.name.partition('_')[2]] = export.shipped_slots(root / scene.name)
-    return shipped
-
-
-def before_export(folder, scene, armature):
-    """A sharing NSF project exports only its shipped slots."""
-    source = shared_from(folder)
-    if source:
-        action, keep = armature.animation_data.action, export.shipped_slots(folder)
-        for slot in [slot for slot in action.slots if slot.name_display not in keep]:
-            print('SKIPPED %s slot %s: author new slots in %s' % (scene.name, slot.name_display, source))
-            action.slots.remove(slot)  # this copy of the file is never saved
-        if armature.animation_data.action_slot is None:
-            armature.animation_data.action_slot = action.slots[0]
+RESULT_LINES = ('SEAM', 'READY')  # the panel's Export gun shows these lines too
 
 
 def after_export(folder, scene):
-    """Write the glued clips and the phases file. Return True for a sharing NSF project: its glued clips, phases
-    and authored slots are its Jinrai project's."""
-    source = shared_from(folder)
-    if source:
-        print('SHARED', scene.name, 'takes its glued clips and phases from', source)
-        return True
+    """Write the glued clips and the phases file."""
     fill_phases(folder, *write_composites(folder, export.read_markers(scene)))
-    return False
 
 
 SOUND_LEAD = 0.02  # neo starts a reload sound piece this long before its time (RELOAD_SOUND_LEAD)
@@ -256,11 +224,8 @@ def check_resume_rows(phases, joins, sources):
                     raise RuntimeError('%s lists step %s: a resume after %s plays only later steps' % (resume, later, step))
 
 
-WRITTEN = {}  # phases file -> text from the first team project of this run
-
-
 def fill_phases(folder, times, joins, sources):
-    """Set every ammo/sound time in the weapon's ReloadPhases file from the markers; both teams must agree."""
+    """Set every ammo/sound time in the weapon's ReloadPhases file from the markers."""
     path = folder.parents[2] / 'scripts' / ('weapon_%s_reload_phases.txt' % folder.name.partition('_')[2])
     if not path.is_file():
         return
@@ -279,8 +244,6 @@ def fill_phases(folder, times, joins, sources):
     for (start, end), seconds in sorted(changes, reverse=True):
         text = text[:start] + seconds + text[end:]
     check_ready(folder, path, text)
-    if WRITTEN.setdefault(path, text) != text:
-        raise RuntimeError('The team projects give different times for ' + path.name)
     path.write_text(text, encoding='ascii')
     print('PHASES', path.name, '\n' + text)
 
@@ -295,7 +258,9 @@ project with a composites.txt, its rig, preview mesh and in-game camera, and one
 slots are the glued clips, imported from PROJECT/anims/*.smd. The timeline markers are the step and sound
 markers shifted into each clip (CLIP:STEP, CLIP:STEP.sound), the times the phases file gets.
 Pick a clip: Scene selector (top right), then Dope Sheet > Action Editor > Slot dropdown. Numpad 0 looks
-through the camera. Edit the animations in viewmodels.blend, never here.
+through the camera. Each scene holds both teams' arms: show the other team with the eye of its collection
+(Outliner: jinrai_GUN_preview, nsf_GUN_preview) or Team in the Viewmodel panel. Edit the animations in
+viewmodels.blend, never here.
 """
 
 
@@ -331,8 +296,7 @@ def build_post_export(root):
     """Rebuild viewmodels_post_export.blend for every project with a composites.txt (all of them, whichever were
     exported), from viewmodels.blend and the glued SMDs now in each project's anims/. viewmodels.blend is not saved."""
     export.open_scenes(root / export.SOURCE)
-    projects = [scene.name for scene in bpy.data.scenes if (root / scene.name / 'composites.txt').is_file()
-                and not shared_from(root / scene.name)]
+    projects = [scene.name for scene in bpy.data.scenes if (root / scene.name / 'composites.txt').is_file()]
     if not projects:
         # Blender cannot remove the last scene, and with no glued clips there is nothing to preview
         print('POST-EXPORT none')
@@ -385,10 +349,3 @@ def build_post_export(root):
         backup.unlink()
     print('POST-EXPORT written', POST_EXPORT)
 
-
-def shared_from(folder):
-    """The Jinrai project an NSF project takes its new assets from, or None."""
-    source = 'jinrai_' + folder.name.partition('_')[2]
-    if folder.name.startswith('nsf_') and '"../%s/glued.qci"' % source in export.qc_text(folder):
-        return source
-    return None
