@@ -1,7 +1,7 @@
 # Weapon model sources
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
-ZR68-L, Kyla, MilSO, AA13 and SRS.
+ZR68-L, Kyla, MilSO, AA13, SRS and PZ252.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -26,20 +26,23 @@ Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
   `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla), `jinrai_milso`,
-  `jinrai_aa13` and `jinrai_srs`. Each scene has one rig and one action, and both teams' arms (see One scene per gun).
+  `jinrai_aa13`, `jinrai_srs` and `jinrai_pz` (the PZ252). Each scene has one rig and one action, and both teams'
+  arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
-- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13 and SRS): the `$sequence` lines
-  of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF model compiles the
-  Jinrai glued clips. The variants of a gun family include their base gun's file instead (see Gun families).
+- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS and PZ252): the
+  `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF
+  model compiles the Jinrai glued clips. The variants of a gun family include their base gun's file instead (see Gun
+  families).
 - `GUN/viewmodel.qci` (such as `tachi/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
   sets only `$modelname` and includes this file. The ZR68-S and ZR68-L follow the ZR68C layout
   (`zr68s/viewmodel.qci`, `zr68l/viewmodel.qci`); the ZR68-L scope's preview images are the MX's, in `mx/textures/`.
   The AA13 follows the ZR68C layout with `aa13/viewmodel.qci`. The SRS shares `srs/viewmodel.qci` and keeps
   `$definebone` per team, as its team rigs differ; a part of its preview mesh uses the M41's image, in
-  `mosok41/textures/`. The MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones.
+  `mosok41/textures/`. The PZ252 shares `pz/viewmodel.qci` and keeps `$definebone` per team, as the SRS.
+  The MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
   Range-of-motion limits).
@@ -321,6 +324,11 @@ and f79, and leaves it at f56, the magazine seat. Slots: `drawunloaded` f0-38, `
 f0-16 (ends on `idle` f0: the SRS idle sequence has no `01`). Its `charge` sequence (the bolt after each shot) is
 unchanged; the marker `charge:3_cycle` (f25, the bolt home) gives the `charge` row of the phases file, the time
 the next round counts as chambered after a shot.
+
+The PZ252 (drum-fed) has the same four clips. It joins `reload` after f70 and f143, and leaves it at f143, after
+the drum latch and its jerk (the load step is credited at f121, the drum seat; its third sound, the latch, plays in
+the full and after-unload clips only). Slots: `drawunloaded` f0-40, `drawtocycle` f0-30, `skipcycle` f0-11. Its
+unload step has two sound pieces and its load step three.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
