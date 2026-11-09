@@ -1,0 +1,36 @@
+// ZR68-S ReloadPhases (sv_neo_reload_experimental), included by neo's scripts/weapon_zr68s.txt through #base.
+// Per viewmodel sequence and reload step: when the step's ammo counts ("ammo") and when each of its sounds first
+// hits ("sound", "sound2"), in seconds from the sequence start. export_viewmodels.py sets every time from the
+// timeline markers in the .blend. "resume" names the sequence the draw plays when a switch interrupts the reload
+// after the step. A resume after step N lists only the steps after N. reload's own sound plays whole, as on master.
+// A reload with a round chambered plays reload_skipcycle: it ends after 2_load, with no bolt pull.
+"WeaponData"
+{
+	"ReloadPhases"
+	{
+		"reload"
+		{
+			"1_unload" { "ammo" "0.667" "resume" "drawunloaded_reload" }
+			"2_load" { "ammo" "1.400" "resume" "drawtocycle_reload" }
+			"3_cycle" { "ammo" "2.267" }
+		}
+		"drawunloaded_reload"
+		{
+			"2_load" { "ammo" "1.467" "sound" "1.367" "sound_name" "weapon_zr68.reload_load" "sound2" "1.800" "sound2_name" "weapon_zr68.reload_load_part2" "resume" "drawtocycle_reload" }
+			"3_cycle" { "ammo" "2.333" "sound" "2.100" "sound_name" "weapon_zr68.reload_cycle" }
+		}
+		"drawunloaded_reload_skipcycle"
+		{
+			"2_load" { "ammo" "1.467" "sound" "1.367" "sound_name" "weapon_zr68.reload_load" "sound2" "1.800" "sound2_name" "weapon_zr68.reload_load_part2" }
+		}
+		"drawtocycle_reload"
+		{
+			"3_cycle" { "ammo" "1.300" "sound" "1.067" "sound_name" "weapon_zr68.reload_cycle" }
+		}
+		"reload_skipcycle"
+		{
+			"1_unload" { "ammo" "0.667" "sound" "0.033" "sound_name" "weapon_zr68.reload_unload" "resume" "drawunloaded_reload_skipcycle" }
+			"2_load" { "ammo" "1.400" "sound" "1.300" "sound_name" "weapon_zr68.reload_load" "sound2" "1.733" "sound2_name" "weapon_zr68.reload_load_part2" }
+		}
+	}
+}

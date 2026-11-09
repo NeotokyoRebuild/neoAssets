@@ -8,6 +8,9 @@ compiles from its shipped SMDs on disk.
 Requires Blender 5.2.3 or newer and Blender Source Tools 3.4.3 or newer.
 This helper reads viewmodels.blend, and writes SMD exports.
 glue.py beside this script, when present, adds glued clips and reload phase times (its docstring has the rules).
+A family variant (a gun whose .qc includes another gun's ../jinrai_BASE/glued.qci, such as the ZR68-S with the ZR68C)
+compiles the base's glued clips and authors no slot of its own: its export writes its shipped slots only (FAMILY WARN
+for a slot it still has, which is not exported). Exporting a base also exports its variants.
 Before any SMD is written, the range-of-motion check of rom_limits.py runs over every slot of the listed projects
 and fails the export when a ROM:* constraint clamps a keyed pose; the export itself runs with ROM:* muted, so the
 SMDs are the keyed poses (an active Local-Space constraint changes them by float round-off even when nothing clamps).
@@ -74,6 +77,16 @@ def qc_text(folder):
 def shipped_slots(folder):
     """The slots the project's qc compiles from its own anims/."""
     return set(SHIPPED_SMD.findall(qc_text(folder)))
+
+
+GLUED_INCLUDE = re.compile(r'^\$include\s+"\.\./(jinrai_[^/"]+)/glued\.qci"', re.M)
+
+
+def family_base(folder):
+    """The family base project of a variant (the gun whose glued.qci its .qc includes), or None. A variant compiles the
+    base's glued clips and authors no slot of its own."""
+    bases = [name for name in GLUED_INCLUDE.findall(qc_text(folder)) if name != folder.name]
+    return folder.parent / bases[0] if bases else None
 
 
 def read_markers(scene):
@@ -308,13 +321,22 @@ def open_scenes(path, keep=None):
     return bpy.context.scene
 
 
-def export_project(folder, scene, allow_shipped=False):
+def export_project(folder, scene, allow_shipped=False, markers=None):
     if scene.render.fps != FPS or scene.render.fps_base != 1:
         raise RuntimeError('Scene %s must play at %d fps' % (scene.name, FPS))
     reference = folder / 'reference.smd'
     reference_bytes = reference.read_bytes()
     armature = project_rig(scene)
     rom_limits.set_mute(scene, True)  # this copy of the file is never saved
+    base = family_base(folder)
+    if base:
+        action, keep = armature.animation_data.action, shipped_slots(folder)
+        for slot in [slot for slot in action.slots if slot.name_display not in keep]:
+            print('FAMILY WARN %s has its own slot %s, which is not exported: %s authors the family\'s new slots. '
+                  'Delete the slot' % (scene.name, slot.name_display, base.name))
+            action.slots.remove(slot)  # this copy of the file is never saved
+        if armature.animation_data.action_slot is None:
+            armature.animation_data.action_slot = action.slots[0]
     expected = [folder / 'anims' / (slot.name_display + '.smd')
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
@@ -334,6 +356,11 @@ def export_project(folder, scene, allow_shipped=False):
     changed = guard_shipped(folder, before, allow_shipped)
     print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
     copy_shipped(folder, changed)
+    if base:
+        print('FAMILY', scene.name, 'compiles the glued clips of', base.name)
+        if glue:
+            glue.after_variant(folder, base, read_markers(scene), markers[base.name])
+        return
     if glue:
         glue.after_export(folder, scene)
     shipped = shipped_slots(folder)
@@ -356,12 +383,18 @@ if __name__ == '__main__':
         unknown = [project for project in projects if project not in found or not (root / project).is_dir()]
         if unknown:
             raise RuntimeError('No scene and folder named ' + ', '.join(unknown))
+        variants = [path.name for path in sorted(root.glob('jinrai_*')) if path.name not in projects and
+                    next(path.glob('*.qc'), None) and family_base(path) and family_base(path).name in projects]
+        if variants:
+            print('FAMILY also exporting', ', '.join(variants), '(their phases files follow the base markers)')
+            projects += variants
         for project in projects:
             project_rig(found[project])
         check_images()
         check_limits([found[project] for project in projects])
+        markers = {scene.name: read_markers(scene) for scene in found}
         for project in projects:
-            export_project(root / project, open_scenes(root / SOURCE, keep=project), allow_shipped)
+            export_project(root / project, open_scenes(root / SOURCE, keep=project), allow_shipped, markers)
         if glue:
             glue.build_post_export(root)
     except RuntimeError as problem:
