@@ -9,6 +9,9 @@ The panel shows the project (one scene per gun: one rig and one action move both
 the active slot and its kind: shipped (keep the original clip) or authored (new motion). Buttons:
 - Team: show the other team's arms (flips the eye of the jinrai_GUN_preview and nsf_GUN_preview collections, which
   the Outliner also shows). Nothing exported depends on it.
+- Gun (family base scenes only): show a variant's gun model on this rig and action, or the base gun again (the eye of
+  the GUN_gun collections that variant_preview.py made; one is visible at a time). The MPN45 scene lists mpn_s as the
+  game default: weapon_mpn.txt uses the suppressed model. Nothing exported depends on it.
 - Frame range to slot: set the scene frame range to the active slot's keys and list its markers.
 - Check slot: the export's range-of-motion check on the active slot only; selects the clamped bones.
 - Mute limits / Unmute: every ROM:* constraint of the scene. Transform locks stay on.
@@ -33,6 +36,8 @@ bl_info = {'name': 'Viewmodel tools (NT;RE)', 'blender': (5, 2, 0), 'category': 
 
 RESULT_LINES = ('ROM CHECK', 'EXPORTED', 'SEAM', 'READY', 'KEPT', 'SHIPPED', 'PACE', 'EXPORT FAILED', '  ')
 TEAM_KEY = 'team'  # custom property merge_teams.py sets on each team's preview collection
+VARIANT_KEY = 'variant'  # custom property variant_preview.py sets on each gun collection of a family base scene
+NOTE_KEY = 'variant_note'  # text variant_preview.py adds beside a gun name ("game default")
 KIND_CACHE = {}  # (project, slot) -> kind text; the .qc files do not change while Blender runs
 
 
@@ -89,6 +94,39 @@ def show_team(scene, team):
     for name, layer in team_layers(scene).items():
         layer.hide_viewport = name != team
         layer.collection.hide_render = name != team
+
+
+def variant_layers(scene):
+    """{gun: layer collection} of the scene's gun collections (family base scenes only)."""
+    return {layer.collection[VARIANT_KEY]: layer for layer in scene.view_layers[0].layer_collection.children
+            if VARIANT_KEY in layer.collection}
+
+
+def gun_label(scene, gun):
+    layer = variant_layers(scene).get(gun)
+    note = layer.collection.get(NOTE_KEY) if layer else None
+    return '%s (%s)' % (gun, note) if note else gun
+
+
+def shown_variant(scene):
+    shown = [gun for gun, layer in variant_layers(scene).items() if not layer.hide_viewport]
+    return ' + '.join(gun_label(scene, gun) for gun in sorted(shown)) or 'none'
+
+
+def show_variant(scene, gun):
+    """Show one gun collection and hide the others, in the viewport and in renders."""
+    for name, layer in variant_layers(scene).items():
+        layer.hide_viewport = name != gun
+        layer.collection.hide_render = name != gun
+
+
+def variant_items(self, context):
+    """Dropdown items: the scene's guns, the base gun (the scene's own) first."""
+    scene = context.scene
+    own = scene.name.partition('_')[2]
+    guns = sorted(variant_layers(scene), key=lambda gun: (gun != own, gun))
+    variant_items.cache = [(gun, gun_label(scene, gun), 'Show the %s gun on this rig' % gun) for gun in guns]
+    return variant_items.cache  # Blender needs the list kept alive while the menu is open
 
 
 def keep_view(scene, rig):
@@ -250,6 +288,24 @@ class VM_OT_team(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class VM_OT_variant(bpy.types.Operator):
+    """Show a family variant's gun model on this rig and action (the eye of the GUN_gun collections); nothing
+    exported depends on it"""
+    bl_idname = 'viewmodel.variant'
+    bl_label = 'Gun'
+    bl_property = 'gun'
+    gun: bpy.props.EnumProperty(name='Gun', items=variant_items)
+
+    @classmethod
+    def poll(cls, context):
+        return len(variant_layers(context.scene)) > 1
+
+    def execute(self, context):
+        show_variant(context.scene, self.gun)
+        self.report({'INFO'}, 'GUN %s shown' % gun_label(context.scene, self.gun))
+        return {'FINISHED'}
+
+
 class VM_OT_export_gun(ProjectOperator):
     """Save the .blend, then export this gun's project in a background Blender"""
     bl_idname = 'viewmodel.export_gun'
@@ -291,6 +347,10 @@ class VM_PT_panel(bpy.types.Panel):
         row = layout.row()
         row.label(text='Arms: ' + shown_team(scene))
         row.operator(VM_OT_team.bl_idname, icon='HIDE_OFF')
+        if variant_layers(scene):
+            row = layout.row()
+            row.label(text='Gun: ' + shown_variant(scene))
+            row.operator_menu_enum(VM_OT_variant.bl_idname, 'gun', text='Variant', icon='HIDE_OFF')
         layout.label(text='Slot: %s' % (slot or 'none'))
         layout.label(text=slot_kind(scene, slot) if slot else 'Pick a slot in the Action Editor')
         muted = any(c.mute for b in rig.pose.bones for c in b.constraints if c.name.startswith(rom.PREFIX))
@@ -305,8 +365,8 @@ class VM_PT_panel(bpy.types.Panel):
         layout.operator(VM_OT_export_gun.bl_idname, icon='EXPORT')
 
 
-CLASSES = (VM_OT_team, VM_OT_slot_range, VM_OT_check_slot, VM_OT_mute, VM_OT_free_selected, VM_OT_widen, VM_OT_export_gun,
-           VM_PT_panel)
+CLASSES = (VM_OT_team, VM_OT_variant, VM_OT_slot_range, VM_OT_check_slot, VM_OT_mute, VM_OT_free_selected, VM_OT_widen,
+           VM_OT_export_gun, VM_PT_panel)
 
 
 def register():

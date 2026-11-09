@@ -14,7 +14,8 @@ For example, a new pose in `drawunloaded` of the ZR68C. Run the commands from th
    Viewport, press N and pick the **Viewmodel** tab.
 2. Pick the scene `jinrai_zr68c` (top right) and the slot in Dope Sheet > Action Editor > Slot. The panel shows the
    slot's kind: **authored** (edit freely) or **shipped** (keep the original; see Exporting animations). Click
-   **Frame range to slot**. **Team** shows the other team's arms; the same keys move both.
+   **Frame range to slot**. **Team** shows the other team's arms; the same keys move both. In a family base scene,
+   **Variant** shows a variant's gun (silencer, scope) on the same keys.
 3. Pose and key the bones. Click **Check slot**: it selects any bone a range-of-motion limit stops.
 4. If such a pose is meant: click **Free selected bones**, key the pose, then click **Widen to this slot** and type
    the reason. This adds a line to `rom_widen.json` and refreshes the limits of every rig (about 8 s).
@@ -51,6 +52,8 @@ Layout:
   Range-of-motion limits).
 - `merge_teams.py`: the one-time merge of the two team scenes of each gun into one (already applied; kept for the
   record and for a gun added later with two scenes).
+- `variant_preview.py`: the one-time build of the variant guns in the family base scenes (already applied; see Gun
+  families, Variant toggle). It stops at a scene that already has gun collections.
 - `viewmodel_tools.py`: the Viewmodel sidebar panel (see Change a transition). It is not installed: load it with
   `blender viewmodels.blend --python viewmodel_tools.py`, or, with the file open, Text Editor > Open >
   `viewmodel_tools.py` > Run Script. It always uses the scripts beside the open `.blend`.
@@ -107,6 +110,17 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
   carries their own `Muzzle` point, so in the glued clips their `Muzzle` sits at the M41's, about 17 units back
   along the barrel. The glued clips do not fire.
 - Not in a family: the ZR68-L (its own `reload` motion, markers and sounds). It authors its own slots.
+- **Variant toggle:** the base scene shows each variant's gun on the base rig and action, to check a new slot on
+  every gun that plays it. The team collections hold the arms only; the guns are in collections `BASE_gun` and
+  `VARIANT_gun` (such as `mpn_gun`, `mpn_s_gun`), one visible at a time. Pick the gun in the **Variant** dropdown of
+  the Viewmodel panel, or click the eye of its collection in the Outliner. The MPN45 scene lists `mpn_s` as the game
+  default: `weapon_mpn.txt` uses the suppressed model.
+- The variant gun has no bones of its own in that scene: `variant_preview.py` moved the weights of its own parts to
+  the nearest bone of the base rig, at the variant's rest pose (the MPN45-S `supressor` to `body`, the MX-S sight
+  to `Box01`). The glued clips carry no track for those bones, so the game also holds the parts at their rest pose
+  under that bone. The preview matches the variant's own scene within 0.025 units in every shared shipped slot
+  (the ZR68-S ships its own `melee01`). Nothing exported depends on these collections: their objects have Source
+  Tools export off.
 
 | term | meaning |
 | :-- | :-- |
@@ -380,7 +394,8 @@ To add a resume clip after another step:
 `viewmodels_post_export.blend` shows each glued clip exactly as the game plays it, easing included. It is an export
 output: every export rebuilds it from `viewmodels.blend` and the glued SMDs, for every project with a
 `composites.txt` (the Jinrai projects; the NSF models and the family variants play the same clips). Each scene there has both teams' arms:
-**Team** or the collection eye shows the other. Never edit it; edit `viewmodels.blend` and export. Commit it together with the SMDs whenever a
+**Team** or the collection eye shows the other. A family base scene also has the variants' guns: **Variant** or the
+eye of a `GUN_gun` collection shows one. Never edit it; edit `viewmodels.blend` and export. Commit it together with the SMDs whenever a
 glued clip changes.
 
 1. Open `viewmodels_post_export.blend` in Blender.
