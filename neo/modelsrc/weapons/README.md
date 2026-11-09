@@ -1,7 +1,7 @@
 # Weapon model sources
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
-ZR68-L, Kyla, MilSO, AA13, SRS, PZ252 and the MPN45 family (MPN45, MPN45-S).
+ZR68-L, Kyla, MilSO, AA13, SRS, PZ252, the MPN45 family (MPN45, MPN45-S) and the SRM family (SRM, SRM-S).
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -27,13 +27,13 @@ Layout:
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
   `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla), `jinrai_milso`,
   `jinrai_aa13`, `jinrai_srs`, `jinrai_pz` (the PZ252), `jinrai_mpn` (the MPN45, unsilenced) and `jinrai_mpn_s`
-  (the MPN45-S, the game's default MPN45). Each scene has one rig and one action, and both teams' arms (see One scene
-  per gun).
+  (the MPN45-S, the game's default MPN45), `jinrai_srm` and `jinrai_srm_s`. Each scene has one rig and one action,
+  and both teams' arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs and from the Jinrai glued clips.
-- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252 and MPN45): the
+- `jinrai_GUN/glued.qci` (guns with glued clips, now the ZR68C, ZR68-L, Kyla, AA13, SRS, PZ252, MPN45 and SRM): the
   `$sequence` lines of the glued clips, read from `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF
   model compiles the Jinrai glued clips. The variants of a gun family include their base gun's file instead (see Gun
   families).
@@ -43,7 +43,8 @@ Layout:
   The AA13 follows the ZR68C layout with `aa13/viewmodel.qci`. The SRS shares `srs/viewmodel.qci` and keeps
   `$definebone` per team, as its team rigs differ; a part of its preview mesh uses the M41's image, in
   `mosok41/textures/`. The PZ252 shares `pz/viewmodel.qci` and keeps `$definebone` per team, as the SRS. The
-  MPN45 and MPN45-S share `mpn/viewmodel.qci` across their four models and keep `$definebone` per model.
+  MPN45 and MPN45-S share `mpn/viewmodel.qci` across their four models and keep `$definebone` per model. The SRM
+  and SRM-S follow the ZR68C layout (`srm/viewmodel.qci`, `srm_s/viewmodel.qci`).
   The MilSO keeps a whole `.qc` per team, as its team models differ in more than their bones.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
@@ -96,6 +97,7 @@ A variant compiles the glued clips of its base gun, so the base gun authors the 
 | :-- | :-- |
 | ZR68C (`jinrai_zr68c`) | ZR68-S |
 | MPN45 (`jinrai_mpn`) | MPN45-S |
+| SRM (`jinrai_srm`) | SRM-S |
 
 - Both team `.qc` files of a variant end with `$include "../jinrai_BASE/glued.qci"`. The variant has no
   `composites.txt`, no `glued.qci` and no authored or glued SMDs.
@@ -338,6 +340,10 @@ The MPN45 has the same four clips, and the MPN45-S compiles them (Gun families).
 f72, and leaves it at f51 (the magazine seat; it has no tap). Slots: `drawunloaded` f0-51, `drawtocycle` f0-45,
 `skipcycle` f0-13. Its `3_cycle.sound` marker sits on the f72 join, which `drawtocycle_reload` replaces with the last
 frame of `drawtocycle`, so that slot carries its own `drawtocycle:3_cycle.sound` marker at f45.
+
+The SRM has the same four clips, and the SRM-S compiles them (Gun families). It joins `reload` after f33 and f75,
+and leaves it at f58, the magazine seat (no tap). Slots: `drawunloaded` f0-34, `drawtocycle` f0-32, `skipcycle`
+f0-11.
 
 The animator makes the motion look right and places markers; the export does the frame and time arithmetic.
 The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
