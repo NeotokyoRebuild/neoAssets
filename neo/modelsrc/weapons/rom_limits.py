@@ -13,8 +13,8 @@ Without PROJECT, every project scene. check also takes --plant PROJECT/BONE:SLOT
 test rotation in memory first (to see the check fail).
 
 Each limited bone gets ROM:loc (Limit Location) and ROM:rot (Limit Rotation), Local Space, Affect Transform on, and
-transform locks on the axes it never moves. The limit is the bone's range in the shipped slots of its gun (both
-teams, where the two rigs have the same rest pose) plus a margin. Gun bones take their range without the melee slot,
+transform locks on the axes it never moves. The limit is the bone's range in the shipped slots of its gun (the one
+rig of the gun's scene, jinrai_GUN; the NSF preview mesh follows that rig) plus a margin. Gun bones take their range without the melee slot,
 which swings them freely; their ROM:* influence is keyed to 0 in that slot. Bones that move freely (roots,
 forearms, magazines) get no limit. rom_widen.json lists the authored poses a limit is widened to cover, with the
 reason (one entry per line: gun, bone, slots, why).
@@ -37,7 +37,6 @@ COLLECTION = 'ROM limited'
 MARGIN_UNITS, MARGIN_DEGREES = 0.05, 0.5  # above the keys' own noise, below a visible pose change
 STILL_UNITS, STILL_DEGREES = 0.02, 0.2  # a bone moving less than this on an axis is locked there
 LINE = 0.05  # a motion whose second spread is below this share of the first runs along one axis
-REST_TOLERANCE = 1e-3  # two team rigs share a limit only when their rest poses agree this closely
 CLAMP_UNITS, CLAMP_DEGREES = 1e-4, 0.01  # above the float round-off of an active constraint (4e-5 u, 1.1e-4 deg)
 ARM_PREFIX = 'bone '
 MELEE = 'melee'
@@ -258,18 +257,18 @@ def outside(entry, samples):
     return False
 
 
-def bone_entry(projects, bone, data, is_arm):
-    """The limit of one bone over the given team projects of a gun."""
+def bone_entry(project, bone, data, is_arm):
+    """The limit of one bone of a gun's project."""
     import numpy as np
+    own = data[project]
 
-    def samples(slots_of):
-        return [data[p]['poses'][s][:, data[p]['names'].index(bone)] for p in projects for s in slots_of(p)
-                if s in data[p]['poses']]
+    def samples(slots):
+        return [own['poses'][s][:, own['names'].index(bone)] for s in slots if s in own['poses']]
 
-    widened = WIDEN.get((gun_of(projects[0]), bone))
-    calm = samples(lambda p: [s for s in data[p]['shipped'] if not s.startswith(MELEE)])
-    melee = samples(lambda p: [s for s in data[p]['shipped'] if s.startswith(MELEE)])
-    extra = samples(lambda p: widened[0]) if widened else []
+    widened = WIDEN.get((gun_of(project), bone))
+    calm = samples([s for s in own['shipped'] if not s.startswith(MELEE)])
+    melee = samples([s for s in own['shipped'] if s.startswith(MELEE)])
+    extra = samples(widened[0]) if widened else []
     label = motion_class(np.concatenate(calm))
     shipped = calm + melee
     if is_arm:
@@ -277,54 +276,31 @@ def bone_entry(projects, bone, data, is_arm):
     else:
         entry = limits(np.concatenate(calm + extra), label)
         if label != 'free' and melee and outside(entry, np.concatenate(melee)):
-            entry['exempt_slots'] = sorted({s for p in projects for s in data[p]['shipped'] if s.startswith(MELEE)})
+            entry['exempt_slots'] = sorted(s for s in own['shipped'] if s.startswith(MELEE))
     if extra and label != 'free':
         entry['why'] = widened[1]
     return entry
 
 
-def differs(union, own):
-    if 'free' in (union['cls'], own['cls']):
-        return union['cls'] != own['cls']
-    if union['order'] != own['order'] or union.get('exempt_slots') != own.get('exempt_slots'):
-        return True
-    return any(abs(a - b) > margin for key, margin in (('loc', MARGIN_UNITS), ('rot_deg', MARGIN_DEGREES))
-               for x, y in zip(union[key], own[key]) for a, b in zip(x, y))
-
-
 def make_spec(scenes):
-    import numpy as np
     import export_viewmodels
     data = {}
     for scene in scenes:
         names, poses, rest = keyed_poses(scene)
         shipped = sorted(export_viewmodels.shipped_slots(ROOT / scene.name) & set(poses))
         data[scene.name] = dict(names=names, poses=poses, rest=rest, shipped=shipped)
-    guns = {}
-    for project in sorted(data):
-        guns.setdefault(gun_of(project), []).append(project)
-    spec = {'version': 2, 'space': 'LOCAL', 'margin': {'loc': MARGIN_UNITS, 'rot_deg': MARGIN_DEGREES},
+    spec = {'version': 3, 'space': 'LOCAL', 'margin': {'loc': MARGIN_UNITS, 'rot_deg': MARGIN_DEGREES},
             'lock_eps': {'loc': STILL_UNITS, 'rot_deg': STILL_DEGREES},
             'note': 'written by rom_limits.py spec from the shipped slots; change rom_widen.json or rom_limits.py, '
                     'not this file',
             'guns': {}}
-    for gun, projects in sorted(guns.items()):
-        section = spec['guns'][gun] = {'projects': projects, 'bones': {}, 'team': {}}
-        bones = sorted({b for p in projects for b in data[p]['names']})
-        for bone in bones:
-            have = [p for p in projects if bone in data[p]['names']]
-            rest = lambda p: data[p]['rest'][data[p]['names'].index(bone)]
-            same = [p for p in have if np.abs(rest(p) - rest(have[0])).max() < REST_TOLERANCE]
-            is_arm = bone.startswith(ARM_PREFIX)
-            union = bone_entry(same, bone, data, is_arm)
-            section['bones'][bone] = union
-            for project in have:
-                own = bone_entry([project], bone, data, is_arm)
-                if project not in same or differs(union, own):
-                    section['team'].setdefault(project, {})[bone] = own
-        for project in projects:
-            print('SPEC', project, len(data[project]['shipped']), 'shipped slots',
-                  sorted(set(data[project]['poses']) - set(data[project]['shipped'])), 'left out')
+    for project in sorted(data):
+        if gun_of(project) in spec['guns']:
+            raise RuntimeError('Two scenes for gun %s: one scene per gun (run merge_teams.py)' % gun_of(project))
+        bones = {bone: bone_entry(project, bone, data, bone.startswith(ARM_PREFIX)) for bone in data[project]['names']}
+        spec['guns'][gun_of(project)] = {'project': project, 'bones': bones}
+        print('SPEC', project, len(data[project]['shipped']), 'shipped slots',
+              sorted(set(data[project]['poses']) - set(data[project]['shipped'])), 'left out')
     SPEC.write_text(spec_text(spec), encoding='ascii')
     print('WROTE', SPEC.name, len(spec['guns']), 'guns')
 
@@ -338,11 +314,8 @@ def spec_text(spec):
     guns = []
     for gun in sorted(spec['guns']):
         section = spec['guns'][gun]
-        team = ',\n'.join('        %s: %s' % (json.dumps(p), bones(section['team'][p], '        '))
-                          for p in sorted(section['team']))
-        guns.append('    %s: {\n      "projects": %s,\n      "bones": %s,\n      "team": {%s}\n    }' % (
-            json.dumps(gun), json.dumps(section['projects']), bones(section['bones'], '      '),
-            ('\n' + team + '\n      ') if team else ''))
+        guns.append('    %s: {\n      "project": %s,\n      "bones": %s\n    }' % (
+            json.dumps(gun), json.dumps(section['project']), bones(section['bones'], '      ')))
     text = '{\n' + ',\n'.join(head + ['  "guns": {\n' + ',\n'.join(guns) + '\n  }']) + '\n}\n'
     assert json.loads(text) == json.loads(json.dumps(spec))
     return text
@@ -352,9 +325,9 @@ def spec_text(spec):
 
 def spec_entry(spec, project, bone):
     section = spec['guns'].get(gun_of(project))
-    if section is None or project not in section['projects']:
+    if section is None or section.get('project') != project:
         raise RuntimeError('rom_spec.json has no gun section for %s: run rom_limits.py spec' % project)
-    entry = section['team'].get(project, {}).get(bone) or section['bones'].get(bone)
+    entry = section['bones'].get(bone)
     if entry is None:
         raise RuntimeError('rom_spec.json has no entry for %s / %s: run rom_limits.py spec' % (project, bone))
     return entry
