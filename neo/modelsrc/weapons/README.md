@@ -22,8 +22,8 @@ For example, a new pose in a slot of the Tachi. Run the commands from this folde
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
-  `jinrai_tachi`, and the two ZR68C scenes `jinrai_zr68c` and `nsf_zr68c`. The Tachi scene has one rig and one
-  action, and both teams' arms (see One scene per gun).
+  `jinrai_tachi` and `jinrai_zr68c`. Each scene has one rig and one action, and both teams' arms (see One scene per
+  gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd` and `anims/*.smd` (written by the
   export). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_tachi/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
