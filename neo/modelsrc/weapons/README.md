@@ -59,7 +59,7 @@ teams' arm meshes are skinned to that rig, so a key moves both. Each team's mesh
 
 - **Team toggle:** click **Team** in the Viewmodel panel, or click the eye of the two collections in the Outliner.
   It changes only what the viewport shows; the export does not depend on it.
-- **Author every slot and marker once**, in that scene: new slots (`drawunloaded`, `drawtocycle`, ...) and edits of shipped slots. The Jinrai
+- **Author every slot and marker once**, in that scene: new slots (`drawunloaded`, `drawtocycle`, `skipcycle`, ...) and edits of shipped slots. The Jinrai
   project holds `composites.txt` and `glued.qci`, and the export writes the phases file from it.
 - **The NSF model has no scene.** It compiles from its shipped SMDs in `nsf_GUN/anims/` (the original NSF clips,
   never rewritten) and, for the glued clips, from `jinrai_GUN/anims/` through `../jinrai_GUN/glued.qci`. So both
@@ -230,12 +230,15 @@ compiled model. Do not edit its SMD; edit the slots it is made of and export aga
 
 When the player switches weapons after the old magazine is out (`1_unload`) or the fresh one is in (`2_load`), and
 before the reload ends, the reload continues when the gun is drawn again (neo, while `sv_neo_reload_experimental` is 1).
-The ZR68C has two glued clips besides `reload`:
+A reload with a round chambered keeps that round and leaves out the bolt pull. The ZR68C has four glued clips besides
+`reload`:
 
 | sequence | plays when | made of |
 | :-- | :-- | :-- |
 | `drawunloaded_reload` | drawn after `1_unload`, chamber empty | `drawunloaded`, then `reload` from f31 |
 | `drawtocycle_reload` | drawn after `2_load`, chamber empty | `drawtocycle`, then `reload` from f61 (the bolt pull) |
+| `reload_skipcycle` | a reload with a round chambered | `reload` f0-56, then `skipcycle` (no bolt pull) |
+| `drawunloaded_reload_skipcycle` | drawn after `1_unload` of `reload_skipcycle` | `drawunloaded`, `reload` f31-56, `skipcycle` |
 
 The `"resume"` key on a row of the phases file names the clip to draw after that step.
 
@@ -250,11 +253,13 @@ The `README_ANIMATOR` text block in `viewmodels.blend` repeats these rules.
 | `reload:1_unload` | step marker on `reload`: the frame the step is done and its ammo counts, and the default join of a resume composite (`reload@1_unload`) |
 | `reload:1_unload.join` | optional: moves that join (the ZR68C joins at f30, after the ammo point at f21) |
 | `reload:2_load.join` | the join after `2_load` (f60): the bolt reach is done, the handle has not moved |
+| `reload:2_load.exit` | where a reload with a round chambered leaves `reload` (f56, after the tap) |
 | `slot:step.sound`, `.sound2` | sound markers: when each of the step's sounds first hits |
 | `drawunloaded` | authored slot: a one-handed draw with the magazine out, up to the join pose (Source style, as `drawempty`) |
 | `drawtocycle` | authored slot: the shipped `draw` (f0-24), then a reach to the `reload` pose at f60 (f31) |
+| `skipcycle` | authored slot: from the `reload` pose at f56 back to `idle01` f0 (f9), magazine seated |
 | `drawunloaded_reload` | generated: `drawunloaded` glued to the rest of `reload`. Pattern: the parts in play order, joined by `_`. |
-| `weapon_zr68.reload_load`, `reload_load_part2`, `reload_cycle` | sound entries of a step, named `reload_<step>` (`_part2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
+| `weapon_zr68.reload_unload`, `reload_load`, `reload_load_part2`, `reload_cycle` | sound entries of a step, named `reload_<step>` (`_part2` for its second sound, the tap after loading), wav files named the same. A glued clip plays these pieces; `reload` plays its whole original sound. |
 
 A resume after step N plays only the sounds of the steps after N: a resume after `2_load` would never play the tap.
 The export fails when a resume's table lists step N or earlier.
@@ -262,7 +267,8 @@ The export fails when a resume's table lists step N or earlier.
 ### Markers and times
 
 - The `drawunloaded` and `drawtocycle` slots hold only the new motion. Each ends on the `reload` pose at its join
-  marker. A small difference is eased out at export.
+  marker; `skipcycle` starts on the `reload` pose at `2_load.exit`. A small difference is eased out at export.
+- A `composites.txt` range may end at a marker: `reload:0-2_load.exit` is `reload` f0-56.
 - The export shifts the timing markers into every composite and rewrites every time in
   `neo/scripts/weapon_<gun>_reload_phases.txt`, the `ReloadPhases` block that neo's weapon script includes with `#base`.
   A row without a marker fails the export, and so does an ammo time at or after the sequence's last frame.
@@ -277,7 +283,8 @@ The export fails when a resume's table lists step N or earlier.
 - A row's `"resume"` key names the sequence the draw plays when a switch interrupts that sequence after the step.
   The export keeps the key and fails unless it names a composite that joins that sequence after the row's step
   (a part such as `reload@1_unload` in `composites.txt`). In a glued clip, the composite may instead join the
-  part the step came from.
+  part the step came from: `reload_skipcycle`'s `1_unload` comes from `reload`, so its resume
+  `drawunloaded_reload_skipcycle` joins `reload@1_unload`.
 - A sequence ends where the gun can fire: the export fails if one of its sounds plays past its last frame. A clip
   that keeps moving after both hands are at rest is trimmed in its source slot; there is no marker for it.
 
