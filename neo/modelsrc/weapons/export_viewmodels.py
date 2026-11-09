@@ -12,15 +12,19 @@ may also name a marker STEP.KEY of the slot, meaning its frame (reload:0-2_load.
 the last N frames (default 3) of the previous part are eased onto the pose the next part continues from.
 Timeline markers time the rows of neo/scripts/weapon_GUN_reload_phases.txt (GUN: the folder name after its team
 prefix): the step marker SLOT:STEP gives the step's "ammo" time, SLOT:STEP.KEY (KEY sound, sound2, ...) the others.
-The export rewrites each time there, shifted into composites. Both team scenes of a gun must carry the same markers:
-a mismatch fails before any SMD is written.
+The export rewrites each time there, shifted into composites. Both team scenes of a gun must carry the same markers
+on the shipped slots: a mismatch fails before any SMD is written.
+New assets are shared: an NSF project whose .qc includes ../jinrai_GUN/glued.qci compiles its glued clips from the
+Jinrai SMDs. Its scene holds only the shipped slots; the authored slots, composites and phases file come from the
+Jinrai project, and the export skips any other slot of that scene.
 A sound entry weapon_GUN.KEY plays sound/weapons/GUN/GUN_KEY.wav (a convention; the sound script is not read).
 A row's "resume" key names the composite that resumes the reload interrupted after that step; the composite must
 join the row's sequence after that step (part SEQUENCE@STEP...), or, in a composite row, the part the step's marker
 came from. A resume lists only the steps after STEP: it never replays an earlier step's sound.
 A sequence's ammo times come before its last frame, and its sounds finish playing by then: the gun can fire there.
 Every export then rebuilds viewmodels_post_export.blend, a preview of the glued clips of every project with a
-composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged.
+composites.txt (also those not exported this run, from their SMDs on disk), unless its inputs are unchanged. A
+sharing NSF project has no scene there: it plays the same glued clips as its Jinrai project.
 viewmodels.blend is never saved.
 """
 from pathlib import Path
@@ -350,7 +354,8 @@ def build_post_export(root):
     """Rebuild viewmodels_post_export.blend for every project with a composites.txt (all of them, whichever were
     exported), from viewmodels.blend and the glued SMDs now in each project's anims/. viewmodels.blend is not saved."""
     open_scenes(root / SOURCE)
-    projects = [scene.name for scene in bpy.data.scenes if (root / scene.name / 'composites.txt').is_file()]
+    projects = [scene.name for scene in bpy.data.scenes if (root / scene.name / 'composites.txt').is_file()
+                and not shared_from(root / scene.name)]
     inputs = post_export_inputs(root, projects)
     if saved_inputs(root / POST_EXPORT) == inputs:
         print('POST-EXPORT unchanged', POST_EXPORT)  # Blender would save the same content with other bytes
@@ -397,16 +402,50 @@ def build_post_export(root):
     print('POST-EXPORT written', POST_EXPORT)
 
 
+SHIPPED_SMD = re.compile(r'"anims/([^"/]+)\.smd"')  # a $sequence of the project's own SMDs, not ../jinrai_GUN/anims/
+INCLUDE = re.compile(r'^\$include\s+"([^"]+)"', re.M)
+
+
+def qc_text(folder):
+    """The project's .qc with its $include files, as one text."""
+    texts, pending = [], [next(folder.glob('*.qc'))]
+    while pending:
+        path = pending.pop(0)
+        text = path.read_text(encoding='ascii')
+        texts.append(text)
+        pending += [(folder / include).resolve() for include in INCLUDE.findall(text)]
+    return '\n'.join(texts)
+
+
+def shared_from(folder):
+    """The Jinrai project an NSF project takes its new assets from, or None."""
+    source = 'jinrai_' + folder.name.partition('_')[2]
+    if folder.name.startswith('nsf_') and '"../%s/glued.qci"' % source in qc_text(folder):
+        return source
+    return None
+
+
+def shipped_slots(folder):
+    """The slots the project's qc compiles from its own anims/."""
+    return set(SHIPPED_SMD.findall(qc_text(folder)))
+
+
 def read_markers(scene):
     return {marker.name: marker.frame for marker in scene.timeline_markers}
 
 
-def check_teams_agree(scenes):
-    """Fail before any export when the team scenes of a gun carry different markers."""
-    first = {}
+def check_teams_agree(root, scenes):
+    """Fail before any export when the team scenes of a gun carry different markers. A sharing NSF project is
+    compared on its shipped slots only."""
+    first, shipped = {}, {}
+    for scene in scenes:
+        if shared_from(root / scene.name):
+            shipped[scene.name.partition('_')[2]] = shipped_slots(root / scene.name)
     for scene in scenes:
         gun = scene.name.partition('_')[2]
         markers = read_markers(scene)
+        if gun in shipped:
+            markers = {name: frame for name, frame in markers.items() if name.partition(':')[0] in shipped[gun]}
         if gun not in first:
             first[gun] = (scene, markers)
             continue
@@ -459,6 +498,14 @@ def export_project(folder, scene):
     reference = folder / 'reference.smd'
     reference_bytes = reference.read_bytes()
     armature = project_rig(scene)
+    source = shared_from(folder)
+    if source:
+        action, keep = armature.animation_data.action, shipped_slots(folder)
+        for slot in [slot for slot in action.slots if slot.name_display not in keep]:
+            print('SKIPPED %s slot %s: author new slots in %s' % (scene.name, slot.name_display, source))
+            action.slots.remove(slot)  # this copy of the file is never saved
+        if armature.animation_data.action_slot is None:
+            armature.animation_data.action_slot = action.slots[0]
     expected = [folder / 'anims' / (slot.name_display + '.smd')
                 for slot in armature.animation_data.action.slots]
     previous = {path: path.stat().st_mtime_ns if path.exists() else None
@@ -474,6 +521,9 @@ def export_project(folder, scene):
     if reference.read_bytes() != reference_bytes:
         raise RuntimeError('The preview mesh must not overwrite reference.smd')
     print('EXPORTED', scene.name, len(expected), 'animation SMD files; reference retained')
+    if source:
+        print('SHARED', scene.name, 'takes its glued clips and phases from', source)
+        return
     fill_phases(folder, *write_composites(folder, read_markers(scene)))
 
 
@@ -489,7 +539,7 @@ if __name__ == '__main__':
             raise RuntimeError('No scene and folder named ' + ', '.join(unknown))
         for project in projects:
             project_rig(found[project])
-        check_teams_agree([found[project] for project in projects])
+        check_teams_agree(root, [found[project] for project in projects])
         check_images()
         for project in projects:
             export_project(root / project, open_scenes(root / SOURCE, keep=project))
