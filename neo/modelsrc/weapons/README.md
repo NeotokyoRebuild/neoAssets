@@ -15,6 +15,8 @@ Layout:
   `jinrai_pz`, `jinrai_milso` with their `nsf_` pairs.
 - `PROJECT/` (such as `jinrai_zr68c/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the export) and
   `composites.txt` (if used). The scripts take project names.
+- `jinrai_GUN/glued.qci` (guns with glued clips): the `$sequence` lines of the glued clips, read from
+  `jinrai_GUN/anims/`. Both team `.qc` files include it, so the NSF model compiles the Jinrai glued clips.
 - `GUN/viewmodel.qci` (such as `zr68c/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
   sets only `$modelname` and includes this file. The M41 family shares one `mosok41/viewmodel.qci` (attachments and
   sequences) across its six models, the MPN45 one `mpn/viewmodel.qci` across its four,
@@ -31,9 +33,18 @@ Run the scripts from this folder (`neo/modelsrc/weapons`).
 Requirements: Blender 5.2.3 or newer with Blender Source Tools 3.4.3 or newer enabled; Python 3 and Valve's
 `studiomdl.exe` (Source SDK Base 2013 Multiplayer) for compiling.
 
-Each gun has one project per team (`jinrai_zr68c`, `nsf_zr68c`), so **edit both team scenes the same way**: the same
-poses, the same markers at the same frames. The export fails, before it writes any SMD, when the two scenes give a
-marker different frames.
+Each gun has one project per team (`jinrai_zr68c`, `nsf_zr68c`). The two teams share new assets:
+
+- **Author new slots and their markers in the Jinrai scene only** (`drawunloaded`, `drawtocycle`, `skipcycle` and any
+  later transition). The Jinrai project holds `composites.txt` and `glued.qci`, and the export writes the phases file
+  from it. The NSF model compiles the same glued SMDs, so both teams play one motion.
+- The shipped slots (`reload`, `draw`, ...) stay the original clip of each team. If one changes, **edit both team
+  scenes the same way**: the same poses, the same markers at the same frames. The export fails, before it writes any
+  SMD, when the two scenes give a marker of a shipped slot different frames.
+- An NSF scene of a sharing gun holds only its shipped slots. The export skips any other slot there and prints a
+  `SKIPPED` line: move that work to the Jinrai scene.
+
+The MilSO and the Tachi have no glued clips; their two team scenes carry the same markers.
 
 | term | meaning |
 | :-- | :-- |
@@ -59,7 +70,8 @@ marker different frames.
    for one arm, `bone forearm` / `bone hand` for the other, under the roots `Dummy01` and `Dummy02`.
    Key them at the frames you edit.
 4. Place markers on the timeline (Marker menu > Add Marker, then rename). Marker names are listed below.
-5. Repeat in the other team's scene, save, then export (next section).
+5. For a shipped slot, repeat in the other team's scene. New slots go in the Jinrai scene only. Save, then export
+   (next section).
 
 Landmarks of `drawunloaded` (frames 0-30), a one-handed draw with the magazine out: the draw brings the gun up from frame 0 to about frame 24;
 from frame 24 to the end of the slot (frame 30, the join) the hands tilt to the pose of `reload` at its join marker.
@@ -223,8 +235,8 @@ To add a resume clip after another step:
 
 1. Place the step marker `reload:STEP` (and `reload:STEP.join` if the join is elsewhere), and add a slot
    for the draw that ends on that pose (ZR68C: `drawunloaded`).
-2. Add a line to `composites.txt`, such as `DRAW_reload DRAW reload@STEP-`, and a
-   `$sequence` line for it to the gun's shared `GUN/viewmodel.qci`.
+2. In the Jinrai project, add a line to `composites.txt`, such as `DRAW_reload DRAW reload@STEP-`, and a
+   `$sequence` line for it to `jinrai_GUN/glued.qci`, with the path `../jinrai_GUN/anims/DRAW_reload.smd`.
 3. In `neo/scripts/weapon_<gun>_reload_phases.txt`, add `"resume" "DRAW_reload"` to the `STEP` row of
    `reload`, and a table for the resume with the rows of the later steps (any time). Then export and compile.
    A new weapon also needs `#base "weapon_<gun>_reload_phases.txt"` and an empty `"ReloadPhases" {}` in its neo script.
@@ -234,7 +246,7 @@ To add a resume clip after another step:
 
 `viewmodels_post_export.blend` shows each glued clip exactly as the game plays it, easing included. It is an export
 output: every export rebuilds it from `viewmodels.blend` and the glued SMDs, for every project with a
-`composites.txt`. Never edit it; edit `viewmodels.blend` and export. Commit it together with the SMDs whenever a
+`composites.txt` (the Jinrai projects; the NSF models play the same clips). Never edit it; edit `viewmodels.blend` and export. Commit it together with the SMDs whenever a
 glued clip changes.
 
 1. Open `viewmodels_post_export.blend` in Blender.
@@ -286,7 +298,9 @@ Files in neoAssets (this repo):
   `ViewModelOffset` (see Preview camera).
 - `neo/modelsrc/weapons/export_viewmodels.py`: add a row per project to `RIGS`, the project's rig and its action
   (`"TEAM_GUN": ("TEAM_GUN_rig", "TEAM_GUN_animations")`). The export fails for a project without one.
-- `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `composites.txt` (if used), `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/TEAM_GUN/`: the `.qc`, `reference.smd` and `anims/`, for each team.
+- `neo/modelsrc/weapons/jinrai_GUN/composites.txt` and `glued.qci` (if the gun has glued clips): Jinrai project only.
+  End both team `.qc` files with `$include "../jinrai_GUN/glued.qci"`.
 - `neo/modelsrc/weapons/GUN/viewmodel.qci`: the QC lines the two teams share.
 - `neo/scripts/weapon_GUN_reload_phases.txt`: the phases file. Copy the ZR68C one and edit the sequences and steps.
 - `neo/sound/weapons/GUN/GUN_<key>.wav`: one wav per sound entry.
