@@ -1,5 +1,28 @@
 $cdmaterials "models/weapons/"
-$body "body" "reference.smd"
+$bodygroup "body"
+{
+	studio "reference.smd"
+}
+$bodygroup "saddle1"
+{
+	studio "saddle1.smd"
+	blank
+}
+$bodygroup "saddle2"
+{
+	studio "saddle2.smd"
+	blank
+}
+$bodygroup "saddle3"
+{
+	studio "saddle3.smd"
+	blank
+}
+$bodygroup "saddle4"
+{
+	studio "saddle4.smd"
+	blank
+}
 $definebone "Dummy01" "" -2.277793 -6.712466 -19.960323 -0.000000 89.999978 0.000000 0 0 0 0 0 0
 $definebone "bone forearm01" "Dummy01" -18.947670 24.317080 -54.370098 -26.563300 148.463396 9.218377 0 0 0 0 0 0
 $definebone "bone hand01" "bone forearm01" -0.035540 -23.756729 -0.084852 60.290510 -16.701725 26.992384 0 0 0 0 0 0
