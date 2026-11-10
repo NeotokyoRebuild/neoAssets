@@ -69,3 +69,6 @@ $sequence "holsterempty" "anims/holsterempty.smd" activity ACT_VM_HOLSTER 1 fps 
 $sequence "idletolow" "anims/idletolow.smd" activity ACT_VM_LOWERED_TO_IDLE 1 fps 30 fadein 0.20 fadeout 0.20 transition "0" "1"
 $sequence "lowtoidle" "anims/lowtoidle.smd" activity ACT_VM_IDLE_TO_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 transition "1" "0"
 $sequence "lowidle" "anims/lowidle.smd" activity ACT_VM_IDLE_LOWERED 1 fps 30 fadein 0.20 fadeout 0.20 loop node "1"
+$sequence "lowidleempty" "../jinrai_milso/anims/lowidleempty.smd" activity ACT_VM_IDLE_LOWERED_EMPTY 1 fps 30 fadein 0.20 fadeout 0.20 loop node "3"
+$sequence "idletolowempty" "../jinrai_milso/anims/idletolowempty.smd" fps 30 fadein 0.20 fadeout 0.20 transition "0" "3"
+$sequence "lowtoidleempty" "../jinrai_milso/anims/lowtoidleempty.smd" fps 30 fadein 0.20 fadeout 0.20 transition "3" "0"
