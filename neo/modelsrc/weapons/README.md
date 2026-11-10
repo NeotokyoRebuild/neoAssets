@@ -2,7 +2,7 @@
 
 The Tachi and ZR68C viewmodels are the first weapons maintained under these conventions, followed by the ZR68-S,
 ZR68-L, Kyla, MilSO, AA13, SRS, PZ252, the MPN45 family (MPN45, MPN45-S), the SRM family (SRM, SRM-S), the
-Jitte family (Jitte, Jitte-S), the M41 family (M41, M41-S, M41-L) and the MX family (MX, MX-S).
+Jitte family (Jitte, Jitte-S), the M41 family (M41, M41-S, M41-L), the MX family (MX, MX-S) and the Supa-7.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -29,9 +29,9 @@ Layout:
   `jinrai_tachi`, `jinrai_zr68c`, `jinrai_zr68s`, `jinrai_zr68l`, `jinrai_klya9` (the Kyla), `jinrai_milso`,
   `jinrai_aa13`, `jinrai_srs`, `jinrai_pz` (the PZ252), `jinrai_mpn` (the MPN45, unsilenced) and `jinrai_mpn_s` (the
   MPN45-S, the game's default MPN45), `jinrai_srm`, `jinrai_srm_s`, `jinrai_jitte`, `jinrai_jittes` (the Jitte-S,
-  scoped), `jinrai_mosok41` (the M41), `jinrai_mosok41s` (the M41-S), `jinrai_mosok41l` (the M41-L), `jinrai_mx` and
-  `jinrai_mxs` (the MX-S, silenced). Each scene has one rig and one action, and both teams' arms (see One scene per
-  gun).
+  scoped), `jinrai_mosok41` (the M41), `jinrai_mosok41s` (the M41-S), `jinrai_mosok41l` (the M41-L), `jinrai_mx`,
+  `jinrai_mxs` (the MX-S, silenced) and `jinrai_shotgun` (the Supa-7). Each scene has one rig and one action, and
+  both teams' arms (see One scene per gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd`, `anims/*.smd` (written by the
   export) and `composites.txt` (if used). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_zr68c/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
