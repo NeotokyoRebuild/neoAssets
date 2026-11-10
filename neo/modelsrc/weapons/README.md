@@ -219,6 +219,19 @@ Then copy the generated files (`v_*_tachi.*` for the Tachi) from the game direct
 `models/weapons/` to neoAssets `neo/models/weapons/`. The compile overwrites older models in the game directory.
 
 
+## Lowered pistols with an empty magazine
+
+The Tachi holds its slide back when empty (`idle01empty`). Its shipped lowered clips (`idletolow`, `lowidle`,
+`lowtoidle`) show the slide forward, so the scene has three authored slots for an empty gun: `idletolowempty`,
+`lowidleempty` and `lowtoidleempty`. Each is the shipped clip with the slide and its catch held at their `idle01empty`
+pose; no other bone differs.
+
+- `lowidleempty` carries the activity `ACT_VM_IDLE_LOWERED_EMPTY`; the game plays it instead of `lowidle` while the
+  magazine is empty.
+- The two transitions connect node `0` (the idles) with node `3` (`lowidleempty`), so the engine plays them on the
+  way into and out of the empty lowered pose, as it plays `idletolow` and `lowtoidle` for a loaded gun.
+- Both team models compile the Jinrai SMDs of these slots.
+
 ## Adding a gun
 
 Files in neoAssets (this repo):
