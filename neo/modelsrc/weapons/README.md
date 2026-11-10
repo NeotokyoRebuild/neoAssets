@@ -1,6 +1,6 @@
 # Weapon model sources
 
-The Tachi viewmodels are the first weapons maintained under these conventions.
+The Tachi viewmodels are the first weapons maintained under these conventions, followed by the MilSO.
 Expect the folder layout, scripts and steps here to change as more weapons are added.
 
 ## Change an animation (quick recipe)
@@ -22,13 +22,15 @@ For example, a new pose in a slot of the Tachi. Run the commands from this folde
 Layout:
 
 - `viewmodels.blend`: the Blender file for every viewmodel. It holds one **scene** per gun, called a project:
-  `jinrai_tachi`. Each scene has one rig and one action, and both teams' arms (see One scene per gun).
+  `jinrai_tachi` and `jinrai_milso`. Each scene has one rig and one action, and both teams' arms (see One scene per
+  gun).
 - `PROJECT/` (such as `jinrai_tachi/`): the project's `.qc`, `reference.smd` and `anims/*.smd` (written by the
   export). The scripts take project names.
 - `nsf_GUN/` (such as `nsf_tachi/`): the NSF model's `.qc`, `reference.smd` and its shipped clips in `anims/`. It has
   no scene and is never exported: it compiles from these SMDs.
 - `GUN/viewmodel.qci` (such as `tachi/viewmodel.qci`): the QC lines both team models of a gun share. Each team's `.qc`
-  sets only `$modelname` and includes this file.
+  sets only `$modelname` and includes this file. The MilSO keeps a whole `.qc` per team, as its team models differ
+  in more than their bones.
 - `arms/textures/` (Jinrai and NSF arms, shared by every weapon) and `GUN/textures/`: preview images the `.blend` loads.
 - `rom_limits.py`, `rom_spec.json` and `rom_widen.json`: the range-of-motion limits on the rigs (see
   Range-of-motion limits).
@@ -57,6 +59,9 @@ teams' arm meshes are skinned to that rig, so a key moves both. Each team's mesh
 - The shipped slots (`reload`, `draw`, ...) stay the original clips. The export fails when a shipped slot's SMD would
   change, unless it runs with `--edit-shipped`; then the changed clip goes to both teams (see Exporting animations).
 - `reference.smd` was not changed by the merge: each team's compiled model keeps its own rest pose.
+- The MilSO team rigs differ by 0.006 units in the arms. The NSF mesh keeps this only in its compiled model; in the
+  scene, `merge_teams.py` re-bound the NSF arm vertices for the preview only, so the NSF arms show as the NSF model
+  plays them.
 
 | term | meaning |
 | :-- | :-- |
